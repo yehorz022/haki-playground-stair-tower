@@ -7,7 +7,7 @@ public class IconMakerForMesh : MonoBehaviour
 {
     public GameObject prefab;
     public SpriteRenderer sp;
-    public Camera componentCamera;
+    public Camera componentCamera; // mycamera
 
     void Start()
     {
