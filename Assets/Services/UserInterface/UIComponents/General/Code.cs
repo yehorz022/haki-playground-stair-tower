@@ -66,7 +66,7 @@ public static class Code {
     }
 
 	public static Coroutine WaitAndCall (float seconds, Action action) {
-        return DependancyInjectionManager.instance.StartCoroutine(WaitAndCallRoutine(seconds, action));
+        return UI.instance.StartCoroutine(WaitAndCallRoutine(seconds, action));
 	}
 
     static IEnumerator WaitAndCallRoutine(float seconds, Action action) {

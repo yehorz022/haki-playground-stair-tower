@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5401991251349348686}
   - component: {fileID: 1456705878784521}
   - component: {fileID: 2983707885891968866}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "\xD6vre hake GFL"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 8131260342664089745}
   - component: {fileID: 3761294414243908390}
   - component: {fileID: 5458159919433343205}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 1544504628328719001}
   - component: {fileID: 3467699742092503423}
   - component: {fileID: 1192256037637788296}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Haki stans 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 6608839323946344556}
   - component: {fileID: 447533600545827206}
   - component: {fileID: 2865176864505880937}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Undre hake 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 9006613004388056415}
   - component: {fileID: 8481279046407634497}
   - component: {fileID: 101971064333429532}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 5911543014929493046}
   - component: {fileID: 714218496892954246}
   - component: {fileID: 6395529932428370205}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Haki stans 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 8010504582566191511}
   - component: {fileID: 2219164009810040300}
   - component: {fileID: 6788576842175911438}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Haki stans 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +562,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3271298976003646655}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Component
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -604,7 +604,7 @@ GameObject:
   - component: {fileID: 2411702177231739494}
   - component: {fileID: 1289981756691699780}
   - component: {fileID: 4109607747515411671}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -683,7 +683,7 @@ GameObject:
   - component: {fileID: 3661309042480017851}
   - component: {fileID: 5414512485006296719}
   - component: {fileID: 8247826062728319342}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "Fj\xE4dersprint"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -763,7 +763,7 @@ GameObject:
   - component: {fileID: 7755528126861941217}
   - component: {fileID: 8139379931354028920}
   - component: {fileID: 2818037428821606547}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "\xC4ndplatta GFL"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -842,7 +842,7 @@ GameObject:
   - component: {fileID: 1997406483631686797}
   - component: {fileID: 115822218572774846}
   - component: {fileID: 1011500732720072231}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -921,7 +921,7 @@ GameObject:
   - component: {fileID: 4915550035259955689}
   - component: {fileID: 3192612071506184325}
   - component: {fileID: 7880339378624956183}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Undre hake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -998,7 +998,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8126625444979228028}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1034,7 +1034,7 @@ GameObject:
   - component: {fileID: 7505014333458576205}
   - component: {fileID: 3129510192783986925}
   - component: {fileID: 5975656125094444832}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "8kantr\xF6r"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1111,7 +1111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6884004675569058337}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1147,7 +1147,7 @@ GameObject:
   - component: {fileID: 4551572486603841638}
   - component: {fileID: 4609124644175849247}
   - component: {fileID: 6443034301451223882}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1224,7 +1224,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8126058320923690395}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Connectors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1260,7 +1260,7 @@ GameObject:
   - component: {fileID: 5948347861056854132}
   - component: {fileID: 4815600356496609657}
   - component: {fileID: 2976594702921543892}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "8kantr\xF6r 1"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1339,7 +1339,7 @@ GameObject:
   - component: {fileID: 5388923978001471503}
   - component: {fileID: 2777573211498744868}
   - component: {fileID: 501978861630052017}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Haki stans 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1418,7 +1418,7 @@ GameObject:
   - component: {fileID: 2239850766607350748}
   - component: {fileID: 8094117585031242240}
   - component: {fileID: 8177176190686162302}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Haki stans
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1497,7 +1497,7 @@ GameObject:
   - component: {fileID: 6013850270282379268}
   - component: {fileID: 4765814010116733966}
   - component: {fileID: 5962785693261613910}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "Fj\xE4dersprint 1"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1577,7 +1577,7 @@ GameObject:
   - component: {fileID: 2941221035563827700}
   - component: {fileID: 3563383993848039169}
   - component: {fileID: 8976263451623000154}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: 7052106
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1591,8 +1591,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7677348753463782470}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.475, z: -0.522}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.040264755, y: 0.47447243, z: -1.0005996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3271298976003646655}
@@ -1637,7 +1637,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3061949363693338956}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1673,7 +1673,7 @@ GameObject:
   - component: {fileID: 1002343350304669243}
   - component: {fileID: 1068450075528299475}
   - component: {fileID: 7814338356350636196}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mittstag GFL 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1752,7 +1752,7 @@ GameObject:
   - component: {fileID: 2289821196860749938}
   - component: {fileID: 451008131085124496}
   - component: {fileID: 1830245767427251975}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "\xD6vre hake GFL 1"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1831,7 +1831,7 @@ GameObject:
   - component: {fileID: 8236327690845951866}
   - component: {fileID: 3614519497049037509}
   - component: {fileID: 3391848232881571188}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "\xC4ndplatta GFL 1"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1910,7 +1910,7 @@ GameObject:
   - component: {fileID: 7848974955127531895}
   - component: {fileID: 888620050847663439}
   - component: {fileID: 4097888764279432702}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Haki stans 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}

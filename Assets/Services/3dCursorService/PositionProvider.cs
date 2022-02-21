@@ -105,14 +105,15 @@ public class PositionProvider : HakiComponent
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 #if UNITY_EDITOR
-        if (ccs.connectionDefinitionCollection.Count == 0)
-            throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
+        if (ccs.connectionDefinitionCollection != null) { 
+            if (ccs.connectionDefinitionCollection.Count == 0)
+                throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
 
-
-        if (componentHolder.TryGetIntersections(ray, ccs.connectionDefinitionCollection.GetElementAt(0).connectionType, out List<InterSectionResults> intersections) && intersections.Count > 0)
-        {
-            result = intersections.First().WorldPosition;
-            return true;
+            if (componentHolder.TryGetIntersections(ray, ccs.connectionDefinitionCollection.GetElementAt(0).connectionType, out List<InterSectionResults> intersections) && intersections.Count > 0)
+            {
+                result = intersections.First().WorldPosition;
+                return true;
+            }
         }
 #endif
         if (Physics.Raycast(ray, out RaycastHit hit))

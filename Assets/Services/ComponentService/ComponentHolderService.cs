@@ -84,22 +84,23 @@ namespace Assets.Services.ComponentService
                 //check if component is behind camera
                 if (Vector3.Dot(ray.direction, (component.transform.position - lineStart).normalized) <= 0)
                     continue;
+                if (component.connectionDefinitionCollection != null) { 
+                    for (int i = 0; i < component.connectionDefinitionCollection.Count; i++)
+                    {
+                        ConnectionDefinition item = component.connectionDefinitionCollection.GetElementAt(i);
 
-                for (int i = 0; i < component.connectionDefinitionCollection.Count; i++)
-                {
-                    ConnectionDefinition item = component.connectionDefinitionCollection.GetElementAt(i);
+                        if (connectionType.Equals(item.connectionType).Equals(false))
+                            continue;
 
-                    if (connectionType.Equals(item.connectionType).Equals(false))
-                        continue;
+                        Vector3 heading = item.CalculateHeading(component.transform.localRotation);
+                        Vector3 wPos = item.CalculateWorldPosition(component.transform);
 
-                    Vector3 heading = item.CalculateHeading(component.transform.localRotation);
-                    Vector3 wPos = item.CalculateWorldPosition(component.transform);
+                        if (IntersectionHandler.CheckIntersection(lineStart, lineEnd, heading, wPos) == false)
+                            continue;
 
-                    if (IntersectionHandler.CheckIntersection(lineStart, lineEnd, heading, wPos) == false)
-                        continue;
-
-                    connectionPoints.Add(new InterSectionResults(component, wPos));
-                    result = true;
+                        connectionPoints.Add(new InterSectionResults(component, wPos));
+                        result = true;
+                    }
                 }
             }
 

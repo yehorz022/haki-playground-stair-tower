@@ -19,7 +19,7 @@ public class PropertyWindow : MonoBehaviour
     // Start is called before the first frame update
     public void Hide() {
         if (routineDrag != null)
-            DependancyInjectionManager.instance.StopCoroutine(routineDrag);
+            UI.instance.StopCoroutine(routineDrag);
         routineDrag = Animate.Lerp(transform.position.y, Screen.height * 1.2f, .18f,
             (val) => {
                 transform.position = new Vector3(transform.position.x, val, transform.position.z);
@@ -31,9 +31,9 @@ public class PropertyWindow : MonoBehaviour
         this.title.text = "Name : " + title;
         this.id.text = "ID : " + id;
         if (routineDrag != null)
-            DependancyInjectionManager.instance.StopCoroutine(routineDrag);
+            UI.instance.StopCoroutine(routineDrag);
         if (routineHide != null)
-            DependancyInjectionManager.instance.StopCoroutine(routineHide);
+            UI.instance.StopCoroutine(routineHide);
         routineDrag = Animate.Lerp(transform.position.y, Screen.height, .18f,
             (val) => {
                 transform.position = new Vector3(transform.position.x, val, transform.position.z);

@@ -12,7 +12,7 @@ public class IButton : MonoBehaviour, IPointerDownHandler, IPointerExitHandler, 
         if (!interactable)
             return;
         Inpute.OnInputDown();
-        transform.parent.GetComponent<PanelComponent>().Select();
+        transform.GetComponent<PanelComponent>().Select();
     }
 
     public virtual void OnPointerExit(PointerEventData eventData) {
