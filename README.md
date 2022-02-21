@@ -1,2 +1,3 @@
-# haki-playground-stair-tower
-haki playground stair tower assembly app
+# HAKI Playground
+
+- This is the experimental cross-platform+ VR version of the different Haki-Unity test- and research projects.
