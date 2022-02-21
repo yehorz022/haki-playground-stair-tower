@@ -1,4 +1,5 @@
 using Assets.Services.ComponentConnection;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Services.ComponentService
@@ -6,80 +7,61 @@ namespace Assets.Services.ComponentService
     public class PopulateGridLayout : MonoBehaviour
     {
 
-        public PanelComponent panel;
-        public GameObject floor;
+        [SerializeField] Color IconBGColor;
+        [SerializeField] MyScrollView scrollView;
+        [SerializeField] List<ComponentConnectionService> elements;
+        [SerializeField] GameObject[] assemblies;  // This is just for testing purpose
+        [SerializeField] List<Texture2D> elementsIcons = new List<Texture2D>();
+        ObjectCacheManager ocm;
+        MeshIconMaker iconMaker = new MeshIconMaker();
 
-        public Camera componentCamera;
-        public ComponentConnectionService[] elements;
-
-        private ObjectCacheManager ocm;
+        public static PopulateGridLayout instance;
+        private void Awake()
+        {
+            instance = this;
+        }
 
         void Start()
         {
             ocm = FindObjectOfType<ObjectCacheManager>();
-
-            PopulateGrid();
+            PopulateItems();
+            ScrollState scrollState = new ScrollState(0);
+            scrollView.Initialize(elements.Count, transform.GetComponent<RectTransform>(), LoadPanel, scrollState, MyScrollView.OLD_STATE);
         }
 
-        private void PopulateGrid()
+        void PopulateItems()
         {
-            BeforePopulate();
-
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < elements.Count; i++)
             {
-                CreateInstance(i % elements.Length);
+                elements[i] = ocm.Instantiate(elements[i], Quaternion.identity);
+                elementsIcons.Add(iconMaker.CreateIcon(elements[i].gameObject, IconBGColor));
+                ocm.Cache(elements[i]);
             }
 
-            AfterPopulate();
-        }
-
-        private void BeforePopulate()
-        {
-            componentCamera.gameObject.SetActive(true);
-            floor.SetActive(false);
-        }
-        private void AfterPopulate()
-        {
-            componentCamera.gameObject.SetActive(false);
-            floor.SetActive(true);
-            RenderTexture.active = null;
-        }
-
-        private void CreateInstance(int i)
-        {
-            Texture2D screenShot = CreateTexture(i);
-            PanelComponent pc1 = Code.AddPanel(panel.gameObject, GetComponent<RectTransform>(), 20, 10, 0, true, true).GetComponent<PanelComponent>();
-            pc1.SetImage(screenShot, elements[i]);
-            pc1.name = elements[i].name;
-        }
-
-        private Texture2D CreateTexture(int i)
-        {
-            const int size = 600;
-            Rect rect = new Rect(0, 0, size, size);
-            RenderTexture renderTexture = new RenderTexture(size, size, 24);
-            Texture2D screenShot = new Texture2D(size, size, TextureFormat.RGBA32, false);
-
-            ComponentConnectionService go = elements[i];
-
-
-            ComponentConnectionService temp = ocm.Instantiate(go, Quaternion.identity);
-            if (temp.isActiveAndEnabled)
+            // vvvvv This code is for just testing purpose vvvvv
+            for (int i = 0; i < assemblies.Length; i++)
             {
-
+                elements.Add(Instantiate(assemblies[i]).AddComponent<ComponentConnectionService>());
+                elementsIcons.Add(iconMaker.CreateIcon(elements[elements.Count - 1].gameObject, IconBGColor));
+                ocm.Cache(elements[elements.Count - 1]);
             }
-            componentCamera.targetTexture = renderTexture;
-            componentCamera.Render();
-
-            RenderTexture.active = renderTexture;
-
-            screenShot.ReadPixels(rect, 0, 0);
-            screenShot.Apply();
-
-            temp.gameObject.SetActive(false);
-            ocm.Cache(temp);
-
-            return screenShot;
+            // ^^^^^ This code is for just testing purpose ^^^^^
         }
+
+        public void LoadPanel(Transform panel, int reset = MyScrollView.DEFAULT)
+        {
+            panel.GetComponent<PanelComponent>().SetImage(elementsIcons[int.Parse(panel.name)], elements[int.Parse(panel.name)]);
+        }
+
+        public void OnDeviceOrientationChange()
+        {
+            if (UI.orientation == DeviceOrientation.Portrait || UI.orientation == DeviceOrientation.PortraitUpsideDown)
+                scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(120, scrollView.GetComponent<RectTransform>().sizeDelta.y);
+            if (UI.orientation == DeviceOrientation.LandscapeLeft || UI.orientation == DeviceOrientation.LandscapeRight)
+                scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(220, scrollView.GetComponent<RectTransform>().sizeDelta.y);
+            scrollView.Initialize(elements.Count, transform.GetComponent<RectTransform>(), LoadPanel, new ScrollState(0));
+        }
+
     }
+
 }

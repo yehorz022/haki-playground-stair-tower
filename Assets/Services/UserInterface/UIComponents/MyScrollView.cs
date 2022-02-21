@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+//This script is under working...
 
 [RequireComponent(typeof(MyScrollRect))]
 public class MyScrollView : MonoBehaviour {
@@ -9,20 +10,26 @@ public class MyScrollView : MonoBehaviour {
     //if dynamically ad panels on runtime
     [SerializeField] bool dynamicCreation; //is scrolling dynamic
     [SerializeField] bool correctPosition; //move to correctPosition
-    public Transform panelsParent;
-    [SerializeField] GameObject panelPrefab; // prefab of panel in scroll list
-    [HideInInspector] public int data; // for saving catNo or modeNo
-    [HideInInspector] public RectTransform content;
+    public RectTransform panelsParent;
+    public RectTransform panelPrefab; // prefab of panel in scroll list
     [SerializeField] int totalPanels;
-    [SerializeField]public float startGap; // gap at the start in scroll list
-    [SerializeField] float endGap; // gap at the end in scroll list
-    [SerializeField] float gap; // gaps among panels in scroll list
-    int minPanels;
-    int myScreenResolutionChangeNo;
-    float panelSize; // size of each panel in scroll list
-
+    public Gap gapp;
+    public float startGap; // gap at the start in scroll list
+    public float endGap; // gap at the end in scroll list
+    public float gap; // gaps among panels in scroll list
+    [HideInInspector] public int data; // for saving catNo or modeNo
+    [HideInInspector] public float panelSize; // size of each panel in scroll list
+    [HideInInspector] public RectTransform content;
     public delegate void LoadPanelDelegate(Transform panel, int reset);
     public LoadPanelDelegate LoadPanel;
+    int rows;
+    int columns;
+    int minPanels;
+    int myScreenResolutionChangeNo;
+    Vector2 contentSize; // size of each panel in scroll list
+    Vector2 panelSizee; // size of each panel in scroll list
+    Vector2 posFixDelta;
+    float extraSpace;
 
     //common properties
     bool vertical; //is horizontal or verticle
@@ -34,6 +41,7 @@ public class MyScrollView : MonoBehaviour {
         scrollRect = GetComponent<MyScrollRect>();
         vertical = scrollRect.vertical; //If the current scroll Rect has the vertical checked then the other one will be scrolling horizontally.
         content = scrollRect.content;
+        
         if (dynamicCreation || correctPosition) { 
             scrollRect.onValueChanged.AddListener(OnValueChanged);
             panelSize = vertical ? panelPrefab.GetComponent<RectTransform>().sizeDelta.y : panelPrefab.GetComponent<RectTransform>().sizeDelta.x;
@@ -51,41 +59,61 @@ public class MyScrollView : MonoBehaviour {
         myScreenResolutionChangeNo = UI.ScreenResolutionChangeNo;
     }
 
-    public ScrollState Initialize(int _totalPanels, Transform _panelsParent, LoadPanelDelegate _LoadPanel, ScrollState oldState, int reset = DEFAULT, MyScrollRect _otherScrollRect = null) {
+    public ScrollState Initialize(int _totalPanels, RectTransform _panelsParent, LoadPanelDelegate _LoadPanel, ScrollState oldState, int reset = DEFAULT, MyScrollRect _otherScrollRect = null) {
         //print("Initialize//  " + (transform.parent.parent ? transform.parent.parent.name : "") + " / " + transform.parent.name + "  /  " + transform.name);
         ScrollState thisState = new ScrollState(this);
         data = oldState.data;
         LoadPanel = _LoadPanel;
         totalPanels = _totalPanels;
         panelsParent = _panelsParent;
-        scrollRect.velocity = Vector2.zero;
         if (_otherScrollRect)
             scrollRect.otherScrollRect = _otherScrollRect;
-        for (int i = panelsParent.childCount; i < minPanels && i < totalPanels; i++) // creating panels if not exist
-            Code.AddPanel(panelPrefab, panelsParent.GetComponent<RectTransform>(), startGap, gap, endGap, vertical); //This is creating panels
+        scrollRect.velocity = Vector2.zero;
+        CalculateRowsColumns();
+        for (int i = panelsParent.childCount; i < totalPanels; i++) // creating panels if not exist
+            Code.AddPanel(panelPrefab.gameObject, panelsParent.GetComponent<RectTransform>(), startGap, gap, endGap, vertical, true); //This is creating panels
         if (panelsParent.childCount > 0)
         for (int i = 0; i < panelsParent.childCount; i++) // set panel visible or not
             panelsParent.GetChild(i).gameObject.SetActive(i < totalPanels);
         if (reset == OLD_STATE || reset == GO_TO_TOP)
             content.anchoredPosition = reset == OLD_STATE ? oldState.anchoredPos : Vector2.zero;
         int activeChilds = GetActiveChildCount(); // 
-        for (int i = 0; i < panelsParent.childCount; i++) {
-            RectTransform panel = panelsParent.GetChild(i).GetComponent<RectTransform>();
-            int child = reset == OLD_STATE ? (i < oldState.childs.Length ? oldState.childs[i] : i) : (i < thisState.childs.Length ? thisState.childs[i] : i); // totalPanels - oldState.childs.Length + i for last 6 panels
-            if (child > totalPanels - activeChilds + i)
-                child = totalPanels - activeChilds + i; // totalPanels - oldState.childs.Length + i for last 6 panels
+        int n = 0; // to terverse index of childs linearly
+        if (vertical)
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < columns; j++) 
+                    ResetPanels(i, j, n++, activeChilds, oldState, thisState, reset);
+        else
+            for (int j = 0; j < columns; j++)
+                for (int i = 0; i < rows; i++)
+                    ResetPanels(i, j, n++, activeChilds, oldState, thisState, reset);
+
+        //int childs = GetChildCountWRTNaming (); // in the last bcz after naming panels
+        //content.sizeDelta = new Vector2(!vertical ? childs * (panelSize + gap) + startGap + endGap : content.sizeDelta.x, vertical ? childs * (panelSize + gap) + startGap + endGap : content.sizeDelta.y);
+        if (vertical)
+            content.sizeDelta = new Vector2(content.sizeDelta.x, panelSize * rows + gapp.middleY * (rows - 1) + extraSpace * (rows + 1) + gapp.top + gapp.bottom);
+        else
+            content.sizeDelta = new Vector2(panelSize * columns + gapp.middleX * (columns - 1) + extraSpace * (columns + 1) + gapp.left + gapp.right, content.sizeDelta.y);
+        return thisState;
+    }
+
+    void ResetPanels (int i, int j, int n, int activeChilds, ScrollState oldState, ScrollState thisState, int reset) {
+        if (n < totalPanels) {
+            RectTransform panel = panelsParent.GetChild(n).GetComponent<RectTransform>();
+            int child = reset == OLD_STATE ? (n < oldState.childs.Length ? oldState.childs[n] : n) : (n < thisState.childs.Length ? thisState.childs[n] : n); // totalPanels - oldState.childs.Length + i for last 6 panels
+            if (child > totalPanels - activeChilds + n)
+                child = totalPanels - activeChilds + n; // totalPanels - oldState.childs.Length + i for last 6 panels
             panel.name = child.ToString();
-            Vector2 targetPos = (vertical ? new Vector2(0, -1) : new Vector2(1, 0)) * (child * (panelSize + gap) + startGap + (!vertical ? panel.pivot.x : 1 - panel.pivot.y) * panelSize);
+            Vector2 targetPos = new Vector2((panelSizee.x + gapp.middleX + extraSpace) * j + gapp.left + extraSpace + posFixDelta.x,  -((panelSizee.y + gapp.middleY + extraSpace) * i + gapp.top + extraSpace + posFixDelta.y));
             if (reset != OLD_STATE && panel.gameObject.activeInHierarchy)
                 Animate.MoveAnchorPos(panel, panel.anchoredPosition, targetPos); // moving animation
             else
                 panel.anchoredPosition = targetPos;
+
             //bool inView = vertical ? panel.position.y + (panelSize / 2) >= 0 && panel.position.y - (panelSize / 2) < Screen.height : panel.position.x + (panelSize / 2) >= 0 && panel.position.x - (panelSize / 2) < Screen.width;
-            LoadPanel(panelsParent.GetChild(i), DEFAULT); // flag for is in view or not
+            if (LoadPanel  != null)
+                LoadPanel(panelsParent.GetChild(n), DEFAULT); // flag for is in view or not
         }
-        int childs = GetChildCountWRTNaming (); // in the last bcz after naming panels
-        content.sizeDelta = new Vector2(!vertical ? childs * (panelSize + gap) + startGap + endGap : content.sizeDelta.x, vertical ? childs * (panelSize + gap) + startGap + endGap : content.sizeDelta.y);
-        return thisState;
     }
 
     public void OnValueChanged(Vector2 value) {
@@ -135,6 +163,24 @@ public class MyScrollView : MonoBehaviour {
         return new Vector2(-((indexPos > totalPanels ? totalPanels : indexPos)) * (panelSize + gap), 0); // if indexpos is grater than total panel then make it equal to total panels
     }
 
+    void CalculateRowsColumns() { // below formula works like for 100 space, with 5 gap, 10 panelSIze, 7 panels can sit, //arrange like 10 + 5 + 10 + 5 + 10 + 5 + 10 + 5 + 10 + 5 + 10 + 5 + 10  = 100 (7 panels)
+                                  // to get value you need to add (space + gap) / (panels + gap) i.e. 105 / 15, answer = 7
+        contentSize = transform.GetComponent<RectTransform>().sizeDelta;
+        panelSizee = panelPrefab.sizeDelta;
+        posFixDelta = vertical ? new Vector2(-(contentSize.x * (1 - panelsParent.pivot.x)) + panelSizee.x * .5f, panelSizee.y * .5f) //if pivot x disturbs then adjust pos accordingly
+                               : new Vector2(panelSizee.x * .5f, -(contentSize.y * panelsParent.pivot.y - panelSizee.y * .5f)); //if pivot x disturbs then adjust pos accordingly
+        if (vertical) {
+            columns = Mathf.FloorToInt(1f * (contentSize.x + gapp.middleX - gapp.left - gapp.right) / (panelSizee.x + gapp.middleX));
+            rows = Mathf.CeilToInt(1f * totalPanels / columns);
+            extraSpace = 1f * (contentSize.x + gapp.middleX - gapp.left - gapp.right) % (panelSizee.x + gapp.middleX) / (columns + 1);
+        }
+        else {
+            rows = Mathf.FloorToInt(1f * (contentSize.y + gapp.middleY - gapp.top - gapp.bottom) / (panelSizee.y + gapp.middleY));
+            columns = Mathf.CeilToInt(1f * totalPanels / rows);
+            extraSpace = 1f * (contentSize.y + gapp.middleY - gapp.top - gapp.bottom) % (panelSizee.y + gapp.middleY) / (rows + 1);
+        }
+    }
+
     int GetIndexPosition(RectTransform panel) {
         return Mathf.RoundToInt(((vertical ? Mathf.Abs(panel.anchoredPosition.y) : Mathf.Abs(panel.anchoredPosition.x)) - gap / 2f) / (panelSize + gap));  //finding index of position of panel to follow,
     }
@@ -173,5 +219,24 @@ public class ScrollState { //for saving state
         childs = new int[scrollview.panelsParent.childCount];
         for (int i = 0; i < childs.Length; i++)
             childs[i] = int.Parse(scrollview.panelsParent.GetChild(i).name);
+    }
+}
+
+[System.Serializable]
+public class Gap {
+    public float left;
+    public float right;
+    public float top;
+    public float bottom;
+    public float middleX;
+    public float middleY;
+
+    public Gap (float _left, float _right, float _top, float _bottom, float _middleX, float _middleY) {
+        left = _left;
+        right = _right;
+        top = _top;
+        bottom = _bottom;
+        middleX = _middleX;
+        middleY = _middleY;
     }
 }

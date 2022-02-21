@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Assets.Services.Json;
+using Assets.Services.JsonServices;
 
 namespace Assets.Services.NetworkService
 {

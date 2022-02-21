@@ -31,7 +31,7 @@ public class PanelComponent : MonoBehaviour
     public void SetImage(Texture2D texture, ComponentConnectionService element)
     {
         this.element = element;
-        img.sprite = Graphik.TextureToSprite(texture);
+        img.sprite = Media.TextureToSprite(texture);
     }
 
     public void ViewProperties()

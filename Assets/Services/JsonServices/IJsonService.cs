@@ -1,4 +1,4 @@
-namespace Assets.Services.Json
+namespace Assets.Services.JsonServices
 {
     public interface IJsonService
     {

@@ -11,8 +11,8 @@ public class IButton : MonoBehaviour, IPointerDownHandler, IPointerExitHandler, 
     public virtual void OnPointerDown(PointerEventData eventData) {
         if (!interactable)
             return;
-        Inpute.OnInputDown();
-        transform.parent.GetComponent<PanelComponent>().Select();
+        InputUI.OnInputDown();
+        transform.GetComponent<PanelComponent>().Select();
     }
 
     public virtual void OnPointerExit(PointerEventData eventData) {
@@ -20,7 +20,7 @@ public class IButton : MonoBehaviour, IPointerDownHandler, IPointerExitHandler, 
         if (!interactable)
             return;
 
-        if (Inpute.InputType() == Click.Tap)
+        if (InputUI.InputType() == Click.Tap)
             onClick.Invoke();
 #endif
     }
@@ -29,7 +29,7 @@ public class IButton : MonoBehaviour, IPointerDownHandler, IPointerExitHandler, 
 #if UNITY_EDITOR
         if (!interactable)
                 return;
-        if (Inpute.InputType() == Click.Tap && !Input.GetMouseButton(0) && !Input.GetMouseButton(1))
+        if (InputUI.InputType() == Click.Tap && !Input.GetMouseButton(0) && !Input.GetMouseButton(1))
             onClick.Invoke();
 #endif
     }

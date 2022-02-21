@@ -1,27 +1,27 @@
-using System.Collections;
 using System.Collections.Generic;
 using Assets.Services.ComponentConnection;
-using Assets.Services.ComponentService;
+using Assets.Services.DependencyInjection;
 using UnityEngine;
 
 namespace Assets.Services.ComponentService
 {
-    public class InterSectionResults
+    public class IntersectionResults
     {
         public ComponentConnectionService Component { get; }
-        public Vector3 WorldPosition { get; }
 
-        public InterSectionResults(ComponentConnectionService component, Vector3 worldPosition)
+        public ConnectionDefinition ConnectionDefinition { get; }
+
+        public IntersectionResults(ComponentConnectionService component, ConnectionDefinition connectionDefinition)
         {
-            this.Component = component;
-            this.WorldPosition = worldPosition;
+            ConnectionDefinition = connectionDefinition;
+            Component = component;
         }
     }
 
     public interface IComponentHolder
     {
         void PlaceComponent(ComponentConnectionService component);
-        bool TryGetIntersections(Ray ray, ConnectionType connectionType, out List<InterSectionResults> connectionPoints);
+        bool TryGetIntersections(Ray ray, ConnectionInfo connectionInfo, out List<IntersectionResults> connectionPoints);
         void OnDrawGizmos();
     }
 
@@ -68,10 +68,10 @@ namespace Assets.Services.ComponentService
             }
         }
 
-        public bool TryGetIntersections(Ray ray, ConnectionType connectionType, out List<InterSectionResults> connectionPoints)
+        public bool TryGetIntersections(Ray ray, ConnectionInfo connectionInfo, out List<IntersectionResults> connectionPoints)
         {
 
-            connectionPoints = new List<InterSectionResults>();
+            connectionPoints = new List<IntersectionResults>();
 
             bool result = false;
 
@@ -84,22 +84,24 @@ namespace Assets.Services.ComponentService
                 //check if component is behind camera
                 if (Vector3.Dot(ray.direction, (component.transform.position - lineStart).normalized) <= 0)
                     continue;
-
-                for (int i = 0; i < component.connectionDefinitionCollection.Count; i++)
+                if (component.connectionDefinitionCollection != null)
                 {
-                    ConnectionDefinition item = component.connectionDefinitionCollection.GetElementAt(i);
+                    for (int i = 0; i < component.connectionDefinitionCollection.Count; i++)
+                    {
+                        ConnectionDefinition item = component.connectionDefinitionCollection.GetElementAt(i);
 
-                    if (connectionType.Equals(item.connectionType).Equals(false))
-                        continue;
+                        if (connectionInfo.Equals(item.ConnectionInfo).Equals(false))
+                            continue;
 
-                    Vector3 heading = item.CalculateHeading(component.transform.localRotation);
-                    Vector3 wPos = item.CalculateWorldPosition(component.transform);
+                        Vector3 heading = item.CalculateHeading(component.transform.localRotation);
+                        Vector3 wPos = item.CalculateWorldPosition(component.transform);
 
-                    if (IntersectionHandler.CheckIntersection(lineStart, lineEnd, heading, wPos) == false)
-                        continue;
+                        if (IntersectionHandler.CheckIntersection(lineStart, lineEnd, heading, wPos) == false)
+                            continue;
 
-                    connectionPoints.Add(new InterSectionResults(component, wPos));
-                    result = true;
+                        connectionPoints.Add(new IntersectionResults(component, item));
+                        result = true;
+                    }
                 }
             }
 

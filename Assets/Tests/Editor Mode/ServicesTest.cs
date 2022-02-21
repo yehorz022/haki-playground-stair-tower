@@ -18,7 +18,7 @@ namespace Test
             service.Register<ITest1, Test1>();
 
 
-
+            
             ITest1 t1 = service.GetDependency<ITest1>();
 
             Assert.IsNotNull(t1);

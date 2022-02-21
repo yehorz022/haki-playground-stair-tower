@@ -10,10 +10,10 @@ public class MyScrollRect : ScrollRect {
     bool otherScrolling; //This tracks if the other one should be scrolling instead of the current one, if multiple scrollrects work at same time
     Vector2 deltaPositon;
     float time;
-    bool limitSCrolling;
+    bool limitScrolling;
 
     public override void OnBeginDrag(PointerEventData eventData) {
-        Inpute.OnInputDown();
+        InputUI.OnInputDown();
         if (time == Time.time)
             return;
         time = Time.time;
@@ -29,35 +29,35 @@ public class MyScrollRect : ScrollRect {
         }
         float horizontalSwipe1 = Mathf.Abs(eventData.position.x - eventData.pressPosition.x);
         float verticalSwipe1 = Mathf.Abs(eventData.position.y - eventData.pressPosition.y);
-        if (horizontalSwipe1 > verticalSwipe1) 
+        if (horizontalSwipe1 * 2 > verticalSwipe1) 
             PanelComponent.Spawn();
-        limitSCrolling = horizontalSwipe1 > verticalSwipe1;
+        limitScrolling = horizontalSwipe1 * 2 > verticalSwipe1;
 
         eventData.position = deltaPositon = Vector2.zero;
         base.OnBeginDrag(eventData);
     }
 
     public override void OnDrag(PointerEventData eventData) {
-        if (limitSCrolling || time == Time.time)
+        if (limitScrolling || time == Time.time)
             return;
         time = Time.time;
         if (otherScrolling) {
             otherScrollRect.OnDrag(eventData);
             return;
         }
-        if (Input.touchCount <= 1 || (Input.touchCount > 1 && Inpute.GetTouchDirection(Input.touches[0]) == Inpute.GetTouchDirection(Input.touches[1])))
-            deltaPositon += Inpute.Drag() * SCROLL_SPEEDS;
+        if (Input.touchCount <= 1 || (Input.touchCount > 1 && InputUI.GetTouchDirection(Input.touches[0]) == InputUI.GetTouchDirection(Input.touches[1])))
+            deltaPositon += InputUI.Drag() * SCROLL_SPEEDS;
         else
-            UI.o.SetScreenResolution(UI.o.cs.referenceResolution.x - Inpute.Zoom() * 300);
+            UI.instance.SetScreenResolution(UI.instance.cs.referenceResolution.x - InputUI.Zoom() * 300);
         eventData.position = deltaPositon;
         base.OnDrag(eventData); //the current scroll rect doesnt move in else condition.
     }
 
     public override void OnEndDrag(PointerEventData eventData) {
-        if (limitSCrolling)
+        if (limitScrolling)
             PositionProvider.instance.PlaceComponent();
-        Inpute.OnInputUp();
-        if (limitSCrolling || time == Time.time)
+        InputUI.OnInputUp();
+        if (limitScrolling || time == Time.time)
             return;
         time = Time.time;
         if (otherScrolling) {

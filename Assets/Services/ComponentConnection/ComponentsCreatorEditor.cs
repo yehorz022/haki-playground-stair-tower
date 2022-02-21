@@ -1,53 +1,39 @@
 #if UNITY_EDITOR
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Assets.Services.ComponentConnection
 {
-
-    [CustomEditor(typeof(ConnectionType))]
-    public class ConnectionTypeEditor : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-
-            var main = target as ConnectionType;
-            GUILayout.Label($"ID: {main.Id}");
-
-            if (GUILayout.Button("Reset Id"))
-            {
-                main.Id = Guid.NewGuid();
-            }
-
-            
-
-        }
-    }
-
     [CustomEditor(typeof(ComponentCreator))]
     public class ComponentsCreatorEditor : Editor
     {
 
 
-        ConnectionDefinition Create(Vector3 pos, string tName, string name, Func<Vector3, Vector3> lookAtImplementation)
+        ConnectionDefinition Create(Vector3 pos, string tName, Orientation orientation)
         {
 
             ConnectionDefinition cd = CreateInstance<ConnectionDefinition>();
-            cd.name = tName + name + ".asset";
+            cd.name = tName + orientation + ".asset";
             cd.localPosition = pos;
-            cd.lookAt = lookAtImplementation(pos);
+            cd.lookAt = CreateLookAt(orientation);
 
-
+            cd.ConnectionInfo = AssetDatabase.LoadAssetAtPath<ConnectionInfo>(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("PillarTop").First()));
             return cd;
         }
+
+        private UnityEngine.Object top;
+        private Vector2 scroll;
         public override void OnInspectorGUI()
         {
 
             ComponentCreator main = this.target as ComponentCreator;
+            Assert.IsNotNull(main);
+            main.HandleCount();
 
 
             GUILayout.BeginHorizontal();
@@ -63,61 +49,84 @@ namespace Assets.Services.ComponentConnection
 
             if (GUILayout.Button("Center"))
             {
-                Vector3[] points = new Vector3[main.connectors.childCount];
-                for (int i = 0; i < main.connectors.childCount; i++)
+
+                for (int i = 0; i < main.connectors.Length; i++)
                 {
-                    Transform con = main.connectors.GetChild(i);
 
-                    points[i] = con.position;
-                }
-                foreach (Vector3 point in points)
-                {
-                    Debug.DrawLine(main.transform.position, point, Color.yellow, 5);
-                }
-                Vector3 avg = Vector3.zero;
-                Debug.Log(avg);
-
-                foreach (Vector3 point in points)
-                {
-                    avg = avg + point;
-                }
-
-                Debug.Log(avg);
-                avg = (avg - main.transform.position) / points.Length;
-                Debug.Log(avg);
-
-                main.transform.GetChild(0).localPosition = avg * -1;
-
-                for (int i = 0; i < main.connectors.childCount; i++)
-                {
-                    Transform con = main.connectors.GetChild(i);
-
-                    points[i] = con.position;
-                }
-                foreach (Vector3 point in points)
-                {
-                    Debug.DrawLine(main.transform.position, point, Color.red, 5);
+                    if (main.connectors[i] != null)
+                        Center(main.connectors[i]);
                 }
             }
 
             GUILayout.EndHorizontal();
+            base.OnInspectorGUI();
 
-            ComponentConnectionService service = main.GetComponent<ComponentConnectionService>();
 
-            string[] arr = new string[service.connectionDefinitionCollection.Count];
 
-            for (int i = 0; i < service.connectionDefinitionCollection.Count; i++)
+            scroll = GUILayout.BeginScrollView(scroll, false, true);
+
+            for (int i = 0; i < main.Count; i++)
             {
-                arr[i] = service.connectionDefinitionCollection.GetElementAt(i).name;
 
+                GUILayout.BeginHorizontal();
+
+                Transform connector = main.connectors[i];
+                ConnectionTypeA ct = main.componentType[i];
+
+                main.connectors[i] = EditorGUILayout.ObjectField("Connector", connector, typeof(Transform), main) as Transform;
+                main.componentType[i] = (ConnectionTypeA)EditorGUILayout.EnumPopup(ct);
+
+                GUILayout.EndHorizontal();
             }
 
-            var test = EditorGUILayout.Popup("Label", 0, arr);
+            GUILayout.EndScrollView();
 
-            base.OnInspectorGUI();
         }
 
-        private void MergeMeshes(ComponentCreator main)
+        private static void Center(Transform connectors)
+        {
+
+            Vector3[] points = new Vector3[connectors.childCount];
+            for (int i = 0; i < connectors.childCount; i++)
+            {
+                Transform con = connectors.GetChild(i);
+
+                points[i] = con.position;
+            }
+
+            foreach (Vector3 point in points)
+            {
+                Debug.DrawLine(connectors.parent.position, point, Color.yellow, 5);
+            }
+
+            Vector3 avg = Vector3.zero;
+            Debug.Log(avg);
+
+            foreach (Vector3 point in points)
+            {
+                avg = avg + point;
+            }
+
+            Debug.Log(avg);
+            avg = (avg - connectors.parent.position) / points.Length;
+            Debug.Log(avg);
+
+            connectors.parent.GetChild(0).localPosition = avg * -1;
+
+            for (int i = 0; i < connectors.childCount; i++)
+            {
+                Transform con = connectors.GetChild(i);
+
+                points[i] = con.position;
+            }
+
+            foreach (Vector3 point in points)
+            {
+                Debug.DrawLine(connectors.parent.position, point, Color.red, 5);
+            }
+        }
+
+        private static void MergeMeshes(ComponentCreator main)
         {
             MeshFilter current = main.GetComponent<MeshFilter>();
             current.sharedMesh = null;
@@ -157,7 +166,7 @@ namespace Assets.Services.ComponentConnection
                 foreach (Vector3 vertex in mf.sharedMesh.vertices)
                 {
                     vertex.Scale(mf.transform.localScale);
-                    var v = mf.transform.localRotation * vertex + mf.transform.localPosition;
+                    Vector3 v = mf.transform.localRotation * vertex + mf.transform.localPosition;
 
                     vertices.Add(v);
                 }
@@ -184,7 +193,7 @@ namespace Assets.Services.ComponentConnection
 
 
 
-                var v = vertices[i];
+                Vector3 v = vertices[i];
 
                 v.y += mesh.bounds.size.y / 2;
                 v.z += mesh.bounds.size.z / 2;
@@ -192,11 +201,11 @@ namespace Assets.Services.ComponentConnection
                 vertices[i] = v;
             }
 
-            var diff = (maxx - minx) / 2;
+            float diff = (maxx - minx) / 2;
 
             for (int i = 0; i < mesh.vertices.Length; i++)
             {
-                var v = vertices[i];
+                Vector3 v = vertices[i];
                 v.x -= .016f;
                 vertices[i] = v;
             }
@@ -267,71 +276,117 @@ namespace Assets.Services.ComponentConnection
 
             return fullPath;
         }
-        Vector3 CreateLookAt(Vector3 pos)
+        private static Vector3 CreateLookAt(object obj)
         {
-            pos.y = 0;
-            pos.Normalize();
 
+            switch (obj)
+            {
+                case null:
+                    throw new Exception(
+                        $"parameter {nameof(obj)} in call {nameof(CreateLookAt)} at {Environment.StackTrace} is null");
+                case Orientation orientation:
+                    switch (orientation)
+                    {
+                        case Orientation.Forward: return Vector3.forward;
+                        case Orientation.Backward: return Vector3.back;
+                        case Orientation.RightWards: return Vector3.right;
+                        case Orientation.Leftwards: return Vector3.left;
+                        case Orientation.Upwards: return Vector3.up;
+                        case Orientation.Downwards: return Vector3.down;
 
-            return pos;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    break;
+                case Vector3 vec:
+                    vec.y = 0;
+                    vec.Normalize();
+                    return vec;
+            }
+
+            throw new Exception($"Unexpected type parameters in {nameof(CreateLookAt)}: {obj.GetType().FullName}");
         }
         private bool HandleElement(ComponentCreator main, List<ConnectionDefinition> list)
         {
-
-            if (main.componentType == ComponentType.Pillar)
+            for (int i = 0; i < main.connectors.Length; i++)
             {
-
-
-                for (int i = 0; i < main.connectors.childCount; i++)
+                if (HandleConnectionType(list, main.componentType[i], main.connectors[i], main) == false)
                 {
-                    Transform t = main.connectors.GetChild(i).transform;
-                    float y = main.transform.InverseTransformPoint(t.position).y;
-
-                    Vector3 vf = new Vector3(.03f, y, 0);
-                    Vector3 vb = new Vector3(-.03f, y, 0);
-
-                    Vector3 vr = new Vector3(0, y, 0.03f);
-                    Vector3 vl = new Vector3(0, y, -0.03f);
-
-                    list.Add(Create(vf, t.name, "Front", CreateLookAt));
-                    list.Add(Create(vb, t.name, "Back", CreateLookAt));
-                    list.Add(Create(vr, t.name, "Right", CreateLookAt));
-                    list.Add(Create(vl, t.name, "Left", CreateLookAt));
+                    list.Clear();
+                    return false;
                 }
-
-                return true;
-            }
-            else if (main.componentType == ComponentType.Foot)
-            {
-                Vector3 vec = main.connectors.localPosition;
-
-                list.Add(Create(vec, main.connectors.name, "Top", x => x + Vector3.up));
-                return true;
-            }
-            else if (main.componentType == ComponentType.SideBarrier)
-            {
-                var other = main.GetComponent<ComponentConnectionService>();
-
-                Vector3[] points = new Vector3[4];
-                for (int i = 0; i < main.connectors.childCount; i++)
-                {
-                    Transform con = main.connectors.GetChild(i);
-
-                    Debug.DrawLine(main.transform.position, con.position, Color.blue, 10);
-
-                    points[i] = main.transform.InverseTransformPoint(con.position);
-                }
-                foreach (Vector3 point in points)
-                {
-                    Debug.DrawLine(main.transform.position, main.transform.position + point, Color.yellow, 5);
-                    list.Add(Create(point, main.name, point.ToString(), CreateLookAt));
-                }
-
-
-
             }
 
-            return false;
+            return list.Count > 0;
+        }
+
+        private bool HandleConnectionType(ICollection<ConnectionDefinition> connectionDefinitions, ConnectionTypeA connectionTypeA, Transform connectors, ComponentCreator main)
+        {
+            switch (connectionTypeA)
+            {
+                case ConnectionTypeA.PillarSideFemale:
+                    {
+                        for (int i = 0; i < connectors.childCount; i++)
+                        {
+                            Transform t = connectors.GetChild(i).transform;
+                            float y = connectors.parent.InverseTransformPoint(t.position).y;
+
+                            Vector3 vf = new Vector3(0, y, .03f);
+                            Vector3 vb = new Vector3(0, y, -.03f);
+
+                            Vector3 vr = new Vector3(0.03f, y, 0);
+                            Vector3 vl = new Vector3(-0.03f, y, 0);
+
+                            connectionDefinitions.Add(Create(vf, t.name, Orientation.Forward));
+                            connectionDefinitions.Add(Create(vb, t.name, Orientation.Backward));
+                            connectionDefinitions.Add(Create(vr, t.name, Orientation.RightWards));
+                            connectionDefinitions.Add(Create(vl, t.name, Orientation.Leftwards));
+                        }
+
+                        return true;
+                    }
+
+                case ConnectionTypeA.PillarSideMale:
+                    {
+
+                        Vector3 pos = main.reference.position;
+                        Vector3 look = main.look.localPosition;
+
+                        Vector3 connectorWorldSpace = pos + look;
+
+
+                        var ttt = connectorWorldSpace - main.transform.position;
+
+                        var point = main.transform.TransformPoint(ttt);
+
+
+                        connectionDefinitions.Add(Create(point, main.name, Orientation.Forward));
+
+                        return true;
+
+                    }
+
+                case ConnectionTypeA.PillarMainMale:
+                    {
+                        return ByLocalPosition(connectionDefinitions, connectors, Orientation.Upwards);
+                    }
+                case ConnectionTypeA.PillarMainFemale:
+                    {
+                        return ByLocalPosition(connectionDefinitions, connectors, Orientation.Downwards);
+
+                    }
+                default:
+                    return false;
+            }
+        }
+
+        private bool ByLocalPosition(ICollection<ConnectionDefinition> connectionDefinitions, Transform connectors, Orientation orientation)
+        {
+            Vector3 vec = connectors.localPosition;
+
+            connectionDefinitions.Add(Create(vec, connectors.name, orientation));
+            return true;
         }
     }
 
@@ -351,24 +406,24 @@ namespace Assets.Services.ComponentConnection
         /// </param>
         public static void RecalculateNormals(this Mesh mesh, float angle)
         {
-            var cosineThreshold = Mathf.Cos(angle * Mathf.Deg2Rad);
+            float cosineThreshold = Mathf.Cos(angle * Mathf.Deg2Rad);
 
-            var vertices = mesh.vertices;
-            var normals = new Vector3[vertices.Length];
+            Vector3[] vertices = mesh.vertices;
+            Vector3[] normals = new Vector3[vertices.Length];
 
             // Holds the normal of each triangle in each sub mesh.
-            var triNormals = new Vector3[mesh.subMeshCount][];
+            Vector3[][] triNormals = new Vector3[mesh.subMeshCount][];
 
-            var dictionary = new Dictionary<VertexKey, List<VertexEntry>>(vertices.Length);
+            Dictionary<VertexKey, List<VertexEntry>> dictionary = new Dictionary<VertexKey, List<VertexEntry>>(vertices.Length);
 
-            for (var subMeshIndex = 0; subMeshIndex < mesh.subMeshCount; ++subMeshIndex)
+            for (int subMeshIndex = 0; subMeshIndex < mesh.subMeshCount; ++subMeshIndex)
             {
 
-                var triangles = mesh.GetTriangles(subMeshIndex);
+                int[] triangles = mesh.GetTriangles(subMeshIndex);
 
                 triNormals[subMeshIndex] = new Vector3[triangles.Length / 3];
 
-                for (var i = 0; i < triangles.Length; i += 3)
+                for (int i = 0; i < triangles.Length; i += 3)
                 {
                     int i1 = triangles[i];
                     int i2 = triangles[i + 1];
@@ -409,17 +464,17 @@ namespace Assets.Services.ComponentConnection
 
             // Each entry in the dictionary represents a unique vertex position.
 
-            foreach (var vertList in dictionary.Values)
+            foreach (List<VertexEntry> vertList in dictionary.Values)
             {
-                for (var i = 0; i < vertList.Count; ++i)
+                for (int i = 0; i < vertList.Count; ++i)
                 {
 
-                    var sum = new Vector3();
-                    var lhsEntry = vertList[i];
+                    Vector3 sum = new Vector3();
+                    VertexEntry lhsEntry = vertList[i];
 
-                    for (var j = 0; j < vertList.Count; ++j)
+                    for (int j = 0; j < vertList.Count; ++j)
                     {
-                        var rhsEntry = vertList[j];
+                        VertexEntry rhsEntry = vertList[j];
 
                         if (lhsEntry.VertexIndex == rhsEntry.VertexIndex)
                         {
@@ -429,7 +484,7 @@ namespace Assets.Services.ComponentConnection
                         {
                             // The dot product is the cosine of the angle between the two triangles.
                             // A larger cosine means a smaller angle.
-                            var dot = Vector3.Dot(
+                            float dot = Vector3.Dot(
                                 triNormals[lhsEntry.MeshIndex][lhsEntry.TriangleIndex],
                                 triNormals[rhsEntry.MeshIndex][rhsEntry.TriangleIndex]);
                             if (dot >= cosineThreshold)
@@ -468,7 +523,7 @@ namespace Assets.Services.ComponentConnection
 
             public override bool Equals(object obj)
             {
-                var key = (VertexKey)obj;
+                VertexKey key = (VertexKey)obj;
                 return _x == key._x && _y == key._y && _z == key._z;
             }
 
@@ -501,4 +556,5 @@ namespace Assets.Services.ComponentConnection
         }
     }
 }
+
 #endif

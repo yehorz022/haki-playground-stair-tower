@@ -1,11 +1,14 @@
 using System;
 
-public sealed class Service : Attribute
+namespace Assets.Services.DependencyInjection
 {
-    public Service(Type @interface)
+    public sealed class Service : Attribute
     {
-        Interface = @interface;
-    }
+        public Service(Type @interface)
+        {
+            Interface = @interface;
+        }
 
-    public Type Interface { get; set; }
+        public Type Interface { get; set; }
+    }
 }

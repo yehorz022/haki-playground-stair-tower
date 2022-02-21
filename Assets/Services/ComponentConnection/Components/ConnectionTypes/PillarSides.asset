@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 952c70682f538754c9ac32c7bf5e61e0, type: 3}
   m_Name: PillarSides
   m_EditorClassIdentifier: 
+  rotationOrientation: 1

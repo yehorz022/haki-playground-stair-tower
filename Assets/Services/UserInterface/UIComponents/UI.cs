@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.UI;
+using Assets.Services.ComponentService;
 
 public class UI : MonoBehaviour {
     public const int MinResolution = 680;
@@ -17,24 +17,42 @@ public class UI : MonoBehaviour {
     public Transform panelsView;
     public Coroutine routineDrag;
     [HideInInspector] public CanvasScaler cs;
+    public static DeviceOrientation orientation = DeviceOrientation.Unknown;
     float deltaDrag;
 
-    public static UI o;
+    public static UI instance;
     void Awake() {
-        o = this;
+        instance = this;
         cs = FindObjectOfType<CanvasScaler>();
         float ScreenWidthInch = Screen.width / Screen.dpi;
-        SetScreenResolution(PlayerPrefs.GetFloat(Prefs.ScreenResolution, 800 + (ScreenWidthInch - 3f) * 100)); //adjust canvas size according to screen width,, //-3 bcz 3 inches is standard size 
+        //SetScreenResolution(PlayerPrefs.GetFloat(Prefs.ScreenResolution, 800 + (ScreenWidthInch - 3f) * 100)); //adjust canvas size according to screen width,, //-3 bcz 3 inches is standard size 
+
+        // The next line is not valid syntax: what should it be?
+    }
+
+    void OnRectTransformDimensionsChange() {
+        if (Input.deviceOrientation != orientation) {
+            orientation = Input.deviceOrientation;
+            if (orientation == DeviceOrientation.Portrait || orientation == DeviceOrientation.PortraitUpsideDown) {
+                cs.matchWidthOrHeight = 0;
+                Code.WaitAndCall(.1f, () => PopulateGridLayout.instance.OnDeviceOrientationChange());
+            }
+            else if (orientation == DeviceOrientation.LandscapeLeft || orientation == DeviceOrientation.LandscapeRight) {
+                cs.matchWidthOrHeight = 1;
+                Code.WaitAndCall(.1f, () => PopulateGridLayout.instance.OnDeviceOrientationChange());
+            }
+        }
+        //print("OnRectTransformDimensionsChange");
     }
 
     public void OnBeginDrag () {
         deltaDrag = 0;
         Animate.Stop (routineDrag);
-        Inpute.OnInputDown();
+        InputUI.OnInputDown();
     }
 
     public void OnEndDrag() {
-        Inpute.OnInputUp();
+        InputUI.OnInputUp();
         Transform trans = panelsView.GetChild(GetFirstActiveChild()).transform;
         routineDrag = Animate.Lerp(trans.position.y, deltaDrag > Screen.height / 8f ? Screen.height * 1.1f : Screen.height / 2f, .18f, 
             (val) => {
@@ -47,7 +65,7 @@ public class UI : MonoBehaviour {
     public void OnDrag() {
         if (!panelsView.GetComponent<IButton>().interactable)
             return;
-        float drag = Inpute.Drag().y;
+        float drag = InputUI.Drag().y;
         deltaDrag += drag * Screen.width; // multiply with screen width bcz input drag func returns divided with screen width
         panelsView.GetChild(GetFirstActiveChild()).position += new Vector3 (0, drag * 1000f, 0);
     }

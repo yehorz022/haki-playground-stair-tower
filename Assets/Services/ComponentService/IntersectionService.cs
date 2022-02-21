@@ -1,4 +1,4 @@
-using Assets.Services.InputService;
+using Assets.Services.DependencyInjection;
 using UnityEngine;
 
 namespace Assets.Services.ComponentService
@@ -98,7 +98,7 @@ namespace Assets.Services.ComponentService
 
             float dot = Vector3.Dot(dir, heading);
 
-            if (dot >= -.5f) // check if it is facing us or away from us. 
+            if (dot >= Constants.MinimumDotProductValueAllowedForIntersections) // check if it is facing us or away from us. 
             {
                 return false;
             }

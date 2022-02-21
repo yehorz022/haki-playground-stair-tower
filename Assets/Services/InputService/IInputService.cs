@@ -1,3 +1,4 @@
+using Assets.Services.DependencyInjection;
 using UnityEngine;
 
 namespace Assets.Services.InputService

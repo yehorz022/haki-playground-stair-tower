@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Assets.Services.DependencyInjection;
 
 [Service(typeof(IUserInterfaceService))]
 public class UserInterfaceService :  IUserInterfaceService
