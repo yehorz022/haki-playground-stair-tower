@@ -5,35 +5,35 @@ using UnityEngine.UI;
 
 public static class Animate {  
     public static Coroutine Lerp (float startValue, float endValue, float speed = .2f, Action<float> action = null, Action actionEnd = null) {
-        return DependancyInjectionManager.instance.StartCoroutine (LerpRoutine(startValue, endValue, speed, action, actionEnd));
+        return UI.instance.StartCoroutine (LerpRoutine(startValue, endValue, speed, action, actionEnd));
     }
 
     public static Coroutine MovePosition(Transform trans, Vector3 startPos, Vector3 targetPos, float speed = .2f, Action action = null) {
-        return DependancyInjectionManager.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.position = startPos + (targetPos - startPos) * val, action));
+        return UI.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.position = startPos + (targetPos - startPos) * val, action));
     }
 
     public static Coroutine MoveAnchorPos (RectTransform trans, Vector2 startPos, Vector2 targetPos, float speed = .2f, Action action = null) {
-        return DependancyInjectionManager.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.anchoredPosition = startPos + (targetPos - startPos) * val, action));
+        return UI.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.anchoredPosition = startPos + (targetPos - startPos) * val, action));
     }
 
     public static Coroutine MoveAnchors (RectTransform trans, Vector2 startVal, Vector2 targetVal, float speed = .2f, Action action = null) {
-        return DependancyInjectionManager.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.anchorMin = trans.anchorMax = startVal + (targetVal - startVal) * val, action));
+        return UI.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.anchorMin = trans.anchorMax = startVal + (targetVal - startVal) * val, action));
     }
 
     public static Coroutine MovePivot (RectTransform trans, Vector2 startVal, Vector2 targetVal, float speed = .2f, Action action = null) {
-        return DependancyInjectionManager.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.pivot = startVal + (targetVal - startVal) * val, action));
+        return UI.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.pivot = startVal + (targetVal - startVal) * val, action));
     }
 
     public static Coroutine MoveConstant(Transform trans, Vector3 startPos, Vector3 targetPos, float speed = 5f, Action action = null) {
-        return DependancyInjectionManager.instance.StartCoroutine(LerpConstant(trans, startPos, targetPos, speed, action));
+        return UI.instance.StartCoroutine(LerpConstant(trans, startPos, targetPos, speed, action));
     }
 
     public static Coroutine Scale(Transform trans, Vector3 startScale, Vector3 targetScale, float speed = .2f, Action action = null) {
-        return DependancyInjectionManager.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.localScale = startScale + (targetScale - startScale) * val, action));
+        return UI.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.localScale = startScale + (targetScale - startScale) * val, action));
     }
 
     public static Coroutine Rotate(Transform trans, float startAngle, float targetAngle, float speed = .2f, Action action = null) {
-        return DependancyInjectionManager.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.eulerAngles = new Vector3(0, 0, startAngle + (targetAngle - startAngle) * val), action));
+        return UI.instance.StartCoroutine(LerpRoutine(0, 1, speed, (val) => trans.eulerAngles = new Vector3(0, 0, startAngle + (targetAngle - startAngle) * val), action));
     }
 
     static IEnumerator LerpRoutine(float startValue, float endValue, float speed = .2f, Action<float> action = null, Action actionEnd = null) {
@@ -61,7 +61,7 @@ public static class Animate {
     }
 
     public static void Open(Transform trans, float speed = .3f) {
-        DependancyInjectionManager.instance.StartCoroutine(OpenRoutine(trans));
+        UI.instance.StartCoroutine(OpenRoutine(trans));
     }
 
     static IEnumerator OpenRoutine(Transform transform, float speed = .3f) {
@@ -139,6 +139,6 @@ public static class Animate {
 
     public static void Stop (Coroutine routine) {
         if (routine != null)
-            DependancyInjectionManager.instance.StopCoroutine(routine);
+            UI.instance.StopCoroutine(routine);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.UI;
+using Assets.Services.ComponentService;
 
 public class UI : MonoBehaviour {
     public const int MinResolution = 680;
@@ -17,14 +17,32 @@ public class UI : MonoBehaviour {
     public Transform panelsView;
     public Coroutine routineDrag;
     [HideInInspector] public CanvasScaler cs;
+    public static DeviceOrientation orientation = DeviceOrientation.Unknown;
     float deltaDrag;
 
-    public static UI o;
+    public static UI instance;
     void Awake() {
-        o = this;
+        instance = this;
         cs = FindObjectOfType<CanvasScaler>();
         float ScreenWidthInch = Screen.width / Screen.dpi;
-        SetScreenResolution(PlayerPrefs.GetFloat(Prefs.ScreenResolution, 800 + (ScreenWidthInch - 3f) * 100)); //adjust canvas size according to screen width,, //-3 bcz 3 inches is standard size 
+        //SetScreenResolution(PlayerPrefs.GetFloat(Prefs.ScreenResolution, 800 + (ScreenWidthInch - 3f) * 100)); //adjust canvas size according to screen width,, //-3 bcz 3 inches is standard size 
+
+        // The next line is not valid syntax: what should it be?
+    }
+
+    void OnRectTransformDimensionsChange() {
+        if (Input.deviceOrientation != orientation) {
+            orientation = Input.deviceOrientation;
+            if (orientation == DeviceOrientation.Portrait || orientation == DeviceOrientation.PortraitUpsideDown) {
+                cs.matchWidthOrHeight = 0;
+                Code.WaitAndCall(.1f, () => ScrollerComponent.instance.OnDeviceOrientationChange());
+            }
+            else if (orientation == DeviceOrientation.LandscapeLeft || orientation == DeviceOrientation.LandscapeRight) {
+                cs.matchWidthOrHeight = 1;
+                Code.WaitAndCall(.1f, () => ScrollerComponent.instance.OnDeviceOrientationChange());
+            }
+        }
+        //print("OnRectTransformDimensionsChange");
     }
 
     public void OnBeginDrag () {

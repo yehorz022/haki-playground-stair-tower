@@ -33,14 +33,14 @@ public class Selected : MonoBehaviour {
 
 	void OnTriggerStay (Collider other) {
 		if (!isOverlaping && item && other.transform != item && other.name != "Floor" && other.name != "walls") {
-			renderer.material.color = Graphik.HexToColor (redColor);
+			renderer.material.color = Media.HexToColor (redColor);
 			isOverlaping = true;
 		}
 	}
 
 	void OnTriggerExit (Collider other) {
 		if (isOverlaping && item && other.transform != item && other.name != "Floor" && other.name != "walls") {
-			renderer.material.color = Graphik.HexToColor (greenColor);
+			renderer.material.color = Media.HexToColor (greenColor);
 			isOverlaping = false;
 		}
 	}

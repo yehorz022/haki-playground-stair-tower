@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Threading;
 
-public static class Graphik {
+public static class Media {
 
 	public static Color ToGray (Color c) {
 		c.r = c.g = c.b = (c.r + c.g + c.b) / 15f + .6f;

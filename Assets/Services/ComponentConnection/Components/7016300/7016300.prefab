@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3817265181631139338}
   - component: {fileID: 6385768600938795656}
   - component: {fileID: 7347290598889184001}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 4461079510493752351}
   - component: {fileID: 3117978671571773723}
   - component: {fileID: 8276926805192431671}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 45
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 7374511648219532235}
   - component: {fileID: 5709459440468244975}
   - component: {fileID: 2495593031881936155}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 7431114169486538540}
   - component: {fileID: 4734161834633725327}
   - component: {fileID: 8445131359224193107}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 8326668966189400212}
   - component: {fileID: 2500486713607643563}
   - component: {fileID: 8288516814501614080}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 34
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 8146555788994603711}
   - component: {fileID: 8536764008873519813}
   - component: {fileID: 7075682633342654274}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "Spirr\xF6r"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 485850998047850396}
   - component: {fileID: 942156255386566432}
   - component: {fileID: 2543687768178216914}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 46
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -562,7 +562,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1070354161913623818}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,7 +598,7 @@ GameObject:
   - component: {fileID: 4122345832985603196}
   - component: {fileID: 5241971080867673834}
   - component: {fileID: 6397390047837796487}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 17
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -675,7 +675,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2102007251428262113}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -711,7 +711,7 @@ GameObject:
   - component: {fileID: 139406559604991098}
   - component: {fileID: 6426715595006608897}
   - component: {fileID: 7198018103928489618}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -790,7 +790,7 @@ GameObject:
   - component: {fileID: 4456494184483008645}
   - component: {fileID: 177649916645338750}
   - component: {fileID: 754814383745430}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 28
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -867,7 +867,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4991358650767368806}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -903,7 +903,7 @@ GameObject:
   - component: {fileID: 2109459000936625603}
   - component: {fileID: 5135262464141517576}
   - component: {fileID: 8972164455754283203}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -982,7 +982,7 @@ GameObject:
   - component: {fileID: 8207278706762874118}
   - component: {fileID: 7375896478760879182}
   - component: {fileID: 7338024001402902902}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1061,7 +1061,7 @@ GameObject:
   - component: {fileID: 8311612517335375866}
   - component: {fileID: 8109143544069197911}
   - component: {fileID: 7331189309945919779}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 27
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1138,7 +1138,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5377462071991474751}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Component
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1170,7 +1170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5454233553723694941}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1206,7 +1206,7 @@ GameObject:
   - component: {fileID: 5379361325537446454}
   - component: {fileID: 4514160408277405587}
   - component: {fileID: 1331860725538839730}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1285,7 +1285,7 @@ GameObject:
   - component: {fileID: 1980426618186058349}
   - component: {fileID: 2659429299232860199}
   - component: {fileID: 3647939975524694907}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 36
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1364,7 +1364,7 @@ GameObject:
   - component: {fileID: 252165586616279816}
   - component: {fileID: 2706106796702214610}
   - component: {fileID: 3514274825057841938}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 21
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1443,7 +1443,7 @@ GameObject:
   - component: {fileID: 2386114674724828935}
   - component: {fileID: 1654434646089831310}
   - component: {fileID: 5251524287013550371}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 38
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1522,7 +1522,7 @@ GameObject:
   - component: {fileID: 2686164199075983418}
   - component: {fileID: 68846635758196835}
   - component: {fileID: 1219084283962907009}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1601,7 +1601,7 @@ GameObject:
   - component: {fileID: 2487053462170311633}
   - component: {fileID: 3970501326076297346}
   - component: {fileID: 6090991517884396837}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1680,7 +1680,7 @@ GameObject:
   - component: {fileID: 8759468873553816655}
   - component: {fileID: 5646563533802249184}
   - component: {fileID: 1144353246325740453}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 32
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1759,7 +1759,7 @@ GameObject:
   - component: {fileID: 2884485840039292817}
   - component: {fileID: 8926497728270576151}
   - component: {fileID: 4285906187828302933}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 26
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1838,7 +1838,7 @@ GameObject:
   - component: {fileID: 7896136929268745436}
   - component: {fileID: 3642487034117341222}
   - component: {fileID: 7450940593007040286}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1917,7 +1917,7 @@ GameObject:
   - component: {fileID: 3344653613387497202}
   - component: {fileID: 4899575264988103991}
   - component: {fileID: 8846904450265658337}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: 7016300
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1931,8 +1931,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4265432435822976786}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.0000000018626451, y: 0.01963818, z: -3.1595001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5377462071991474751}
@@ -1979,7 +1979,7 @@ GameObject:
   - component: {fileID: 8088549065009722631}
   - component: {fileID: 4004183380330069201}
   - component: {fileID: 4199379632745874544}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 42
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2058,7 +2058,7 @@ GameObject:
   - component: {fileID: 3083623996325279611}
   - component: {fileID: 7404285062145382984}
   - component: {fileID: 3099743236404148236}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2135,7 +2135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6414503681306912628}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2171,7 +2171,7 @@ GameObject:
   - component: {fileID: 7304935651023593929}
   - component: {fileID: 8898019159780498114}
   - component: {fileID: 6384445831339200879}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2250,7 +2250,7 @@ GameObject:
   - component: {fileID: 5445319804516509338}
   - component: {fileID: 6545932649739783859}
   - component: {fileID: 7623956276024414455}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 33
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2329,7 +2329,7 @@ GameObject:
   - component: {fileID: 7263469347463568933}
   - component: {fileID: 4922263703061360203}
   - component: {fileID: 3691361782592071419}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2408,7 +2408,7 @@ GameObject:
   - component: {fileID: 3174554720845944778}
   - component: {fileID: 7930424416913871013}
   - component: {fileID: 2747222697910687104}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 47
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2487,7 +2487,7 @@ GameObject:
   - component: {fileID: 5139438253539470028}
   - component: {fileID: 6907718508397482872}
   - component: {fileID: 2736313558769039330}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2566,7 +2566,7 @@ GameObject:
   - component: {fileID: 7927039159829826900}
   - component: {fileID: 3356185957637501182}
   - component: {fileID: 5715798666733616509}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: "Spirr\xF6r bottendel"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2645,7 +2645,7 @@ GameObject:
   - component: {fileID: 4172253666994850077}
   - component: {fileID: 7459850767346202288}
   - component: {fileID: 4498186451368184187}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 29
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2724,7 +2724,7 @@ GameObject:
   - component: {fileID: 9038010877902350489}
   - component: {fileID: 4417596027221821695}
   - component: {fileID: 8462723674593250235}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 39
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2803,7 +2803,7 @@ GameObject:
   - component: {fileID: 9204089600901127807}
   - component: {fileID: 7454800229898370038}
   - component: {fileID: 8823840871015867686}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 25
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2880,7 +2880,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2848487481514741666}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2914,7 +2914,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7946338612126609961}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2950,7 +2950,7 @@ GameObject:
   - component: {fileID: 669396201504286390}
   - component: {fileID: 1438250450809532455}
   - component: {fileID: 7094726061460909913}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 41
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3029,7 +3029,7 @@ GameObject:
   - component: {fileID: 13859486076696572}
   - component: {fileID: 8154252585835146534}
   - component: {fileID: 1358846803286494259}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 40
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3108,7 +3108,7 @@ GameObject:
   - component: {fileID: 5277207026226782835}
   - component: {fileID: 2796017010290477444}
   - component: {fileID: 1076743663520361099}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 43
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3185,7 +3185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 724803928525503255}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3221,7 +3221,7 @@ GameObject:
   - component: {fileID: 8084476794264067991}
   - component: {fileID: 3255653647793095447}
   - component: {fileID: 2452605049833400521}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3300,7 +3300,7 @@ GameObject:
   - component: {fileID: 7795064622014762786}
   - component: {fileID: 6368868614828550644}
   - component: {fileID: 7410649196182439997}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 30
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3379,7 +3379,7 @@ GameObject:
   - component: {fileID: 7366315629834156740}
   - component: {fileID: 2274442020952889913}
   - component: {fileID: 923460607958897847}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3456,7 +3456,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7805635827455132353}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3492,7 +3492,7 @@ GameObject:
   - component: {fileID: 7100595920202926756}
   - component: {fileID: 8555611588157963924}
   - component: {fileID: 6160427752823914163}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 23
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3571,7 +3571,7 @@ GameObject:
   - component: {fileID: 3312819646348017587}
   - component: {fileID: 5603492931766731460}
   - component: {fileID: 7905997539323937801}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 35
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3650,7 +3650,7 @@ GameObject:
   - component: {fileID: 6493062972822403696}
   - component: {fileID: 1061792577670253365}
   - component: {fileID: 4957259208550053083}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 37
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3729,7 +3729,7 @@ GameObject:
   - component: {fileID: 6770070186794249488}
   - component: {fileID: 1260203448870177657}
   - component: {fileID: 6293358034641013418}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3806,7 +3806,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3203357491347292437}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Connectors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3852,7 +3852,7 @@ GameObject:
   - component: {fileID: 8209684191609923120}
   - component: {fileID: 5176528431716348917}
   - component: {fileID: 3028748107859568504}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3931,7 +3931,7 @@ GameObject:
   - component: {fileID: 2545556557753522069}
   - component: {fileID: 4038737081837406116}
   - component: {fileID: 7379253660905111560}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4010,7 +4010,7 @@ GameObject:
   - component: {fileID: 3127552719718578620}
   - component: {fileID: 3855942256468555189}
   - component: {fileID: 7972321368040011534}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4089,7 +4089,7 @@ GameObject:
   - component: {fileID: 6099900911698743644}
   - component: {fileID: 4721377718576008966}
   - component: {fileID: 4896941880790159509}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4166,7 +4166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3276380808432025509}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4202,7 +4202,7 @@ GameObject:
   - component: {fileID: 997150492481234181}
   - component: {fileID: 6511121737942467564}
   - component: {fileID: 1602185824798617663}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 31
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4281,7 +4281,7 @@ GameObject:
   - component: {fileID: 3314648540063581895}
   - component: {fileID: 5701698442253316746}
   - component: {fileID: 6968848307071363271}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4358,7 +4358,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7550754348953685163}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4394,7 +4394,7 @@ GameObject:
   - component: {fileID: 5232767146538438960}
   - component: {fileID: 8053331714590957007}
   - component: {fileID: 2202499513981501348}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygel Fine 44
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4471,7 +4471,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1753052327843778203}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bygelring Fine 9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4507,7 +4507,7 @@ GameObject:
   - component: {fileID: 9129857310764321281}
   - component: {fileID: 8433450312390488652}
   - component: {fileID: 2021386884953741855}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Spirtopp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
