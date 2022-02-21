@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services.csproj", "{ABCF6938-E607-4E53-C8C8-23AD41412855}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{D340673B-32A7-F6DC-747A-3D33B5986916}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayMode", "PlayMode.csproj", "{93EC241D-52B3-FC2A-CB43-36FE03185C09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorMode", "EditorMode.csproj", "{86408482-A6C9-04F2-91F7-C94CAD6650E2}"
@@ -19,10 +17,6 @@ Global
 		{ABCF6938-E607-4E53-C8C8-23AD41412855}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABCF6938-E607-4E53-C8C8-23AD41412855}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABCF6938-E607-4E53-C8C8-23AD41412855}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D340673B-32A7-F6DC-747A-3D33B5986916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D340673B-32A7-F6DC-747A-3D33B5986916}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D340673B-32A7-F6DC-747A-3D33B5986916}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D340673B-32A7-F6DC-747A-3D33B5986916}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93EC241D-52B3-FC2A-CB43-36FE03185C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{93EC241D-52B3-FC2A-CB43-36FE03185C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93EC241D-52B3-FC2A-CB43-36FE03185C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
