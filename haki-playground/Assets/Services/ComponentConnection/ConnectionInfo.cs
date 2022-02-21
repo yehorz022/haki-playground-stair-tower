@@ -40,7 +40,7 @@ namespace Assets.Services.ComponentConnection
 
         public bool Equals(ConnectionInfo other)
         {
-            Debug.Log(Id);
+            //Debug.Log(Id);
             return Id.Equals(other?.Id);
         }
     }

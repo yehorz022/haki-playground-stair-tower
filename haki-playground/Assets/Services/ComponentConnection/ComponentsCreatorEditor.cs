@@ -232,7 +232,7 @@ namespace Assets.Services.ComponentConnection
 
             AssetDatabase.CreateAsset(mesh, $"{fullPath}/{main.name}.mesh");
 
-            AssetDatabase.SaveAssetIfDirty(main);
+            //AssetDatabase.SaveAssetIfDirty(main);
         }
 
         private void CreateConnections(ComponentCreator main)

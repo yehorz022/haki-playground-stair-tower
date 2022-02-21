@@ -16,6 +16,12 @@ public class PositionProvider : HakiComponent
     [Inject]
     private IComponentHolder componentHolder { get; set; }
 
+    public static PositionProvider instance;
+    void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         ocm = FindObjectOfType<ObjectCacheManager>();
@@ -74,14 +80,14 @@ public class PositionProvider : HakiComponent
         }
     }
 
-    private void RecycleComponent()
+    public void RecycleComponent()
     {
         ocm.Cache(ccs);
         run = false;
         ccs = null;
     }
 
-    private void PlaceComponent()
+    public void PlaceComponent()
     {
         componentHolder.PlaceComponent(ccs);
         run = false;
@@ -109,7 +115,7 @@ public class PositionProvider : HakiComponent
             if (diff < min)
                 res = intersections[i];
 
-            Debug.Log(diff);
+            //Debug.Log(diff);
         }
 
         return res;
@@ -119,31 +125,32 @@ public class PositionProvider : HakiComponent
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-
-        if (ccs.connectionDefinitionCollection.Count == 0)
-            throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
-
-
-        if (componentHolder.TryGetIntersections(ray, ccs.connectionDefinitionCollection.GetElementAt(0).ConnectionInfo, out List<IntersectionResults> intersections) && intersections.Count > 0)
+        if (ccs.connectionDefinitionCollection != null)
         {
+            if (ccs.connectionDefinitionCollection.Count == 0)
+                throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
 
-            IntersectionResults intersection = GetBestResult(intersections);
-
-            result = CalculateNewPosition(intersection);
-
-            switch (intersection.ConnectionDefinition.ConnectionInfo.rotationOrientation)
+            if (componentHolder.TryGetIntersections(ray, ccs.connectionDefinitionCollection.GetElementAt(0).ConnectionInfo, out List<IntersectionResults> intersections) && intersections.Count > 0)
             {
-                case ConnectionInfo.RotationOrientation.Horizontal:
-                    euler = Quaternion.FromToRotation(Vector3.back, intersection.ConnectionDefinition.lookAt);
-                    break;
-                case ConnectionInfo.RotationOrientation.Vertical:
-                    euler = Quaternion.FromToRotation(Vector3.up, intersection.ConnectionDefinition.lookAt);
-                    break;
-                default:
-                    euler = Quaternion.identity;
-                    break;
+
+                IntersectionResults intersection = GetBestResult(intersections);
+
+                result = CalculateNewPosition(intersection);
+
+                switch (intersection.ConnectionDefinition.ConnectionInfo.rotationOrientation)
+                {
+                    case ConnectionInfo.RotationOrientation.Horizontal:
+                        euler = Quaternion.FromToRotation(Vector3.back, intersection.ConnectionDefinition.lookAt);
+                        break;
+                    case ConnectionInfo.RotationOrientation.Vertical:
+                        euler = Quaternion.FromToRotation(Vector3.up, intersection.ConnectionDefinition.lookAt);
+                        break;
+                    default:
+                        euler = Quaternion.identity;
+                        break;
+                }
+                return true;
             }
-            return true;
         }
 
         if (Physics.Raycast(ray, out RaycastHit hit))

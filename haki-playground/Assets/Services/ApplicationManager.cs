@@ -15,6 +15,7 @@ namespace Assets
         {
             dim = GetComponent<DependancyInjectionManager>();
             dim.InjectDependencies(this);
+            InputUI.Initialize();
         }
 
         void Update()
