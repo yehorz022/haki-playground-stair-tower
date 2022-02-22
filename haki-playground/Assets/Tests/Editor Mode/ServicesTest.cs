@@ -182,7 +182,7 @@ namespace Test
                 {
                     if (tt == initial)
                     {
-                        message = $"Type {initial.FullName} is circularry referencing itself.";
+                        message = $"ScaffoldingComponent {initial.FullName} is circularry referencing itself.";
                         return true;
                     }
 

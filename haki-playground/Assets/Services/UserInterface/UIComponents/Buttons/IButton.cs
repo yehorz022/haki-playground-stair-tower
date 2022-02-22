@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+//this clicking is not done right way, will correct it later
 
 public class IButton : MonoBehaviour, IPointerDownHandler, IPointerExitHandler, IPointerUpHandler {
     public bool interactable = true;

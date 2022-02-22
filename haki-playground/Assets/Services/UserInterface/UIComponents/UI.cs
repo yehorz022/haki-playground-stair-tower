@@ -14,9 +14,10 @@ public class UI : MonoBehaviour {
     public static Action<string> OnUpdateRank;
     public static Action OnScreenResolutionChanged;
 
-    public Transform panelsView;
+    [HideInInspector] public Transform panelsView;
     public Coroutine routineDrag;
     [HideInInspector] public CanvasScaler cs;
+    [SerializeField] PopulateGridLayout populateGridLayout;
     public static DeviceOrientation orientation = DeviceOrientation.Unknown;
     float deltaDrag;
 
@@ -35,11 +36,11 @@ public class UI : MonoBehaviour {
             orientation = Input.deviceOrientation;
             if (orientation == DeviceOrientation.Portrait || orientation == DeviceOrientation.PortraitUpsideDown) {
                 cs.matchWidthOrHeight = 0;
-                Code.WaitAndCall(.1f, () => PopulateGridLayout.instance.OnDeviceOrientationChange());
+                Code.WaitAndCall(.1f, () => populateGridLayout.OnDeviceOrientationChange());
             }
             else if (orientation == DeviceOrientation.LandscapeLeft || orientation == DeviceOrientation.LandscapeRight) {
                 cs.matchWidthOrHeight = 1;
-                Code.WaitAndCall(.1f, () => PopulateGridLayout.instance.OnDeviceOrientationChange());
+                Code.WaitAndCall(.1f, () => populateGridLayout.OnDeviceOrientationChange());
             }
         }
         //print("OnRectTransformDimensionsChange");
