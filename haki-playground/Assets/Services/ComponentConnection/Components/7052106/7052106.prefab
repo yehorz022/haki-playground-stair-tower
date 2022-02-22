@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugOptions: 1
-  connectionDefinitionCollection: {fileID: 11400000, guid: fc539f6b60ae139479d11ffb4dc57ae3, type: 2}
+  ConnectionDefinitionCollection: {fileID: 11400000, guid: fc539f6b60ae139479d11ffb4dc57ae3, type: 2}
 --- !u!114 &6243383065129235263
 MonoBehaviour:
   m_ObjectHideFlags: 0

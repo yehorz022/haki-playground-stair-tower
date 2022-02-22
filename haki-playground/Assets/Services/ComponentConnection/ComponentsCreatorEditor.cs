@@ -256,8 +256,8 @@ namespace Assets.Services.ComponentConnection
             cdc.connectionDefinitions = list.ToArray();
             AssetDatabase.CreateAsset(cdc, $"{fullPath}/{cdc.name}");
 
-            ComponentConnectionService ccs = main.GetComponent<ComponentConnectionService>();
-            ccs.connectionDefinitionCollection = cdc;
+            ScaffoldingComponent ccs = main.GetComponent<ScaffoldingComponent>();
+            ccs.ConnectionDefinitionCollection = cdc;
 
             AssetDatabase.SaveAssets();
         }

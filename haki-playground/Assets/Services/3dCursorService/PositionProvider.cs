@@ -1,164 +1,124 @@
-using System;
-using System.Collections.Generic;
 using Assets.Services.ComponentConnection;
 using Assets.Services.ComponentService;
 using Assets.Services.InputService;
 using UnityEngine;
 
-public class PositionProvider : HakiComponent
+namespace Assets.Services._3dCursorService
 {
-    public GameObject floor;
-    private ObjectCacheManager ocm;
-
-    [Inject]
-    private IInputService InputService { get; set; }
-
-    [Inject]
-    private IComponentHolder componentHolder { get; set; }
-
-    void Start()
+    public class PositionProvider : HakiComponent
     {
-        ocm = FindObjectOfType<ObjectCacheManager>();
-        DependancyInjectionManager dis = FindObjectOfType<DependancyInjectionManager>();
+        public GameObject floor;
+        private ObjectCacheManager ocm;
 
-        dis.InjectDependencies(this);
+        [Inject]
+        private IInputService InputService { get; set; }
 
-        floor.SetActive(true);
-    }
+        [Inject]
+        private IComponentHolder ComponentHolder { get; set; }
 
+        [Inject]
+        private IComponentCollisionDetectionService collisionDetectionService { get; set; }
 
-    private bool run;
-    private ComponentConnectionService ccs;
-    public void SetObject(ComponentConnectionService replacement)
-    {
-
-        if (ccs != null)
+        void Start()
         {
-            RecycleComponent();
+            ocm = FindObjectOfType<ObjectCacheManager>();
+            DependancyInjectionManager dis = FindObjectOfType<DependancyInjectionManager>();
+
+            dis.InjectDependencies(this);
+
+            floor.SetActive(true);
         }
 
-        run = true;
-        ccs = ocm.Instantiate(replacement, transform); ;
 
-    }
-
-
-    void OnDrawGizmos()
-    {
-        if (Application.isEditor == false)
-            componentHolder.OnDrawGizmos();
-    }
-
-    private void Update()
-    {
-        if (run == false)
-            return;
-
-        if (ccs.gameObject.activeSelf is false)
-            ccs.gameObject.SetActive(true);
-
-
-        if (HandleCollisionDetection(out Vector3 newPos, out Quaternion euler))
+        private bool run;
+        private ScaffoldingComponent ccs;
+        public void SetObject(ScaffoldingComponent replacement)
         {
-            ccs.transform.position = newPos;
-            ccs.transform.rotation = euler;
 
-            if (InputService.IsLeftMouseButtonDown)
+            if (ccs != null)
             {
-                PlaceComponent();
+                RecycleComponent();
             }
-            else if (InputService.IsRightMouseButtonDown)
+
+            run = true;
+            ccs = ocm.Instantiate(replacement, transform); ;
+
+        }
+
+
+        void OnDrawGizmos()
+        {
+            if (Application.isEditor == false)
+                ComponentHolder.OnDrawGizmos();
+        }
+
+        private void Update()
+        {
+            if (run == false)
+                return;
+
+            if (ccs.gameObject.activeSelf is false)
+                ccs.gameObject.SetActive(true);
+
+
+            if (HandleCollisionDetection(out Vector3 newPos, out Quaternion euler))
+            {
+                ccs.transform.position = newPos;
+                ccs.transform.rotation = euler;
+
+                if (InputService.IsLeftMouseButtonDown)
+                {
+                    PlaceComponent();
+                }
+            }
+            if (InputService.IsRightMouseButtonDown)
             {
                 RecycleComponent();
             }
         }
-    }
 
-    private void RecycleComponent()
-    {
-        ocm.Cache(ccs);
-        run = false;
-        ccs = null;
-    }
-
-    private void PlaceComponent()
-    {
-        componentHolder.PlaceComponent(ccs);
-        run = false;
-        ccs = null;
-    }
-
-    private Vector3 CalculateNewPosition(IntersectionResults intersection)
-    {
-
-        return intersection.ConnectionDefinition.CalculateWorldPosition(intersection.Component.transform);
-    }
-
-    IntersectionResults GetBestResult(List<IntersectionResults> intersections)
-    {
-        IntersectionResults res = null;
-        float min = float.MaxValue;
-
-        for (int i = 0; i < intersections.Count; i++)
+        private void RecycleComponent()
         {
-            var newPos = CalculateNewPosition(intersections[i]);
-
-            float diff = (newPos - Camera.main.transform.position).sqrMagnitude;
-
-
-            if (diff < min)
-                res = intersections[i];
-
-            Debug.Log(diff);
+            ocm.Cache(ccs);
+            run = false;
+            ccs = null;
         }
 
-        return res;
-    }
+        private void PlaceComponent()
+        {
+            ComponentHolder.PlaceComponent(ccs);
+            run = false;
+            ccs = null;
+        }
 
-    private bool HandleCollisionDetection(out Vector3 result, out Quaternion euler)
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-
-        if (ccs.connectionDefinitionCollection.Count == 0)
-            throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
-
-
-        if (componentHolder.TryGetIntersections(ray, ccs.connectionDefinitionCollection.GetElementAt(0).ConnectionInfo, out List<IntersectionResults> intersections) && intersections.Count > 0)
+        private bool HandleCollisionDetection(out Vector3 result, out Quaternion euler)
         {
 
-            IntersectionResults intersection = GetBestResult(intersections);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            result = CalculateNewPosition(intersection);
+            CollisionInfo ci = collisionDetectionService.Evaluate(ray, ccs.ConnectionDefinitionCollection, 0);
 
-            switch (intersection.ConnectionDefinition.ConnectionInfo.rotationOrientation)
+            if (ci.IsSuccess)
             {
-                case ConnectionInfo.RotationOrientation.Horizontal:
-                    euler = Quaternion.FromToRotation(Vector3.back, intersection.ConnectionDefinition.lookAt);
-                    break;
-                case ConnectionInfo.RotationOrientation.Vertical:
-                    euler = Quaternion.FromToRotation(Vector3.up, intersection.ConnectionDefinition.lookAt);
-                    break;
-                default:
-                    euler = Quaternion.identity;
-                    break;
+                ConnectionDefinition cd = ci.Target.GetElementAt(ci.TargetConnectionIndex);
+                result = cd.CalculateWorldPosition(ci.TargetScaffoldingComponent.transform);
+                euler = cd.CalculateRotation();
+
+                return true;
             }
-            return true;
-        }
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            result = hit.point;
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                result = hit.point;
+                euler = Quaternion.identity;
+                return true;
+            }
+
+            result = Vector3.zero;
             euler = Quaternion.identity;
-            return true;
+            return false;
         }
 
-        result = default;
 
-        euler = default;
-        return false;
     }
-
-
 }
-

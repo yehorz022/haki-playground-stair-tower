@@ -1,9 +1,7 @@
 {
-    "name": "Services",
+    "name": "Extensions",
     "rootNamespace": "",
-    "references": [
-        "Extensions"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

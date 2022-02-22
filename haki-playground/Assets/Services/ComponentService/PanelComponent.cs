@@ -1,3 +1,4 @@
+using Assets.Services._3dCursorService;
 using Assets.Services.ComponentConnection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,13 +18,13 @@ public class PanelComponent : MonoBehaviour
         positionProvider = FindObjectOfType<PositionProvider>();
     }
 
-    private ComponentConnectionService element;
+    private ScaffoldingComponent element;
     public void Spawn()
     {
         positionProvider.SetObject(element);
     }
 
-    public void SetImage(Texture2D texture, ComponentConnectionService element)
+    public void SetImage(Texture2D texture, ScaffoldingComponent element)
     {
         this.element = element;
         image.texture = texture;

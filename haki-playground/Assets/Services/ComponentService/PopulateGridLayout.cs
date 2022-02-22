@@ -10,7 +10,7 @@ namespace Assets.Services.ComponentService
         public GameObject floor;
 
         public Camera componentCamera;
-        public ComponentConnectionService[] elements;
+        public ScaffoldingComponent[] elements;
 
         private ObjectCacheManager ocm;
 
@@ -62,10 +62,10 @@ namespace Assets.Services.ComponentService
             RenderTexture renderTexture = new RenderTexture(size, size, 24);
             Texture2D screenShot = new Texture2D(size, size, TextureFormat.RGBA32, false);
 
-            ComponentConnectionService go = elements[i];
+            ScaffoldingComponent go = elements[i];
 
 
-            ComponentConnectionService temp = ocm.Instantiate(go, Quaternion.identity);
+            ScaffoldingComponent temp = ocm.Instantiate(go, Quaternion.identity);
             if (temp.isActiveAndEnabled)
             {
 
