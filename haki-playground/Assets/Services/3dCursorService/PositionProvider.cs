@@ -22,6 +22,7 @@ public class PositionProvider : HakiComponent
         instance = this;
     }
 
+
     void Start()
     {
         ocm = FindObjectOfType<ObjectCacheManager>();
@@ -45,7 +46,6 @@ public class PositionProvider : HakiComponent
 
         run = true;
         ccs = ocm.Instantiate(replacement, transform); ;
-
     }
 
 
@@ -80,19 +80,6 @@ public class PositionProvider : HakiComponent
         }
     }
 
-    public void RecycleComponent()
-    {
-        ocm.Cache(ccs);
-        run = false;
-        ccs = null;
-    }
-
-    public void PlaceComponent()
-    {
-        componentHolder.PlaceComponent(ccs);
-        run = false;
-        ccs = null;
-    }
 
     private Vector3 CalculateNewPosition(IntersectionResults intersection)
     {
@@ -115,42 +102,57 @@ public class PositionProvider : HakiComponent
             if (diff < min)
                 res = intersections[i];
 
-            //Debug.Log(diff);
         }
 
         return res;
     }
 
+    
+
+    private void RecycleComponent()
+    {
+        ocm.Cache(ccs);
+        run = false;
+        ccs = null;
+    }
+
+    public void PlaceComponent()
+    {
+        componentHolder.PlaceComponent(ccs);
+        run = false;
+        ccs = null;
+    }
+
+
     private bool HandleCollisionDetection(out Vector3 result, out Quaternion euler)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (ccs.connectionDefinitionCollection != null)
+
+        if (ccs.connectionDefinitionCollection.Count == 0)
+            throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
+
+
+        if (componentHolder.TryGetIntersections(ray, ccs.connectionDefinitionCollection.GetElementAt(0).ConnectionInfo, out List<IntersectionResults> intersections) && intersections.Count > 0)
         {
-            if (ccs.connectionDefinitionCollection.Count == 0)
-                throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
 
-            if (componentHolder.TryGetIntersections(ray, ccs.connectionDefinitionCollection.GetElementAt(0).ConnectionInfo, out List<IntersectionResults> intersections) && intersections.Count > 0)
+            IntersectionResults intersection = GetBestResult(intersections);
+
+            result = CalculateNewPosition(intersection);
+
+            switch (intersection.ConnectionDefinition.ConnectionInfo.rotationOrientation)
             {
-
-                IntersectionResults intersection = GetBestResult(intersections);
-
-                result = CalculateNewPosition(intersection);
-
-                switch (intersection.ConnectionDefinition.ConnectionInfo.rotationOrientation)
-                {
-                    case ConnectionInfo.RotationOrientation.Horizontal:
-                        euler = Quaternion.FromToRotation(Vector3.back, intersection.ConnectionDefinition.lookAt);
-                        break;
-                    case ConnectionInfo.RotationOrientation.Vertical:
-                        euler = Quaternion.FromToRotation(Vector3.up, intersection.ConnectionDefinition.lookAt);
-                        break;
-                    default:
-                        euler = Quaternion.identity;
-                        break;
-                }
-                return true;
+                case ConnectionInfo.RotationOrientation.Horizontal:
+                    euler = Quaternion.FromToRotation(Vector3.back, intersection.ConnectionDefinition.lookAt);
+                    break;
+                case ConnectionInfo.RotationOrientation.Vertical:
+                    euler = Quaternion.FromToRotation(Vector3.up, intersection.ConnectionDefinition.lookAt);
+                    break;
+                default:
+                    euler = Quaternion.identity;
+                    break;
             }
+            return true;
         }
 
         if (Physics.Raycast(ray, out RaycastHit hit))

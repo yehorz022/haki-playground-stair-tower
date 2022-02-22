@@ -1,5 +1,5 @@
-using Assets.Services.ComponentConnection;
 using System.Collections.Generic;
+using Assets.Services.ComponentConnection;
 using UnityEngine;
 
 namespace Assets.Services.ComponentService
@@ -63,5 +63,5 @@ namespace Assets.Services.ComponentService
         }
 
     }
-
+    
 }

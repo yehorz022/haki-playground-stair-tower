@@ -8,6 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+
   - component: {fileID: 3155852882133938572}
   - component: {fileID: 3155852882133938570}
   - component: {fileID: 596767767938830706}
@@ -16,6 +17,13 @@ GameObject:
   - component: {fileID: 1087872780990391069}
   m_Layer: 0
   m_Name: Panel
+
+  - component: {fileID: 7482487945423752559}
+  - component: {fileID: 7525705637037761268}
+  - component: {fileID: 3880592883231132171}
+  m_Layer: 5
+  m_Name: RawImage
+
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -207,6 +215,7 @@ MonoBehaviour:
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
+
       m_Calls: []
   m_Sprite: {fileID: 0}
   m_Type: 0
@@ -218,3 +227,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+
+      m_Calls:
+      - m_Target: {fileID: 503803956475044543}
+        m_TargetAssemblyTypeName: PanelComponent, Services
+        m_MethodName: Spawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+

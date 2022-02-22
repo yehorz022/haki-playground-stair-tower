@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 06259f8aa01381b4c883485a0f8151ef
+=======
+<<<<<<< HEAD:haki-playground/Assets/Media/skp/Materials.meta
+guid: ec4ff53f843cbe749ad054fa2fcf8db5
+=======
+guid: 06259f8aa01381b4c883485a0f8151ef
+>>>>>>> main:haki-playground/Assets/Services/ComponentConnection.meta
+>>>>>>> main
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
