@@ -3,18 +3,17 @@ using UnityEngine;
 
 namespace Assets.Services.ComponentConnection
 {
-    public class ComponentConnectionService : HakiComponent
+    public class ScaffoldingComponent : HakiComponent
     {
-        [SerializeField]
-        internal ConnectionDefinitionCollection connectionDefinitionCollection;
+        [SerializeField] public ConnectionDefinitionCollection ConnectionDefinitionCollection;
 
 
         protected override void DebugDraw(bool isSelected)
         {
-            if (connectionDefinitionCollection == null)
+            if (ConnectionDefinitionCollection == null)
                 return;
 
-            for (int i = 0; i < connectionDefinitionCollection.Count; i++)
+            for (int i = 0; i < ConnectionDefinitionCollection.Count; i++)
             {
 
                 Color color = default;
@@ -35,7 +34,7 @@ namespace Assets.Services.ComponentConnection
                         break;
                 }
 
-                connectionDefinitionCollection.GetElementAt(i).DebugDraw(transform, color);
+                ConnectionDefinitionCollection.GetElementAt(i).DebugDraw(transform, color);
             }
         }
     }

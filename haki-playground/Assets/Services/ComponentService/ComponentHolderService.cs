@@ -5,22 +5,9 @@ using UnityEngine;
 
 namespace Assets.Services.ComponentService
 {
-    public class IntersectionResults
-    {
-        public ComponentConnectionService Component { get; }
-
-        public ConnectionDefinition ConnectionDefinition { get; }
-
-        public IntersectionResults(ComponentConnectionService component, ConnectionDefinition connectionDefinition)
-        {
-            ConnectionDefinition = connectionDefinition;
-            Component = component;
-        }
-    }
-
     public interface IComponentHolder
     {
-        void PlaceComponent(ComponentConnectionService component);
+        void PlaceComponent(ScaffoldingComponent scaffoldingComponent);
         bool TryGetIntersections(Ray ray, ConnectionInfo connectionInfo, out List<IntersectionResults> connectionPoints);
         void OnDrawGizmos();
     }
@@ -35,30 +22,30 @@ namespace Assets.Services.ComponentService
         {
             IntersectionHandler = intersectionService;
 
-            components = new List<ComponentConnectionService>();
+            components = new List<ScaffoldingComponent>();
         }
 
-        private readonly List<ComponentConnectionService> components;
+        private readonly List<ScaffoldingComponent> components;
 
         public ComponentHolderService()
         {
-            components = new List<ComponentConnectionService>();
+            components = new List<ScaffoldingComponent>();
         }
 
-        public void PlaceComponent(ComponentConnectionService component)
+        public void PlaceComponent(ScaffoldingComponent scaffoldingComponent)
         {
-            components.Add(component);
+            components.Add(scaffoldingComponent);
         }
 
         public void OnDrawGizmos()
         {
             if (components != null)
             {
-                foreach (ComponentConnectionService component in components)
+                foreach (ScaffoldingComponent component in components)
                 {
-                    for (int i = 0; i < component.connectionDefinitionCollection.Count; i++)
+                    for (int i = 0; i < component.ConnectionDefinitionCollection.Count; i++)
                     {
-                        ConnectionDefinition item = component.connectionDefinitionCollection.GetElementAt(i);
+                        ConnectionDefinition item = component.ConnectionDefinitionCollection.GetElementAt(i);
 
                         Vector3 connectorPos = item.CalculateWorldPosition(component.transform);
 
@@ -78,16 +65,17 @@ namespace Assets.Services.ComponentService
             Vector3 lineStart = ray.origin;
             Vector3 lineEnd = ray.GetPoint(100);
 
-            foreach (ComponentConnectionService component in components)
+            foreach (ScaffoldingComponent component in components)
             {
 
-                //check if component is behind camera
-                if (Vector3.Dot(ray.direction, (component.transform.position - lineStart).normalized) <= 0)
+                //check if scaffoldingComponent is behind ray
+
+                if(ray.IsVectorBehind(component.transform.position))
                     continue;
 
-                for (int i = 0; i < component.connectionDefinitionCollection.Count; i++)
+                for (int i = 0; i < component.ConnectionDefinitionCollection.Count; i++)
                 {
-                    ConnectionDefinition item = component.connectionDefinitionCollection.GetElementAt(i);
+                    ConnectionDefinition item = component.ConnectionDefinitionCollection.GetElementAt(i);
 
                     if (connectionInfo.Equals(item.ConnectionInfo).Equals(false))
                         continue;
@@ -98,7 +86,7 @@ namespace Assets.Services.ComponentService
                     if (IntersectionHandler.CheckIntersection(lineStart, lineEnd, heading, wPos) == false)
                         continue;
 
-                    connectionPoints.Add(new IntersectionResults(component, item));
+                    connectionPoints.Add(new IntersectionResults(component, i));
                     result = true;
                 }
             }

@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugOptions: 2
-  connectionDefinitionCollection: {fileID: 11400000, guid: adad6566d62c83e48bce399d471cc215, type: 2}
+  ConnectionDefinitionCollection: {fileID: 11400000, guid: adad6566d62c83e48bce399d471cc215, type: 2}
 --- !u!114 &3432587292074179194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,8 +140,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57754c3f6d8a8664a941c1e6954d527a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectors: {fileID: 6878515291778995068}
-  componentType: 1
+  reference: {fileID: 0}
+  look: {fileID: 0}
+  count: 0
 --- !u!1 &1936646305312762868
 GameObject:
   m_ObjectHideFlags: 0
