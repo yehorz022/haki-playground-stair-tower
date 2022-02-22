@@ -5,18 +5,18 @@ using UnityEngine.UI;
 
 public class PropertyWindow : MonoBehaviour
 {
-    public static PropertyWindow o;
+    public static PropertyWindow instance;
     public Image img;
     public Text title;
     public Text id;
 
     public Coroutine routineDrag;
     public Coroutine routineHide;
-    public void Awake()
-    {
-        o = this;
+
+    public void Awake() {
+        instance = this;
     }
-    // Start is called before the first frame update
+
     public void Hide() {
         if (routineDrag != null)
             UI.instance.StopCoroutine(routineDrag);
@@ -39,11 +39,5 @@ public class PropertyWindow : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, val, transform.position.z);
             }); // moving animation
         routineHide = Code.WaitAndCall(3, Hide);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

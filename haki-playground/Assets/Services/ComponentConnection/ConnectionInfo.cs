@@ -1,11 +1,9 @@
-
-
 using System;
 using UnityEngine;
 
 namespace Assets.Services.ComponentConnection
 {
-    [CreateAssetMenu(fileName = nameof(ConnectionInfo), menuName = "Component/Connection/Connection Type", order = 10)]
+    [CreateAssetMenu(fileName = nameof(ConnectionInfo), menuName = "ScaffoldingComponent/Connection/Connection ScaffoldingComponent", order = 10)]
     public class ConnectionInfo : ScriptableObject
     {
 

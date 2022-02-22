@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Assets.Services._3dCursorService;
 
 public class MyScrollRect : ScrollRect {
     static float SCROLL_SPEEDS = 2000f;
@@ -11,6 +12,12 @@ public class MyScrollRect : ScrollRect {
     Vector2 deltaPositon;
     float time;
     bool limitScrolling;
+    private PositionProvider positionProvider;
+        
+    void Start()
+    {
+        positionProvider = FindObjectOfType<PositionProvider>();
+    }
 
     public override void OnBeginDrag(PointerEventData eventData) {
         InputUI.OnInputDown();
@@ -29,8 +36,9 @@ public class MyScrollRect : ScrollRect {
         }
         float horizontalSwipe1 = Mathf.Abs(eventData.position.x - eventData.pressPosition.x);
         float verticalSwipe1 = Mathf.Abs(eventData.position.y - eventData.pressPosition.y);
-        if (horizontalSwipe1 * 2 > verticalSwipe1) 
-            PanelComponent.Spawn();
+        if (horizontalSwipe1 * 2 > verticalSwipe1)
+            positionProvider.SetObject(PanelComponent.selectedScaffoldingComponent);
+
         limitScrolling = horizontalSwipe1 * 2 > verticalSwipe1;
 
         eventData.position = deltaPositon = Vector2.zero;
@@ -55,7 +63,7 @@ public class MyScrollRect : ScrollRect {
 
     public override void OnEndDrag(PointerEventData eventData) {
         if (limitScrolling)
-            PositionProvider.instance.PlaceComponent();
+            positionProvider.PlaceComponent();
         InputUI.OnInputUp();
         if (limitScrolling || time == Time.time)
             return;

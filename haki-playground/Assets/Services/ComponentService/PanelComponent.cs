@@ -1,41 +1,27 @@
-using System.Threading.Tasks;
 using Assets.Services.ComponentConnection;
-using Assets.Services.ComponentService;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PanelComponent : MonoBehaviour
 {
     [SerializeField]
-    private Image img;
+    private Image image;
+    private ScaffoldingComponent element;
+    public static ScaffoldingComponent selectedScaffoldingComponent;
 
-    private PositionProvider positionProvider;
-    public static PanelComponent selected;
-
-    void Start()
+    public void Initialize(ScaffoldingComponent element)
     {
-        positionProvider = FindObjectOfType<PositionProvider>();
+        this.element = element;
+        image.sprite = element.icon;
     }
 
     public void Select()
     {
-        selected = this;
-    }
-
-    private ComponentConnectionService element;
-    public static void Spawn()
-    {
-        selected.positionProvider.SetObject(selected.element);
-    }
-
-    public void SetImage(Texture2D texture, ComponentConnectionService element)
-    {
-        this.element = element;
-        img.sprite = Media.TextureToSprite(texture);
+        selectedScaffoldingComponent = element;
     }
 
     public void ViewProperties()
     {
-        PropertyWindow.o.Show(img.sprite, element.name, element.name);
+        PropertyWindow.instance.Show(element.icon, element.name, element.name);
     }
 }
