@@ -10,7 +10,6 @@ namespace Assets.Services.ComponentService
         [SerializeField] Color IconBGColor;
         [SerializeField] MyScrollView scrollView;
         [SerializeField] List<ComponentConnectionService> elements;
-        [SerializeField] GameObject[] assemblies;  // This is just for testing purpose
         [SerializeField] List<Texture2D> elementsIcons = new List<Texture2D>();
         ObjectCacheManager ocm;
         MeshIconMaker iconMaker = new MeshIconMaker();
@@ -37,15 +36,6 @@ namespace Assets.Services.ComponentService
                 elementsIcons.Add(iconMaker.CreateIcon(elements[i].gameObject, IconBGColor));
                 ocm.Cache(elements[i]);
             }
-
-            // vvvvv This code is for just testing purpose vvvvv
-            for (int i = 0; i < assemblies.Length; i++)
-            {
-                elements.Add(Instantiate(assemblies[i]).AddComponent<ComponentConnectionService>());
-                elementsIcons.Add(iconMaker.CreateIcon(elements[elements.Count - 1].gameObject, IconBGColor));
-                ocm.Cache(elements[elements.Count - 1]);
-            }
-            // ^^^^^ This code is for just testing purpose ^^^^^
         }
 
         public void LoadPanel(Transform panel, int reset = MyScrollView.DEFAULT)
