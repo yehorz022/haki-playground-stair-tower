@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Assets.Scripts.Services;
+using Assets.Scripts.Services.Core;
 using Assets.Scripts.Shared.Containers.Collision;
 using Assets.Scripts.Shared.ScriptableObjects;
 using UnityEngine;
 
-namespace Assets.Scripts.RunMode.ComponentService
+namespace Assets.Scripts.Services.ComponentService
 {
 
     public interface IComponentCollisionResultEvaluationService

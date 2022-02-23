@@ -1,3 +1,4 @@
+using Assets.Scripts.Services.Core;
 using Unity.Plastic.Newtonsoft.Json;
 
 namespace Assets.Scripts.Services.JsonServices

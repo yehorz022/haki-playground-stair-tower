@@ -5,7 +5,7 @@ using System.Reflection;
 using Assets.Scripts.Shared.Constants;
 using UnityEngine;
 
-namespace Assets.Scripts.Services
+namespace Assets.Scripts.Services.Core
 {
     internal class ServiceFactory
     {

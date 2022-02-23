@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Assets.Scripts.RunMode.DependencyInjection;
 using Assets.Scripts.Services;
 using Assets.Scripts.Services.ComponentService;
+using Assets.Scripts.Services.Core;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.ComponentService

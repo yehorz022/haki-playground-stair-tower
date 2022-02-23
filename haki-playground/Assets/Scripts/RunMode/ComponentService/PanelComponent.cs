@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Assets.Scripts.RunMode.ComponentConnection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,8 +25,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             positionProvider.SetObject(element);
         }
 
-        public void SetImage(Texture2D texture, ScaffoldingComponent element)
-        {
+        public void SetImage(Texture2D texture, ScaffoldingComponent element)        {
             this.element = element;
             image.texture = texture;
             text.text = element.name;

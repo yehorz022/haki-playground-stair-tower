@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localPosition: {x: 0, y: 1.134, z: 0.03}
   lookAt: {x: 0, y: 0, z: 1}
-  ConnectionInfo: {fileID: 11400000, guid: 33796fc12f35888478b97fff1f0434ef, type: 2}
+  ComponentConnectionInfo: {fileID: 11400000, guid: 33796fc12f35888478b97fff1f0434ef, type: 2}

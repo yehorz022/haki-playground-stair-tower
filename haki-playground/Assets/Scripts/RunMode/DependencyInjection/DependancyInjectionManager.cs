@@ -1,4 +1,5 @@
 using Assets.Scripts.Services;
+using Assets.Scripts.Services.Core;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.DependencyInjection

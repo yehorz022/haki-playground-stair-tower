@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Assets.Scripts.Services;
+using Assets.Scripts.Services.Core;
 using NUnit.Framework;
 
 namespace Assets.Scripts.Tests.Editor_Tests.Tests

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Assets.Scripts.Services
+namespace Assets.Scripts.Services.Core
 {
     public class ServiceCollection
     {

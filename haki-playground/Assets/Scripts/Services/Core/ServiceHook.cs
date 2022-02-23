@@ -1,4 +1,4 @@
-namespace Assets.Scripts.Services
+namespace Assets.Scripts.Services.Core
 {
     public class ServiceHook 
     {

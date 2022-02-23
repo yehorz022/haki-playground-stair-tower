@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
-
-namespace Assets.Scripts.Services
+namespace Assets.Scripts.Services.Core
 {
     public class Service : Attribute
     {

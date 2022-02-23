@@ -1,8 +1,8 @@
 using Assets.Scripts.RunMode.ComponentConnection;
 using Assets.Scripts.RunMode.ComponentService;
 using Assets.Scripts.RunMode.DependencyInjection;
-using Assets.Scripts.Services;
 using Assets.Scripts.Services.ComponentService;
+using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.InputService;
 using Assets.Scripts.Shared.Containers.Collision;
 using Assets.Scripts.Shared.ScriptableObjects;

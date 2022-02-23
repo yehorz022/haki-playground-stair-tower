@@ -1,4 +1,6 @@
+using System.Collections;
 using Assets.Scripts.RunMode.ComponentConnection;
+using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.ComponentService
@@ -18,16 +20,17 @@ namespace Assets.Scripts.RunMode.ComponentService
         {
             ocm = FindObjectOfType<ObjectCacheManager>();
 
-            PopulateGrid();
+           StartCoroutine(PopulateGrid());
         }
 
-        private void PopulateGrid()
+        private IEnumerator  PopulateGrid()
         {
             BeforePopulate();
 
             for (int i = 0; i < elements.Length; i++)
             {
-                CreateInstance(i);
+                yield return CreateInstance(i);
+               
             }
 
             AfterPopulate();
@@ -45,9 +48,16 @@ namespace Assets.Scripts.RunMode.ComponentService
             RenderTexture.active = null;
         }
 
-        private void CreateInstance(int i)
+        private IEnumerator CreateInstance(int i)
         {
-            Texture2D screenShot = CreateTexture(i);
+            var obj = ocm.Instantiate(elements[i]);
+
+
+            Texture2D screenShot = MeshIconMaker.CreateIcon(obj.gameObject, Color.blue, componentCamera);
+
+            yield return new WaitForSeconds(5);
+
+            ocm.Cache(obj);
 
             PanelComponent pc1 = Instantiate(panel, transform);
 
@@ -55,33 +65,35 @@ namespace Assets.Scripts.RunMode.ComponentService
             pc1.name = elements[i].name;
         }
 
-        private Texture2D CreateTexture(int i)
-        {
-            const int size = 600;
-            Rect rect = new Rect(0, 0, size, size);
-            RenderTexture renderTexture = new RenderTexture(size, size, 24);
-            Texture2D screenShot = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        //private Texture2D CreateTexture(int i)
+        //{
+        //    const int size = 600;
+        //    //Rect rect = new Rect(0, 0, size, size);
+        //    //RenderTexture renderTexture = new RenderTexture(size, size, 24);
+        //    //Texture2D screenShot = new Texture2D(size, size, TextureFormat.RGBA32, false);
 
-            ScaffoldingComponent go = elements[i];
+        //    //ScaffoldingComponent go = elements[i];
 
 
-            ScaffoldingComponent temp = ocm.Instantiate(go, Quaternion.identity);
-            if (temp.isActiveAndEnabled)
-            {
+        //    //ScaffoldingComponent temp = ocm.Instantiate(go, Quaternion.identity);
+        //    //if (temp.isActiveAndEnabled)
+        //    //{
 
-            }
-            componentCamera.targetTexture = renderTexture;
-            componentCamera.Render();
+        //    //}
+        //    //componentCamera.targetTexture = renderTexture;
+        //    //componentCamera.Render();
 
-            RenderTexture.active = renderTexture;
+        //    //RenderTexture.active = renderTexture;
 
-            screenShot.ReadPixels(rect, 0, 0);
-            screenShot.Apply();
+        //    //screenShot.ReadPixels(rect, 0, 0);
+        //    //screenShot.Apply();
 
-            temp.gameObject.SetActive(false);
-            ocm.Cache(temp);
+        //    return 
 
-            return screenShot;
-        }
+        //    //temp.gameObject.SetActive(false);
+        //    //ocm.Cache(temp);
+
+        //    //return screenShot;
+        //}
     }
 }
