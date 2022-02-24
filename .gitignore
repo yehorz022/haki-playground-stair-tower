@@ -84,3 +84,5 @@ crashlytics-build.properties
 #directories to ignore
 /haki-playground/[Tt]emp/UnityTempFile**
 /haki-playground/[Ll]ogs/*
+/[Tt]emp/UnityTempFile**
+/[Ll]ogs/*
