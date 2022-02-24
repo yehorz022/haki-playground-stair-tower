@@ -1,0 +1,19 @@
+{
+    "name": "Services",
+    "rootNamespace": "",
+    "references": [
+        "Extensions",
+        "Shared"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Unity.Plastic.Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
