@@ -4,9 +4,10 @@ using System.Threading;
 
 namespace Assets.Scripts.Shared.Helpers
 {
+    //>>>This is a class containing generic color and sprite functions
+
     public static class Media
     {
-
         public static Color ToGray(Color c)
         {
             c.r = c.g = c.b = (c.r + c.g + c.b) / 15f + .6f;
@@ -305,5 +306,4 @@ namespace Assets.Scripts.Shared.Helpers
                 c1.a + (c2.a - c1.a) * value);
         }
     }
-
 }

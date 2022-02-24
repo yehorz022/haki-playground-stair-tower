@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System;
 using Assets.Scripts.Shared.ScriptableObjects;
 using UnityEditor;
@@ -23,3 +25,5 @@ namespace Assets.Scripts.EditorMode.ComponentConnection
         }
     }
 }
+
+#endif

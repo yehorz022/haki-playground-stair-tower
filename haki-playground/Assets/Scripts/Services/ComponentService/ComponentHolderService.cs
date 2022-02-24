@@ -12,7 +12,9 @@ namespace Assets.Scripts.Services.ComponentService
     public interface IComponentHolder
     {
         void PlaceComponent(IScaffoldingComponent scaffoldingComponent);
+        void RemoveComponent(IScaffoldingComponent scaffoldingComponent);
         bool TryGetIntersections(Ray ray, ComponentConnectionInfo connectionInfo, out List<IntersectionResults> connectionPoints);
+        IScaffoldingComponent GetComponentBehindRay();
         void OnDrawGizmos();
     }
 
@@ -39,6 +41,11 @@ namespace Assets.Scripts.Services.ComponentService
         public void PlaceComponent(IScaffoldingComponent scaffoldingComponent)
         {
             components.Add(scaffoldingComponent);
+        }
+
+        public void RemoveComponent(IScaffoldingComponent scaffoldingComponent)
+        {
+            components.Remove(scaffoldingComponent);
         }
 
         public void OnDrawGizmos()
@@ -96,6 +103,24 @@ namespace Assets.Scripts.Services.ComponentService
             }
 
             return result;
+        }
+
+        RaycastHit hit;
+        public IScaffoldingComponent GetComponentBehindRay()
+        {
+            foreach (IScaffoldingComponent component in components)
+                component.GetGameObject().layer = LayerMask.NameToLayer("Default"); // enable raycast so it can selectable
+            IScaffoldingComponent componentSelected = null;
+            bool gotHit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit);
+            if (gotHit)
+            {
+                if (hit.collider.GetComponent<IScaffoldingComponent>() != null) //print("gotHit  " + hit.collider.gameObject.name);
+                    componentSelected = hit.collider.GetComponent<IScaffoldingComponent>();
+            }
+
+            foreach (IScaffoldingComponent component in components)
+                component.GetGameObject().layer = LayerMask.NameToLayer("Ignore Raycast"); // disable objects raycast to detect floor easily
+            return componentSelected;
         }
     }
 }

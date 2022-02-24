@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+<<<<<<< HEAD
+guid: dcd2c07a1770cdf4f8133989cbc51a05
+PrefabImporter:
+  externalObjects: {}
+=======
+<<<<<<< HEAD:haki-playground/Assets/Media/Animations/Panel.controller.meta
+guid: 40aa0f1348ac29c46ae7a428f864fc92
+NativeFormatImporter:
+=======
+guid: dcd2c07a1770cdf4f8133989cbc51a05
+PrefabImporter:
+>>>>>>> main:haki-playground/Assets/Services/ComponentConnection/Components/2073003/2013003.prefab.meta
+  externalObjects: {}
+  mainObjectFileID: 0
+>>>>>>> main
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

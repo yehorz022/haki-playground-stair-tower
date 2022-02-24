@@ -16,8 +16,6 @@ namespace Assets.Scripts.Services.InputService
     }
 
    
-
-
     [Service(typeof(IInputService))]
     public class InputService : IInputService
     {

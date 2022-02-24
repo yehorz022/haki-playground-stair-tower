@@ -1,57 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Shared.Helpers
 {
-    public static class MeshIconMaker
+
+    //>>>This is a class create icon of 3d models and create camera on runtime to do it.
+
+    public static class IconMaker
     {
+        // Camera Properties
+        static Camera iconCamera;
+        static GameObject camerObj;
+        static RenderTexture renderTexture;
 
+        // Icon Image Properties
+        static int iconSize = 300;
+        static Rect screenRect;
+
+        //3D Model Properities (save model state to reset it after making icon)
         static int modelOldLayer;
+        static Vector3 modelOldPosition;
         static MeshEdges extremeEdges; //to find boundary points of models
+        static Quaternion modelOldRotation;
 
-        private static void Initialize(Camera camera)
+        public static void Initialize()
         {
-            camera.clearFlags = CameraClearFlags.SolidColor;
-            camera.nearClipPlane = 0.01f;
-            camera.cullingMask = LayerMask.GetMask("UI");
+            iconSize = iconSize < Screen.width ? iconSize : Screen.width; // checking our size with screen size width
+            iconSize = iconSize < Screen.height ? iconSize : Screen.height; // checking our size with screen size height
+            screenRect = new Rect(0, 0, Screen.width, Screen.height);
+            renderTexture = new RenderTexture(iconSize, iconSize, 24);
+
+            camerObj = new GameObject();
+            camerObj.name = "MeshIconMaker";
+            iconCamera = camerObj.AddComponent<Camera>();
+            iconCamera.clearFlags = CameraClearFlags.SolidColor;
+            iconCamera.nearClipPlane = 0.01f;
+            iconCamera.cullingMask = LayerMask.GetMask("UI");
         }
 
-        public static Texture2D CreateIcon(GameObject model, Color backgroundColor, Camera camera)
+        public static Texture2D CreateIcon(GameObject model, Color backgroundColor)
         {
-            Initialize(camera);
-            BeforeCreation(model, camera, out var oldPos, out var oldRotation);
+            if (iconCamera == null)
+                Initialize(); // as this code only needs to run once at start
+            BeforeCreation(model);
             MeshEdges edges = GetExtremeEdges(model);
             int smallerAxis = edges.GetSmallerAxis(); //print ("smaller axis : " + smallerAxis + " ,, "+ edges.size);
             model.transform.rotation = Quaternion.Euler(smallerAxis == 1 ? 90 : 0, smallerAxis != 1 ? 90 : 0, 0);
-            edges = GetExtremeEdges(model); 
-            Debug.DrawLine(edges.min, edges.max, Color.green, 5000);
+            edges = GetExtremeEdges(model); //Debug.DrawLine(edges.min, edges.max, Color.green, 5000);
             edges.CalculateSize(); // setting its size values 
-            camera.transform.position = new Vector3(edges.Center().x, edges.Center().y, -edges.GetBiggerAxisSize() * 1.1f); //move camera in middle and front of obj to take snap
+            camerObj.transform.position = new Vector3(edges.Center().x, edges.Center().y, -edges.GetBiggerAxisSize() * 1.1f); //move camera in middle and front of obj to take snap
 
-            const int size = 300;
-            Rect rect = new Rect(0, 0, Screen.width, Screen.height);
-            RenderTexture renderTexture = new RenderTexture(size, size, 24);
-            Texture2D screenShot = new Texture2D(size, size, TextureFormat.RGBA32, false);
-
-            //camera.backgroundColor = backgroundColor;
-            camera.targetTexture = renderTexture;
-            camera.Render();    
+            iconCamera.backgroundColor = backgroundColor;
+            iconCamera.targetTexture = renderTexture;
+            iconCamera.Render();
             RenderTexture.active = renderTexture;
-            screenShot.ReadPixels(rect, 0, 0);
+
+            Texture2D screenShot = new Texture2D(iconSize, iconSize, TextureFormat.RGBA32, false);
+            screenShot.ReadPixels(screenRect, 0, 0);
             screenShot.Apply();
             RenderTexture.active = null;
 
-            AfterCreation(model, camera, oldPos, oldRotation);
+            AfterCreation(model);
             return screenShot;
         }
 
-        static void BeforeCreation(GameObject model, Camera camera, out Vector3 modelOldPosition, out Quaternion modelOldRotation)
+        static void BeforeCreation(GameObject model)
         {
-            camera.enabled = true;
+            iconCamera.enabled = true;
             modelOldLayer = model.layer;
             modelOldPosition = model.transform.position;
             modelOldRotation = model.transform.rotation;
@@ -60,7 +74,7 @@ namespace Assets.Scripts.Shared.Helpers
             SetLayerRecursively(model, LayerMask.NameToLayer("UI")); // set layer uI
         }
 
-        static void AfterCreation(GameObject model, Camera iconCamera, Vector3 modelOldPosition, Quaternion modelOldRotation)
+        static void AfterCreation(GameObject model)
         {
             iconCamera.enabled = false;
             model.transform.position = modelOldPosition;
@@ -86,10 +100,8 @@ namespace Assets.Scripts.Shared.Helpers
         {
             if (obj.transform.GetComponent<MeshRenderer>() != null)
             {
-                Bounds bounds = obj.transform.GetComponent<MeshRenderer>().bounds;
-                extremeEdges = new MeshEdges(bounds.min, bounds.max).CompareAndGetExtremeEdges(extremeEdges);
-                //print(obj.name + " ("+bounds.min + "," + bounds.max + ") , " + extremeEdges);
-                //Debug.DrawLine(bounds.min, bounds.max, Color.magenta, 50);
+                Bounds bounds = obj.transform.GetComponent<MeshRenderer>().bounds;  //Debug.DrawLine(bounds.min, bounds.max, Color.magenta, 50);
+                extremeEdges = new MeshEdges(bounds.min, bounds.max).CompareAndGetExtremeEdges(extremeEdges); //print(obj.name + " ("+bounds.min + "," + bounds.max + ") , " + extremeEdges);
             }
             for (int i = 0; i < obj.transform.childCount; i++)
                 GetExtremeEdgesRecursively(obj.transform.GetChild(i).gameObject);
