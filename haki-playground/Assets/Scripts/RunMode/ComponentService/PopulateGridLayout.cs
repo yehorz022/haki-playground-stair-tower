@@ -20,16 +20,16 @@ namespace Assets.Scripts.RunMode.ComponentService
         {
             ocm = FindObjectOfType<ObjectCacheManager>();
 
-           StartCoroutine(PopulateGrid());
+            PopulateGrid();
         }
 
-        private IEnumerator  PopulateGrid()
+        private void  PopulateGrid()
         {
             BeforePopulate();
 
             for (int i = 0; i < elements.Length; i++)
             {
-                yield return CreateInstance(i);
+                CreateInstance(i);
                
             }
 
@@ -48,14 +48,11 @@ namespace Assets.Scripts.RunMode.ComponentService
             RenderTexture.active = null;
         }
 
-        private IEnumerator CreateInstance(int i)
+        private void CreateInstance(int i)
         {
-            var obj = ocm.Instantiate(elements[i]);
-
+            ScaffoldingComponent obj = ocm.Instantiate(elements[i]);
 
             Texture2D screenShot = MeshIconMaker.CreateIcon(obj.gameObject, Color.blue, componentCamera);
-
-            yield return new WaitForSeconds(5);
 
             ocm.Cache(obj);
 
@@ -65,35 +62,5 @@ namespace Assets.Scripts.RunMode.ComponentService
             pc1.name = elements[i].name;
         }
 
-        //private Texture2D CreateTexture(int i)
-        //{
-        //    const int size = 600;
-        //    //Rect rect = new Rect(0, 0, size, size);
-        //    //RenderTexture renderTexture = new RenderTexture(size, size, 24);
-        //    //Texture2D screenShot = new Texture2D(size, size, TextureFormat.RGBA32, false);
-
-        //    //ScaffoldingComponent go = elements[i];
-
-
-        //    //ScaffoldingComponent temp = ocm.Instantiate(go, Quaternion.identity);
-        //    //if (temp.isActiveAndEnabled)
-        //    //{
-
-        //    //}
-        //    //componentCamera.targetTexture = renderTexture;
-        //    //componentCamera.Render();
-
-        //    //RenderTexture.active = renderTexture;
-
-        //    //screenShot.ReadPixels(rect, 0, 0);
-        //    //screenShot.Apply();
-
-        //    return 
-
-        //    //temp.gameObject.SetActive(false);
-        //    //ocm.Cache(temp);
-
-        //    //return screenShot;
-        //}
     }
 }
