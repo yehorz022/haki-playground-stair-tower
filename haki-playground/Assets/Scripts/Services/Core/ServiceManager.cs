@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Assets.Scripts.Services.Core
 {
-    public class ServiceCollection
+    public class ServiceManager
     {
         private readonly Dictionary<Type, ServiceFactory> services = new Dictionary<Type, ServiceFactory>();
         private readonly Dictionary<Type, object> implementations = new Dictionary<Type, object>();
@@ -23,7 +23,7 @@ namespace Assets.Scripts.Services.Core
             {
                 ConstructorInfo[] implementationConstructors = tImplementation.GetConstructors();
 
-                ServiceFactory sf = new ServiceFactory(implementationConstructors);
+                ServiceFactory sf = new ReflectionInstanciation(implementationConstructors);
 
                 services.Add(tInterface, sf);
             }
@@ -39,22 +39,27 @@ namespace Assets.Scripts.Services.Core
             return CreateDependency(type);
         }
 
+
+
         private object CreateDependency(Type type)
         {
-            if (services.TryGetValue(type, out ServiceFactory factory))
+            if (services.TryGetValue(type, out ServiceFactory serviceFactory))
             {
-                IEnumerable<Type> requiredTypes = new List<Type>(factory.RequiredTypes);
-
-                object[] parameters = new object[requiredTypes.Count()];
-                int index = 0;
-                foreach (Type requiredType in requiredTypes)
+                if (serviceFactory is ReflectionInstanciation reflectionInstanciation)
                 {
-                    parameters[index++] = GetDependency(requiredType);
-                }
+                    IEnumerable<Type> requiredTypes = new List<Type>(reflectionInstanciation.RequiredTypes);
 
-                object implementation = factory.Implement(parameters);
-                implementations.Add(type, implementation);
-                return implementation;
+                    object[] parameters = new object[requiredTypes.Count()];
+                    int index = 0;
+                    foreach (Type requiredType in requiredTypes)
+                    {
+                        parameters[index++] = GetDependency(requiredType);
+                    }
+
+                    object implementation = reflectionInstanciation.Implement(parameters);
+                    implementations.Add(type, implementation);
+                    return implementation;
+                }
             }
 
 
@@ -74,6 +79,11 @@ namespace Assets.Scripts.Services.Core
 
         public void InjectDependencies(object item)
         {
+            if (item == null)
+            {
+                return;
+            }
+
             Type type = item.GetType();
 
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
@@ -97,7 +107,7 @@ namespace Assets.Scripts.Services.Core
 
             foreach (Type type in types)
             {
-                if(type.IsInterface)
+                if (type.IsInterface)
                     continue;
 
                 Service att = type.GetCustomAttribute<Service>();
@@ -108,6 +118,21 @@ namespace Assets.Scripts.Services.Core
 
                 Register(att.Interface, type);
             }
+        }
+
+        /// <summary>
+        /// Overrides existing implementation or creates new one.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T1"></typeparam>
+        /// <param name="instance"></param>
+        public void DefineAs<T, T1>(T1 instance) where T1 : T
+        {
+            Type key = typeof(T);
+            services.Remove(key);
+            implementations.Remove(key);
+
+            implementations.Add(typeof(T), instance);
         }
     }
 }

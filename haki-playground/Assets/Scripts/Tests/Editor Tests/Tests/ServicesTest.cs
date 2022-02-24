@@ -21,7 +21,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
         [Test]
         public void CreateSimpleDependencyTest_1()
         {
-            ServiceCollection service = new ServiceCollection();
+            ServiceManager service = new ServiceManager();
 
             service.Register<ITest1, Test1>();
 
@@ -37,7 +37,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
         [Test]
         public void CreateSimpleDependencyTest_2()
         {
-            ServiceCollection service = new ServiceCollection();
+            ServiceManager service = new ServiceManager();
 
             service.Register<ITest1, Test1>();
             service.Register<ITest2, Test2>();
@@ -78,7 +78,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
         [Test]
         public void CreateSimpleDependencyTest_3()
         {
-            ServiceCollection service = new ServiceCollection();
+            ServiceManager service = new ServiceManager();
 
             service.Register<ITest1, Test1>();
             service.Register<ITest2, Test2>();
@@ -126,7 +126,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
             Assert.IsNull(it.Test2);
             Assert.IsNull(it.Test3);
 
-            ServiceCollection service = new ServiceCollection();
+            ServiceManager service = new ServiceManager();
 
             service.Register<ITest1, Test1>();
             service.Register<ITest2, Test2>();

@@ -7,14 +7,15 @@ using UnityEngine;
 
 namespace Assets.Scripts.Services.Core
 {
-    internal class ServiceFactory
+    internal class ReflectionInstanciation : ServiceFactory
     {
+
         private readonly HashSet<Type> types;
         private readonly Func<object[], object> factory;
 
         public IEnumerable<Type> RequiredTypes => types;
 
-        internal ServiceFactory(IReadOnlyCollection<ConstructorInfo> constructors)
+        internal ReflectionInstanciation(IReadOnlyCollection<ConstructorInfo> constructors)
         {
 
             if (constructors.Count > 2)
@@ -42,7 +43,7 @@ namespace Assets.Scripts.Services.Core
             }
         }
 
-        internal object Implement(object[] parameters)
+        internal override object Implement(object[] parameters)
         {
             if (Validate(parameters))
             {
@@ -53,7 +54,7 @@ namespace Assets.Scripts.Services.Core
             throw new Exception(Constants.ImproperParameters);
         }
 
-        private bool Validate(object[] parameters)
+        protected override bool Validate(object[] parameters)
         {
             if (parameters.Length != types.Count)
                 return false;
@@ -71,5 +72,16 @@ namespace Assets.Scripts.Services.Core
 
             return count == 0;
         }
+    }
+
+
+    internal abstract class ServiceFactory
+    {
+
+        internal abstract object Implement(object[] parameters);
+
+        protected abstract bool Validate(object[] parameters);
+
+
     }
 }

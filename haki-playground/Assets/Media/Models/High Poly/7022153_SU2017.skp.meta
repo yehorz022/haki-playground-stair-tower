@@ -18,7 +18,7 @@ SketchUpImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: "M\xF6rkgalv"
-    second: {fileID: -2584018330700738005, guid: b7617e58d54261045808acf0870a3069, type: 3}
+    second: {fileID: 2100000, guid: 598ff83411692b44f848dcfb377f6403, type: 2}
   materials:
     materialImportMode: 2
     materialName: 2
@@ -120,5 +120,5 @@ SketchUpImporter:
   selectedNodes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f00000010000000110000001200000013000000140000001500000016000000
   assetHash:
     serializedVersion: 2
-    Hash: 58b3f58d8f36dd1a3fed5cf803aa04f1
+    Hash: b1648d64c2976314c472daa5b04b5084
   fileUnit: 0

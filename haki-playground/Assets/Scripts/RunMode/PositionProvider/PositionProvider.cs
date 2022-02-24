@@ -1,9 +1,9 @@
 using Assets.Scripts.RunMode.ComponentConnection;
 using Assets.Scripts.RunMode.ComponentService;
-using Assets.Scripts.RunMode.DependencyInjection;
 using Assets.Scripts.Services.ComponentService;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.InputService;
+using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Shared.Containers.Collision;
 using Assets.Scripts.Shared.Interfaces;
 using Assets.Scripts.Shared.ScriptableObjects;
@@ -14,7 +14,13 @@ namespace Assets.Scripts.RunMode.PositionProvider
 {
     public class PositionProvider : HakiComponent
     {
-        private ObjectCacheManager ocm;
+
+
+        private bool run;
+        private ScaffoldingComponent ccs;
+
+        [Inject]
+        private IObjectCacheManager ObjectCacheManager { get; set; }
 
         [SerializeField]
         private GameObject floor;
@@ -26,25 +32,21 @@ namespace Assets.Scripts.RunMode.PositionProvider
         private IComponentHolder ComponentHolder { get; set; }
 
         [Inject]
-        private IComponentCollisionDetectionService collisionDetectionService { get; set; }
+        private IComponentCollisionDetectionService CollisionDetectionService { get; set; }
 
         void Start()
         {
-            ocm = FindObjectOfType<ObjectCacheManager>();
+            ApplicationManager.HandleDependencyInjection(this);
 
-            DependancyInjectionManager dis = FindObjectOfType<DependancyInjectionManager>();
 
-            dis.InjectDependencies(this);
 
             floor.SetActive(true);
         }
 
 
-        private bool run;
-        private ScaffoldingComponent ccs;
         public ScaffoldingComponent CreateAndPickComponent(ScaffoldingComponent replacement) // made create 
         {
-            ccs = ocm.Instantiate(replacement, transform);
+            ccs = ObjectCacheManager.Instantiate(replacement, transform);
             run = true;
             return ccs;
         }
@@ -54,6 +56,8 @@ namespace Assets.Scripts.RunMode.PositionProvider
             ComponentHolder.RemoveComponent(component);
             ccs = component;
             run = true;
+            ccs = ObjectCacheManager.Instantiate(component, transform);
+            ;
         }
 
         public void PlaceComponent()
@@ -65,7 +69,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
 
         public void RecycleComponent()
         {
-            ocm.Cache(ccs);
+            ObjectCacheManager.Cache(ccs);
             ccs = null;
             run = false;
         }
@@ -97,12 +101,14 @@ namespace Assets.Scripts.RunMode.PositionProvider
             }
         }
 
+       
+
         private bool HandleCollisionDetection(out Vector3 pos, out Quaternion euler)
         {
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            CollisionInfo ci = collisionDetectionService.Evaluate(ray, ccs.ConnectionDefinitionCollection, 0, ccs);
+            CollisionInfo ci = CollisionDetectionService.Evaluate(ray, ccs.ConnectionDefinitionCollection, 0, ccs);
 
             if (ci.IsSuccess)
             {

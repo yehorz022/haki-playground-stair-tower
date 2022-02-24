@@ -12,7 +12,6 @@ namespace Assets.Scripts.RunMode.ComponentService
         AllowInEditorMode = 1 << 1,
         RenderWhenSelected = 1 << 2,
         RenderWhenNotSelected = 1 << 3,
-
     }
 
 
