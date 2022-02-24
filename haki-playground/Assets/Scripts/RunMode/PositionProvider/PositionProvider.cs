@@ -38,8 +38,6 @@ namespace Assets.Scripts.RunMode.PositionProvider
         {
             ApplicationManager.HandleDependencyInjection(this);
 
-
-
             floor.SetActive(true);
         }
 
@@ -56,8 +54,6 @@ namespace Assets.Scripts.RunMode.PositionProvider
             ComponentHolder.RemoveComponent(component);
             ccs = component;
             run = true;
-            ccs = ObjectCacheManager.Instantiate(component, transform);
-            ;
         }
 
         public void PlaceComponent()
