@@ -19,11 +19,11 @@ namespace Assets.Scripts.RunMode.ComponentService
             positionProvider = FindObjectOfType<PositionProvider.PositionProvider>();
             ocm = FindObjectOfType<ObjectCacheManager>();
             ScrollState scrollState = new ScrollState(0);
-            Routine.WaitAndCall (.01f, () => //wait for system to initialize first
+            Routine.WaitAndCall(.01f, () => //wait for system to initialize first
             {
                 PopulateItems();
                 scrollView.Initialize(elements.Length, transform.GetComponent<RectTransform>(), LoadPanel, scrollState, ScrollViewComponent.OLD_STATE);
-            }); 
+            });
         }
 
         void PopulateItems()
