@@ -6,6 +6,7 @@ namespace Assets.Scripts.Shared.Interfaces
     public interface IScaffoldingComponent
     {
         Transform GetTransform();
+        GameObject GetGameObject();
         ConnectionDefinitionCollection GetConnectionDefinitionCollection();
     }
 }

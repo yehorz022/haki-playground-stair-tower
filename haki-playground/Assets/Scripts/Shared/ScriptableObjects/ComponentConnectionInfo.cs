@@ -39,6 +39,7 @@ namespace Assets.Scripts.Shared.ScriptableObjects
 
         public bool Equals(ComponentConnectionInfo other)
         {
+            //Debug.Log(Id);
             return Id.Equals(other?.Id);
         }
     }

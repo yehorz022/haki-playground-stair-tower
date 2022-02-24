@@ -6,29 +6,31 @@ namespace Assets.Scripts.RunMode.ComponentService
 {
     public class PanelComponent : MonoBehaviour
     {
-
-        [SerializeField]
-        private RawImage image;
-        [SerializeField]
-        private Text text;
-
-        private PositionProvider.PositionProvider positionProvider;
-
+        public static ScaffoldingComponent selectedComponentPrefab; // this selection is used to create object 
+        [SerializeField] private Image image;
+        private ScaffoldingComponent component;
+        private PropertiesWindow propertiesWindow;
+        
         void Start()
         {
-            positionProvider = FindObjectOfType<PositionProvider.PositionProvider>();
+            propertiesWindow = FindObjectOfType<PropertiesWindow>();
         }
 
-        private ScaffoldingComponent element;
-        public void Spawn()
+        public void Initialize(ScaffoldingComponent component, Sprite icon)
         {
-            positionProvider.SetObject(element);
+            this.component = component;
+            image.sprite = icon;
         }
 
-        public void SetImage(Texture2D texture, ScaffoldingComponent element)        {
-            this.element = element;
-            image.texture = texture;
-            text.text = element.name;
+        public void Select()
+        {
+            selectedComponentPrefab = component;
+        }
+
+        public void ViewProperties()
+        {
+            propertiesWindow.Show(image.sprite, component.name, component.name);
+            AudioManager.instance.PlaySound(SoundID.Click);
         }
     }
 }

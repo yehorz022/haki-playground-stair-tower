@@ -5,15 +5,19 @@ using Assets.Scripts.Services.ComponentService;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.InputService;
 using Assets.Scripts.Shared.Containers.Collision;
+using Assets.Scripts.Shared.Interfaces;
 using Assets.Scripts.Shared.ScriptableObjects;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.PositionProvider
 {
     public class PositionProvider : HakiComponent
     {
-        public GameObject floor;
         private ObjectCacheManager ocm;
+
+        [SerializeField]
+        private GameObject floor;
 
         [Inject]
         private IInputService InputService { get; set; }
@@ -27,6 +31,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
         void Start()
         {
             ocm = FindObjectOfType<ObjectCacheManager>();
+
             DependancyInjectionManager dis = FindObjectOfType<DependancyInjectionManager>();
 
             dis.InjectDependencies(this);
@@ -37,19 +42,38 @@ namespace Assets.Scripts.RunMode.PositionProvider
 
         private bool run;
         private ScaffoldingComponent ccs;
-        public void SetObject(ScaffoldingComponent replacement)
+        public ScaffoldingComponent CreateAndPickComponent(ScaffoldingComponent replacement) // made create 
         {
-
-            if (ccs != null)
-            {
-                RecycleComponent();
-            }
-
+            ccs = ocm.Instantiate(replacement, transform);
             run = true;
-            ccs = ocm.Instantiate(replacement, transform); ;
-
+            return ccs;
         }
 
+        public void PickComponent(ScaffoldingComponent component)
+        {
+            ComponentHolder.RemoveComponent(component);
+            ccs = component;
+            run = true;
+        }
+
+        public void PlaceComponent()
+        {
+            ComponentHolder.PlaceComponent(ccs);
+            ccs = null;
+            run = false;
+        }
+
+        public void RecycleComponent()
+        {
+            ocm.Cache(ccs);
+            ccs = null;
+            run = false;
+        }
+
+        public ScaffoldingComponent GetComponent()
+        {
+            return (ScaffoldingComponent)ComponentHolder.GetComponentBehindRay();
+        }
 
         void OnDrawGizmos()
         {
@@ -66,28 +90,14 @@ namespace Assets.Scripts.RunMode.PositionProvider
                 ccs.gameObject.SetActive(true);
 
 
-            if (HandleCollisionDetection(out Vector3 newPos, out Quaternion euler))
+            if (HandleCollisionDetection(out Vector3 newPos, out Quaternion newEuler))
             {
                 ccs.transform.position = newPos;
-                ccs.transform.rotation = euler;
+                ccs.transform.rotation = newEuler;
             }
         }
 
-        public void PlaceComponent()
-        {
-            ComponentHolder.PlaceComponent(ccs);
-            run = false;
-            ccs = null;
-        }
-
-        public void RecycleComponent()
-        {
-            ocm.Cache(ccs);
-            run = false;
-            ccs = null;
-        }
-
-        private bool HandleCollisionDetection(out Vector3 result, out Quaternion euler)
+        private bool HandleCollisionDetection(out Vector3 pos, out Quaternion euler)
         {
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -97,24 +107,28 @@ namespace Assets.Scripts.RunMode.PositionProvider
             if (ci.IsSuccess)
             {
                 ConnectionDefinition cd = ci.Target.GetElementAt(ci.TargetConnectionIndex);
-                result = cd.CalculateWorldPosition(ci.TargetScaffoldingComponent.GetTransform());
-                euler = cd.CalculateRotation();
+                Vector3 newPos = cd.CalculateWorldPosition(ci.TargetScaffoldingComponent.GetTransform());
+                Quaternion newEuler = cd.CalculateRotation();
 
+                if (ccs.transform.position != newPos && ccs.transform.rotation != newEuler)
+                {
+                    AudioManager.instance.PlaySound(SoundID.Join); //playing joining sound
+                }
+                pos = newPos;
+                euler = newEuler;
                 return true;
             }
 
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                result = hit.point;
+                pos = hit.point;
                 euler = Quaternion.identity;
                 return true;
             }
 
-            result = Vector3.zero;
+            pos = Vector3.zero;
             euler = Quaternion.identity;
             return false;
         }
-
-
     }
 }

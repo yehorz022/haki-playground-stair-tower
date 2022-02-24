@@ -32,7 +32,7 @@ namespace Assets.Scripts.Services.ComponentService
                 if (diff < min)
                     res = intersections[i];
 
-                Debug.Log(diff);
+                //Debug.Log(diff);
             }
 
             return res;
