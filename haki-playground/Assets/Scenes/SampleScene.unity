@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -615,6 +615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdd7746aadc4974aaeeeada626895e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugOptions: 0
   iconBGColor: {r: 0.29411766, g: 0.29411766, b: 0.29411766, a: 1}
   scrollView: {fileID: 2077771808}
   elements:
@@ -1966,15 +1967,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  onBeginDrags:
-    m_PersistentCalls:
-      m_Calls: []
-  onDrags:
-    m_PersistentCalls:
-      m_Calls: []
-  onEndDrags:
-    m_PersistentCalls:
-      m_Calls: []
   otherScrollRect: {fileID: 0}
 --- !u!114 &2077771811
 MonoBehaviour:
@@ -2024,7 +2016,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2082505768}
   - component: {fileID: 2082505769}
-  - component: {fileID: 2082505767}
   - component: {fileID: 2082505766}
   m_Layer: 0
   m_Name: ApplicationManager
@@ -2042,22 +2033,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2082505765}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad75402afc2e7854d8daaa9ff6968cdf, type: 3}
+  m_Script: {fileID: 11500000, guid: bb9c326c5d4493f4f92ea8bda6cd17d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dim: {fileID: 0}
---- !u!114 &2082505767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2082505765}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 783d566510bcb114b9e6e085396e8284, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  debugOptions: 0
+  Assembly: {fileID: 2694878345618951803, guid: e07dea5d419f44d4ea01cc75d9235c7b, type: 3}
 --- !u!4 &2082505768
 Transform:
   m_ObjectHideFlags: 0

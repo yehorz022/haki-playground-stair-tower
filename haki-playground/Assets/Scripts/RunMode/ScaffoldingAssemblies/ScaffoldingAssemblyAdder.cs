@@ -27,7 +27,8 @@ namespace Assets.Scripts.RunMode.ScaffoldingAssemblies
             ScaffoldingAssembly assembly = ObjectCacheManager != null
                 ? ObjectCacheManager.Instantiate(Assembly, transform)
                 : Instantiate(Assembly, transform);
-
+            if (assemblies == null)
+                assemblies = new List<ScaffoldingAssembly>();
 
             assembly.transform.Translate(0, assemblies.Count * 2, 0);
             assemblies.Add(assembly);
@@ -39,7 +40,9 @@ namespace Assets.Scripts.RunMode.ScaffoldingAssemblies
             {
                 int maxIndex = assemblies.Count - 1;
                 var item = assemblies[maxIndex];
-                ObjectCacheManager.Cache(item);
+                if (ObjectCacheManager == null)
+                    DestroyImmediate(item.gameObject);
+                else ObjectCacheManager.Cache(item);
                 assemblies.RemoveAt(maxIndex);
             }
         }
