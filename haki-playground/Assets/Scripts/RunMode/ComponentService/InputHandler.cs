@@ -94,7 +94,7 @@ namespace Assets.Scripts.RunMode.ComponentService
                 return;
             onRecycleBin = false;
             recycleBin.sprite = recycleBinDefault;
-            picked.SetMaterial(defaultMat);
+            picked.SetMaterial(picked == ScaffoldingComponent.selected ? selectedMat : defaultMat);
         }
         //^^^^   button listners functions for UI   ^^^^
 

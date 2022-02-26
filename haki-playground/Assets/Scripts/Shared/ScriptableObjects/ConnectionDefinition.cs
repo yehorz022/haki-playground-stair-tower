@@ -1,3 +1,4 @@
+using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 
 namespace Assets.Scripts.Shared.ScriptableObjects
@@ -40,6 +41,7 @@ namespace Assets.Scripts.Shared.ScriptableObjects
 
             Gizmos.color = color;
             Gizmos.DrawLine(worldPosition, worldPosition + lookAtPoint);
+            Gizmo.DrawWireCube("sample", worldPosition, .03f, color);
         }
 
         public Quaternion CalculateRotation()

@@ -10,9 +10,6 @@ namespace Assets.Scripts.RunMode.ComponentConnection
         [SerializeField] public ConnectionDefinitionCollection ConnectionDefinitionCollection;
         public static ScaffoldingComponent selected;
         public InputHandler inputHandler;
-        bool isDown;
-        int touchCount;
-        bool onRecycleBin;
 
         void Start()
         {

@@ -112,7 +112,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
                 Vector3 newPos = cd.CalculateWorldPosition(ci.TargetScaffoldingComponent.GetTransform());
                 Quaternion newEuler = cd.CalculateRotation();
 
-                if (ccs.transform.position != newPos && ccs.transform.rotation != newEuler)
+                if (ccs.transform.position != newPos || ccs.transform.rotation != newEuler)
                 {
                     AudioManager.instance.PlaySound(SoundID.Join); //playing joining sound
                 }
