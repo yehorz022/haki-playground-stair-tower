@@ -41,7 +41,7 @@ namespace Assets.Scripts.Shared.ScriptableObjects
 
             Gizmos.color = color;
             Gizmos.DrawLine(worldPosition, worldPosition + lookAtPoint);
-            Gizmo.DrawWireCube("sample", worldPosition, .03f, color);
+            Gizmo.DrawWireCone(worldPosition, .03f, color, Vector3.forward);
         }
 
         public Quaternion CalculateRotation()
