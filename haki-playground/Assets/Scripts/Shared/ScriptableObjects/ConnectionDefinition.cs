@@ -39,9 +39,17 @@ namespace Assets.Scripts.Shared.ScriptableObjects
 
             Vector3 lookAtPoint = CalculateHeading(parent.localRotation);
 
-            Gizmos.color = color;
-            Gizmos.DrawLine(worldPosition, worldPosition + lookAtPoint);
-            Gizmo.DrawWireCone(worldPosition, .03f, color, Vector3.forward);
+            //Gizmos.color = color;
+            //Gizmos.DrawLine(worldPosition, worldPosition + lookAtPoint);
+            Gizmo.DrawArrow(worldPosition, worldPosition + lookAtPoint, color);
+            Gizmo.DrawWireCube(worldPosition + lookAtPoint * 1f / 4f, lookAtPoint, new Vector3(.05f, .05f, .1f), color, Direction.center);
+            Gizmo.DrawWireCone(worldPosition + lookAtPoint * 2f / 4f, lookAtPoint, .1f, color, Direction.center);
+            Gizmo.DrawWireCircle(worldPosition + lookAtPoint * 3f / 4f, lookAtPoint, .04f, color, Direction.center);
+            Gizmo.DrawText("Hello", worldPosition + lookAtPoint, color, 12);
+
+            Gizmo.DrawWireCube(new Vector3(2, 3, 0), Quaternion.Euler(250, 224, 10), new Vector3(.05f, .05f, .1f), Color.white, Direction.down);
+            Gizmo.DrawWireCone(new Vector3(3, 2, 0), Quaternion.Euler(150, 24, 0), .1f, Color.magenta, Direction.right);
+            Gizmo.DrawWireCircle(new Vector3(2, 2, 0), Quaternion.Euler(50, 124, 20), .1f, Color.cyan, Direction.up);
         }
 
         public Quaternion CalculateRotation()
