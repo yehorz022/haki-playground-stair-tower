@@ -126,8 +126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8028b95c62ced5743926f9b8101449ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugOptions: 2
+  debugOptions: 0
   ConnectionDefinitionCollection: {fileID: 11400000, guid: adad6566d62c83e48bce399d471cc215, type: 2}
+  inputHandler: {fileID: 0}
 --- !u!114 &3432587292074179194
 MonoBehaviour:
   m_ObjectHideFlags: 0

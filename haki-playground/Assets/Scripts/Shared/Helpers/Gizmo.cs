@@ -50,6 +50,12 @@ namespace Assets.Scripts.Shared.Helpers
         #endregion
 
         #region WireCube
+
+        public static void DrawWireCube(Vector3 position, Vector3 direction, float size, Color color)
+        {
+           // we need this kind of overloads for each method that takes in vector3 size 
+            DrawWireCube(position, direction, new Vector3(size, size, size ), color);
+        }
         public static void DrawWireCube(Vector3 position, Vector3 direction, Vector3 size, Color color)
         {
             DrawWireCube(position, Quaternion.LookRotation(direction), size, color, new Vector3(0.5f, 0.5f, 0.5f));

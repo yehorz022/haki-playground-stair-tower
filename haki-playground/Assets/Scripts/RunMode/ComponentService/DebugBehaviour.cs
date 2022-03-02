@@ -1,17 +1,16 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.ComponentService
 {
-    [Flags]
     public enum DebugOptions
     {
         None = 0,
 
-        AllowInPlayMode = 1 << 0,
-        AllowInEditorMode = 1 << 1,
-        RenderWhenSelected = 1 << 2,
-        RenderWhenNotSelected = 1 << 3,
+        DisableInPlayMode = 1,
+        DisableinEditor = 2,
+        DisableWhenNotSelected = 3,
     }
 
 
@@ -29,41 +28,49 @@ namespace Assets.Scripts.RunMode.ComponentService
             Gizmos.color = gizmoColor;
         }
 
-        [ExecuteInEditMode]
-        void OnDrawGizmosSelected()
-        {
-            if (debugOptions.HasFlag(DebugOptions.RenderWhenSelected))
-            {
-                DebugRender(true);
-            }
-        }
+
 
         [ExecuteInEditMode]
         void OnDrawGizmos()
         {
-            DebugRender(false);
+            DebugRender();
         }
 
-        private void DebugRender(bool isSelected)
+        private void DebugRender()
         {
-#if UNITY_EDITOR
-            if (debugOptions.HasFlag(DebugOptions.AllowInEditorMode) == false)
-            {
+            bool isSelectedInEditorNotWorkingCorrectly = Selection.Contains(this);
+            if (ShouldRenderDebugNotWorkingCorrectly(isSelectedInEditorNotWorkingCorrectly) == false)
                 return;
-            }
-#endif
-
-
 
             BeforeDrawGizmos();
-            DebugDraw(isSelected);
+            DebugDraw(isSelectedInEditorNotWorkingCorrectly);
             AfterDrawGizmos();
+        }
+
+
+        private bool ShouldRenderDebugNotWorkingCorrectly(bool isSelected)
+        {
+            if (debugOptions == DebugOptions.DisableInPlayMode && Application.IsPlaying(this))
+            {
+                Debug.Log(this.GetType().Name + " / " + name + " is playing");
+                return false;
+            }
+
+            if (debugOptions == DebugOptions.DisableinEditor && Application.isEditor)
+                return false;
+
+            if (debugOptions == DebugOptions.DisableWhenNotSelected && isSelected == false)
+                return false;
+
+            return true;
         }
 
 
         protected virtual void DebugDraw(bool isSelected)
         {
-
+            //this method is empty on purpose. 
+            //it could have been made abstract, but that would enforce implementation for every non-abstract inheritor class 
+            //in the event when a implementation is not needed, the implementation would look exactly like this one. 
         }
     }
 }
