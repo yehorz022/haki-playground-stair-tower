@@ -42,14 +42,15 @@ namespace Assets.Scripts.Shared.ScriptableObjects
             //Gizmos.color = color;
             //Gizmos.DrawLine(worldPosition, worldPosition + lookAtPoint);
             Gizmo.DrawArrow(worldPosition, worldPosition + lookAtPoint, color);
-            Gizmo.DrawWireCube(worldPosition + lookAtPoint * 1f / 4f, lookAtPoint, new Vector3(.05f, .05f, .1f), color, Direction.center);
-            Gizmo.DrawWireCone(worldPosition + lookAtPoint * 2f / 4f, lookAtPoint, .1f, color, Direction.center);
-            Gizmo.DrawWireCircle(worldPosition + lookAtPoint * 3f / 4f, lookAtPoint, .04f, color, Direction.center);
-            Gizmo.DrawText("Hello", worldPosition + lookAtPoint, color, 12);
+            Gizmo.DrawCube(worldPosition + lookAtPoint * 1f / 4f, lookAtPoint, new Vector3(.05f, .05f, .1f), color, new Vector3(.5f, .5f, .5f));
+            Gizmo.DrawWireCube(worldPosition + lookAtPoint, lookAtPoint, new Vector3(.2f, .2f, .2f), color, new Vector3(0.5f, 0f, 0));
+            Gizmo.DrawWireCone(worldPosition + lookAtPoint * 2f / 4f, lookAtPoint, .1f, .2f, color, new Vector3(.5f, .5f, .5f));
+            Gizmo.DrawWireCircle(worldPosition + lookAtPoint * 3f / 4f, lookAtPoint, .04f, color, new Vector3(.5f, .5f, .5f));
+            //Gizmo.DrawText("Hello", worldPosition + lookAtPoint, color, 12);
 
-            Gizmo.DrawWireCube(new Vector3(2, 3, 0), Quaternion.Euler(250, 224, 10), new Vector3(.05f, .05f, .1f), Color.white, Direction.down);
-            Gizmo.DrawWireCone(new Vector3(3, 2, 0), Quaternion.Euler(150, 24, 0), .1f, Color.magenta, Direction.right);
-            Gizmo.DrawWireCircle(new Vector3(2, 2, 0), Quaternion.Euler(50, 124, 20), .1f, Color.cyan, Direction.up);
+            Gizmo.DrawWireCube(new Vector3(2, 3, 0), Quaternion.Euler(250, 224, 10), new Vector3(.05f, .05f, .1f), Color.white, new Vector3(.5f, .5f, .5f));
+            Gizmo.DrawWireCone(new Vector3(3, 2, 0), Quaternion.Euler(270, 0, 0), .1f, .2f, Color.magenta, new Vector3(.5f, .5f, .5f), 7);
+            Gizmo.DrawWireCircle(new Vector3(2, 2, 0), Quaternion.Euler(50, 124, 20), .1f, Color.cyan, new Vector3(.5f, .5f, .5f));
         }
 
         public Quaternion CalculateRotation()
