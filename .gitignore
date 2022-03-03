@@ -86,3 +86,8 @@ crashlytics-build.properties
 /haki-playground/[Ll]ogs/*
 /[Tt]emp/UnityTempFile**
 /[Ll]ogs/*
+/haki-playground/Library
+/haki-playground/obj/Debug
+/haki-playground/UserSettings
+/haki-playground/ProjectSettings
+/haki-playground

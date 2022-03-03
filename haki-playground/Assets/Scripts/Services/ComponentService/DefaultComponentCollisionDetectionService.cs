@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Assets.Scripts.Services.Core;
+using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Constants;
 using Assets.Scripts.Shared.Containers.Collision;
-using Assets.Scripts.Shared.Interfaces;
 using Assets.Scripts.Shared.ScriptableObjects;
 using UnityEngine;
 
@@ -11,8 +11,8 @@ namespace Assets.Scripts.Services.ComponentService
 {
     public interface IComponentCollisionDetectionService
     {
-        CollisionInfo Evaluate(Ray ray, ConnectionDefinitionCollection source, int sourceConnectionIndex,
-            IScaffoldingComponent component);
+        CollisionInfo Evaluate(Ray ray, int sourceConnectionIndex,
+            HakiComponent component);
     }
 
     [Service(typeof(IComponentCollisionDetectionService))]
@@ -28,10 +28,12 @@ namespace Assets.Scripts.Services.ComponentService
         }
 
 
-        public CollisionInfo Evaluate(Ray ray, ConnectionDefinitionCollection source, int sourceConnectionIndex,
-            IScaffoldingComponent component)
+        public CollisionInfo Evaluate(Ray ray,  int sourceConnectionIndex, HakiComponent component)
         {
             CollisionInfo ci = new CollisionInfo();
+            if (component.TryGetCollectionDefinition(out ConnectionDefinitionCollection source) is false)
+                return ci;
+
             ci.SourceScaffoldingComponent = component;
             ci.Source = source;
             ci.SourceConnectionIndex = sourceConnectionIndex;
@@ -40,10 +42,10 @@ namespace Assets.Scripts.Services.ComponentService
             if (source.Count == 0 || sourceConnectionIndex >= source.Count)
                 throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
 
+            
 
-            if (componentHolder.TryGetIntersections(ray, source.GetElementAt(sourceConnectionIndex).ComponentConnectionInfo, out List<IntersectionResults> intersections) && intersections.Count > 0)
+            if (ValidateIntersection(component.GetInstanceID(),ray, source, sourceConnectionIndex, out List<IntersectionResults> intersections))
             {
-
                 IntersectionResults intersection = intersectionEvaluationService.Evaluate(intersections);
 
                 ci.TargetScaffoldingComponent = intersection.ScaffoldingComponent;
@@ -53,6 +55,12 @@ namespace Assets.Scripts.Services.ComponentService
             }
 
             return ci;
+        }
+
+        private bool ValidateIntersection(int id, Ray ray, ConnectionDefinitionCollection source,
+            int sourceConnectionIndex, out List<IntersectionResults> intersections)
+        {
+            return componentHolder.TryGetIntersections(id,ray, source.GetElementAt(sourceConnectionIndex).ComponentConnectionInfo, out intersections);
         }
     }
 }

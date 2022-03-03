@@ -24,7 +24,7 @@ namespace Assets.Scripts.Services.ComponentService
             {
 
                 ConnectionDefinition intersection = intersections[i].ConnectionDefinitionCollection.GetElementAt(intersections[i].ConnectionIndex);
-                Vector3 newPos = intersection.CalculateWorldPosition(intersections[i].ScaffoldingComponent.GetTransform());
+                Vector3 newPos = intersection.CalculateWorldPosition(intersections[i].ScaffoldingComponent.transform);
 
                 float diff = (newPos - Camera.main.transform.position).sqrMagnitude;
 

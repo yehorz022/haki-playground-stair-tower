@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.Shared.Helpers
+namespace Assets.Scripts.RunMode.ComponentService.ButtonComponents
 {
     //>>> This is child class is of button responsible to handle changing color features of button
 

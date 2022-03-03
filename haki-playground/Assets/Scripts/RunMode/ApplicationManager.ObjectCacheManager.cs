@@ -1,69 +1,107 @@
-﻿using System.Collections.Generic;
-using Assets.Scripts.RunMode.ComponentService;
+﻿using System;
+using System.Collections.Generic;
+using Assets.Scripts.Services.DependencyInjection;
 using Assets.Scripts.Services.Instanciation;
+using Assets.Scripts.Shared.Behaviours;
+using Assets.Scripts.Shared.Constants;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Assets.Scripts.RunMode
 {
     public partial class ApplicationManager
     {
+        private class DependencyInjection : IDependencyInjection
+        {
+            private readonly Action<SceneMemberInjectDependencies> injectionDelegate;
+
+            public DependencyInjection(Action<SceneMemberInjectDependencies> injectionDelegate)
+            {
+                this.injectionDelegate = injectionDelegate;
+            }
+
+            /// <inheritdoc />
+            public void HandleInjections(SceneMemberInjectDependencies item)
+            {
+                injectionDelegate.Invoke(item);
+            }
+        }
+
         private class ObjectCacheManager : IObjectCacheManager
         {
-            private readonly IDictionary<string, Stack<GameObject>> cache = new Dictionary<string, Stack<GameObject>>();
+            private readonly IDictionary<string, Stack<HakiComponent>> cache = new Dictionary<string, Stack<HakiComponent>>();
 
-            private readonly ApplicationManager parent;
+            private readonly Transform applicationManagerTransform;
+            private readonly GameObject emptyPrefab;
+            private IDependencyInjection dependencyInjectionHandler;
+            private readonly IDictionary<string, Transform> parents;
 
-            public ObjectCacheManager(ApplicationManager parent)
+            public ObjectCacheManager(ApplicationManager parent, GameObject emptyPrefab, IDependencyInjection dependencyInjection)
             {
-                this.parent = parent;
+                applicationManagerTransform = parent.transform;
+                this.emptyPrefab = emptyPrefab;
+                parents = new Dictionary<string, Transform>();
+                dependencyInjectionHandler = dependencyInjection;
             }
 
-            public T Instantiate<T>(T template) where T : Component
+            private Transform GetParent(string itemName)
             {
-                return CreateInstance(template, parent.transform, Vector3.zero, Quaternion.identity);
+                if (parents.TryGetValue(itemName, out Transform res) == false)
+                {
+                    res = UnityInstanciate(emptyPrefab, applicationManagerTransform).transform;
+                    res.name = itemName + Constants.cacheSuffix;
+                    parents.Add(itemName, res);
+                }
+
+                return res;
             }
 
-            public T Instantiate<T>(T template, Quaternion rotation) where T : Component
+            public T Instantiate<T>(T template) where T : HakiComponent
             {
-                return CreateInstance(template, parent.transform, Vector3.zero, rotation);
+                return CreateInstance(template, applicationManagerTransform.transform, Vector3.zero, Quaternion.identity);
             }
 
-            public T Instantiate<T>(T template, Vector3 position) where T : Component
+            public T Instantiate<T>(T template, Quaternion rotation) where T : HakiComponent
             {
-                return CreateInstance(template, parent.transform, position, Quaternion.identity);
+                return CreateInstance(template, applicationManagerTransform.transform, Vector3.zero, rotation);
             }
 
-            public T Instantiate<T>(T template, Vector3 position, Quaternion rotation) where T : Component
+            public T Instantiate<T>(T template, Vector3 position) where T : HakiComponent
             {
-                return CreateInstance(template, parent.transform, position, rotation);
+                return CreateInstance(template, applicationManagerTransform.transform, position, Quaternion.identity);
             }
 
-            public T Instantiate<T>(T template, Transform parent) where T : Component
+            public T Instantiate<T>(T template, Vector3 position, Quaternion rotation) where T : HakiComponent
+            {
+                return CreateInstance(template, applicationManagerTransform.transform, position, rotation);
+            }
+
+            public T Instantiate<T>(T template, Transform parent) where T : HakiComponent
             {
                 return CreateInstance(template, parent, Vector3.zero, Quaternion.identity);
             }
 
-            public T Instantiate<T>(T template, Transform parent, Quaternion rotation) where T : Component
+            public T Instantiate<T>(T template, Transform parent, Quaternion rotation) where T : HakiComponent
             {
                 return CreateInstance(template, parent, Vector3.zero, rotation);
             }
 
-            public T Instantiate<T>(T template, Transform parent, Vector3 position, Quaternion rotation) where T : Component
+            public T Instantiate<T>(T template, Transform parent, Vector3 position, Quaternion rotation) where T : HakiComponent
             {
                 return CreateInstance(template, parent, position, rotation);
             }
-            public T Instantiate<T>(T template, Transform parent, Vector3 position) where T : Component
+            public T Instantiate<T>(T template, Transform parent, Vector3 position) where T : HakiComponent
             {
                 return CreateInstance(template, parent, position, Quaternion.identity);
             }
 
 
-            private T UnityInstanciate<T>(T template, Transform parent) where T : Component
+            private T UnityInstanciate<T>(T template, Transform parent) where T : Object
             {
-                return GameObject.Instantiate(template, parent, false);
+                return Object.Instantiate(template, parent, false);
             }
 
-            private static void SetData<T>(T item, Transform parent, Vector3 position, Quaternion rotation) where T : Component
+            private static void SetData<T>(T item, Transform parent, Vector3 position, Quaternion rotation) where T : HakiComponent
             {
                 if (parent)
                     item.transform.SetParent(parent);
@@ -73,55 +111,48 @@ namespace Assets.Scripts.RunMode
                     item.transform.localRotation = rotation;
             }
 
-            private T GetInstanceOf<T>(T template, Transform parent) where T : Component
+            private T GetInstanceOf<T>(T template, Transform newParent) where T : HakiComponent
             {
-                if (cache.TryGetValue(template.name, out Stack<GameObject> stack) is false || stack.Count == 0)
+                if (cache.TryGetValue(template.name, out Stack<HakiComponent> stack) is false || stack.Count == 0)
                 {
-                    return UnityInstanciate(template, parent);
+                    return UnityInstanciate(template, newParent);
                 }
                 else
                 {
-                    GameObject go = stack.Pop();
-                    go.SetActive(true);
-                    return go.GetComponent<T>();
+                    HakiComponent go = stack.Pop();
+                    go.OnInitialize(newParent);
+
+                    return go as T;
                 }
             }
 
-            public T CreateInstance<T>(T template, Transform parent, Vector3 position, Quaternion rotation) where T : Component
+            private T CreateInstance<T>(T template, Transform parent, Vector3 position, Quaternion rotation) where T : HakiComponent
             {
-
                 T res = GetInstanceOf(template, parent);
 
                 SetData(res, parent, position, rotation);
-                HandleDependencyInjection(res);
+
+                dependencyInjectionHandler.HandleInjections(res);
 
                 return res;
-
             }
 
-            private void HandleDependencyInjection<T>(T item) where T : Component
+            public void Cache<T>(T item) where T : HakiComponent
             {
-                ApplicationManager.HandleDependencyInjection(item as HakiComponent);
-            }
+                item.name = item.name.Replace(Constants.CloneGameObjectSuffix, string.Empty).Trim();
 
-            public void Cache<T>(T item) where T : Component
-            {
-                item.name = item.name.Replace("(Clone)", "").Trim();
+                Transform tempParent = GetParent(item.name);
 
-                if (cache.TryGetValue(item.name, out Stack<GameObject> stack) is false)
+                if (cache.TryGetValue(item.name, out Stack<HakiComponent> stack) is false)
                 {
-                    stack = new Stack<GameObject>();
+                    stack = new Stack<HakiComponent>();
                     cache.Add(item.name, stack);
                 }
 
-                item.transform.SetParent(parent.transform);
-                item.transform.position = Vector3.zero;
-                item.transform.rotation = Quaternion.identity;
-                item.gameObject.SetActive(false);
+                item.OnCache(tempParent);
 
-                stack.Push(item.gameObject);
+                stack.Push(item);
             }
         }
-
     }
 }

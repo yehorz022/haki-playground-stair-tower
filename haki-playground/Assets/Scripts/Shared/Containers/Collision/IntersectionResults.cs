@@ -1,4 +1,4 @@
-using Assets.Scripts.Shared.Interfaces;
+using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.ScriptableObjects;
 
 namespace Assets.Scripts.Shared.Containers.Collision
@@ -8,12 +8,12 @@ namespace Assets.Scripts.Shared.Containers.Collision
 
         public ConnectionDefinitionCollection ConnectionDefinitionCollection { get; }
         public int ConnectionIndex { get; }
-        public IScaffoldingComponent ScaffoldingComponent { get; }
+        public HakiComponent ScaffoldingComponent { get; }
 
-        public IntersectionResults(IScaffoldingComponent scaffoldingComponent, int connectionIndex)
+        public IntersectionResults(HakiComponent scaffoldingComponent, int connectionIndex, ConnectionDefinitionCollection connectionDefinitionCollection)
         {
             ScaffoldingComponent = scaffoldingComponent;
-            ConnectionDefinitionCollection = scaffoldingComponent.GetConnectionDefinitionCollection();
+            ConnectionDefinitionCollection = connectionDefinitionCollection;
             ConnectionIndex = connectionIndex;
         }
     }

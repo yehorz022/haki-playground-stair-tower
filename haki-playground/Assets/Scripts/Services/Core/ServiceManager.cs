@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace Assets.Scripts.Services.Core
 {
+
     public class ServiceManager
     {
         private readonly Dictionary<Type, ServiceFactory> services = new Dictionary<Type, ServiceFactory>();
