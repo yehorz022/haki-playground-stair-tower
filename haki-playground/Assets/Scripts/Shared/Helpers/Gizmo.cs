@@ -5,7 +5,27 @@ namespace Assets.Scripts.Shared.Helpers
 {
     public static class Gizmo
     {
-        static GUIStyle style = new GUIStyle();
+
+        #region Circle
+        public static void DrawCircle(Vector3 position, Vector3 direction, float radius, Color color)
+        {
+            DrawCircle(position, Quaternion.LookRotation(direction), radius, color, new Vector3(0.5f, 0.5f, 0.5f));
+        }
+        public static void DrawCircle(Vector3 position, Quaternion rotation, float radius, Color color)
+        {
+            DrawCircle(position, rotation, radius, color, new Vector3(0.5f, 0.5f, 0.5f));
+        }
+        public static void DrawCircle(Vector3 position, Vector3 direction, float radius, Color color, Vector3 pivot)
+        {
+            DrawCircle(position, Quaternion.LookRotation(direction), radius, color, pivot);
+        }
+        public static void DrawCircle(Vector3 position, Quaternion rotation, float radius, Color color, Vector3 pivot)
+        {
+            Matrix4x4 oldGizmosMatrix = SetEnvironment(position, rotation, color);
+            DrawCircle(new Vector3(pivot.x - 0.5f, 0.5f - pivot.y, pivot.z - 0.5f) * radius, radius);
+            Gizmos.matrix = oldGizmosMatrix;
+        }
+        #endregion
 
         #region Cube
         public static void DrawCube(Vector3 position, Vector3 direction, Vector3 size, Color color)
@@ -20,10 +40,47 @@ namespace Assets.Scripts.Shared.Helpers
         {
             DrawCube(position, Quaternion.LookRotation(direction), size, color, pivot);
         }
+        public static void DrawCube(Vector3 startPosition, Vector3 size, Color color)
+        {
+            DrawCube(startPosition, Vector3.forward, size, color, new Vector3(0, 0, 0));
+        }
+        public static void DrawCubeFromBottomCenter(Vector3 startPosition, Vector3 size, Color color)
+        {
+            DrawCube(startPosition, Vector3.forward, size, color, new Vector3(0.5f, 0, 0));
+        }
         public static void DrawCube(Vector3 position, Quaternion rotation, Vector3 size, Color color, Vector3 pivot)
         {
-            Matrix4x4 oldGizmosMatrix = SetEnvironment(position + new Vector3((pivot.x - 0.5f) * size.x, (0.5f - pivot.y) * size.y, (pivot.z - 0.5f) * size.z), rotation, color);
-            Gizmos.DrawCube(Vector3.zero, size);
+            Matrix4x4 oldGizmosMatrix = SetEnvironment(position, rotation, color);
+            Gizmos.DrawWireCube(new Vector3((pivot.x - 0.5f) * size.x, (0.5f - pivot.y) * size.y, (pivot.z - 0.5f) * size.z), size);
+            Gizmos.matrix = oldGizmosMatrix;
+        }
+        #endregion
+
+        #region SolidCube
+        public static void DrawSolidCube(Vector3 position, Vector3 direction, Vector3 size, Color color)
+        {
+            DrawSolidCube(position, Quaternion.LookRotation(direction), size, color, new Vector3(0.5f, 0.5f, 0.5f));
+        }
+        public static void DrawSolidCube(Vector3 position, Quaternion rotation, Vector3 size, Color color)
+        {
+            DrawSolidCube(position, rotation, size, color, new Vector3(0.5f, 0.5f, 0.5f));
+        }
+        public static void DrawSolidCube(Vector3 position, Vector3 direction, Vector3 size, Color color, Vector3 pivot)
+        {
+            DrawSolidCube(position, Quaternion.LookRotation(direction), size, color, pivot);
+        }
+        public static void DrawSolidCube(Vector3 startPosition, Vector3 size, Color color)
+        {
+            DrawSolidCube(startPosition, Vector3.forward, size, color, new Vector3(0, 0, 0));
+        }
+        public static void DrawSolidCubeFromBottomCenter(Vector3 startPosition, Vector3 size, Color color)
+        {
+            DrawSolidCube(startPosition, Vector3.forward, size, color, new Vector3(0.5f, 0, 0));
+        }
+        public static void DrawSolidCube(Vector3 position, Quaternion rotation, Vector3 size, Color color, Vector3 pivot)
+        {
+            Matrix4x4 oldGizmosMatrix = SetEnvironment(position, rotation, color);
+            Gizmos.DrawCube(new Vector3((pivot.x - 0.5f) * size.x, (0.5f - pivot.y) * size.y, (pivot.z - 0.5f) * size.z), size);
             Gizmos.matrix = oldGizmosMatrix;
         }
         #endregion
@@ -43,118 +100,76 @@ namespace Assets.Scripts.Shared.Helpers
         }
         public static void DrawSphere(Vector3 position, Quaternion rotation, float radius, Color color, Vector3 pivot)
         {
-            Matrix4x4 oldGizmosMatrix = SetEnvironment(position + new Vector3(pivot.x - 0.5f, 0.5f - pivot.y, pivot.z - 0.5f) * radius, rotation, color);
-            Gizmos.DrawSphere(Vector3.zero, radius);
+            Matrix4x4 oldGizmosMatrix = SetEnvironment(position, rotation, color);
+            Gizmos.DrawWireSphere(new Vector3(pivot.x - 0.5f, 0.5f - pivot.y, pivot.z - 0.5f) * radius, radius);
             Gizmos.matrix = oldGizmosMatrix;
         }
         #endregion
 
-        #region WireCube
-
-        public static void DrawWireCube(Vector3 position, Vector3 direction, float size, Color color)
+        #region SolidSphere
+        public static void DrawSolidSphere(Vector3 position, Vector3 direction, float radius, Color color)
         {
-           // we need this kind of overloads for each method that takes in vector3 size 
-            DrawWireCube(position, direction, new Vector3(size, size, size ), color);
+            DrawSolidSphere(position, Quaternion.LookRotation(direction), radius, color, new Vector3(0.5f, 0.5f, 0.5f));
         }
-        public static void DrawWireCube(Vector3 position, Vector3 direction, Vector3 size, Color color)
+        public static void DrawSolidSphere(Vector3 position, Quaternion rotation, float radius, Color color)
         {
-            DrawWireCube(position, Quaternion.LookRotation(direction), size, color, new Vector3(0.5f, 0.5f, 0.5f));
+            DrawSolidSphere(position, rotation, radius, color, new Vector3(0.5f, 0.5f, 0.5f));
         }
-        public static void DrawWireCube(Vector3 position, Quaternion rotation, Vector3 size, Color color)
+        public static void DrawSolidSphere(Vector3 position, Vector3 direction, float radius, Color color, Vector3 pivot)
         {
-            DrawWireCube(position, rotation, size, color, new Vector3(0.5f, 0.5f, 0.5f));
+            DrawSolidSphere(position, Quaternion.LookRotation(direction), radius, color, pivot);
         }
-        public static void DrawWireCube(Vector3 position, Vector3 direction, Vector3 size, Color color, Vector3 pivot)
+        public static void DrawSolidSphere(Vector3 position, Quaternion rotation, float radius, Color color, Vector3 pivot)
         {
-            DrawWireCube(position, Quaternion.LookRotation(direction), size, color, pivot);
-        }
-        public static void DrawWireCube(Vector3 position, Quaternion rotation, Vector3 size, Color color, Vector3 pivot)
-        {
-            Matrix4x4 oldGizmosMatrix = SetEnvironment(position + new Vector3((pivot.x - 0.5f) * size.x, (0.5f - pivot.y) * size.y, (pivot.z - 0.5f) * size.z), rotation, color);
-            Gizmos.DrawWireCube(Vector3.zero, size);
-            Gizmos.matrix = oldGizmosMatrix;
-        }
-        #endregion
-
-        #region WireSphere
-        public static void DrawWireSphere(Vector3 position, Vector3 direction, float radius, Color color)
-        {
-            DrawWireSphere(position, Quaternion.LookRotation(direction), radius, color, new Vector3(0.5f, 0.5f, 0.5f));
-        }
-        public static void DrawWireSphere(Vector3 position, Quaternion rotation, float radius, Color color)
-        {
-            DrawWireSphere(position, rotation, radius, color, new Vector3(0.5f, 0.5f, 0.5f));
-        }
-        public static void DrawWireSphere(Vector3 position, Vector3 direction, float radius, Color color, Vector3 pivot)
-        {
-            DrawWireSphere(position, Quaternion.LookRotation(direction), radius, color, pivot);
-        }
-        public static void DrawWireSphere(Vector3 position, Quaternion rotation, float radius, Color color, Vector3 pivot)
-        {
-            Matrix4x4 oldGizmosMatrix = SetEnvironment(position + new Vector3(pivot.x - 0.5f, 0.5f - pivot.y, pivot.z - 0.5f) * radius, rotation, color);
-            Gizmos.DrawWireSphere(Vector3.zero, radius);
-            Gizmos.matrix = oldGizmosMatrix;
-        }
-        #endregion
-
-        #region WireCircle
-        public static void DrawWireCircle(Vector3 position, Vector3 direction, float radius, Color color)
-        {
-            DrawWireCircle(position, Quaternion.LookRotation(direction), radius, color, new Vector3(0.5f, 0.5f, 0.5f));
-        }
-        public static void DrawWireCircle(Vector3 position, Quaternion rotation, float radius, Color color)
-        {
-            DrawWireCircle(position, rotation, radius, color, new Vector3(0.5f, 0.5f, 0.5f));
-        }
-        public static void DrawWireCircle(Vector3 position, Vector3 direction, float radius, Color color, Vector3 pivot)
-        {
-            DrawWireCircle(position, Quaternion.LookRotation(direction), radius, color, pivot);
-        }
-        public static void DrawWireCircle(Vector3 position, Quaternion rotation, float radius, Color color, Vector3 pivot)
-        {
-            Matrix4x4 oldGizmosMatrix = SetEnvironment(position + new Vector3(pivot.x - 0.5f, 0.5f - pivot.y, pivot.z - 0.5f) * radius, rotation, color);
-            DrawCircle(radius);
+            Matrix4x4 oldGizmosMatrix = SetEnvironment(position, rotation, color);
+            Gizmos.DrawSphere(new Vector3(pivot.x - 0.5f, 0.5f - pivot.y, pivot.z - 0.5f) * radius, radius);
             Gizmos.matrix = oldGizmosMatrix;
         }
         #endregion
 
         #region Cone
-        public static void DrawWireCone(Vector3 position, Vector3 direction, float radius, float height, Color color, int noOfRings = 10)
+        public static void DrawCone(Vector3 position, Vector3 direction, float radius, float height, Color color, int noOfRings = 10, bool isRevesed = false)
         {
-            DrawWireCone(position, Quaternion.LookRotation(direction), radius, height, color, new Vector3(0.5f, 0.5f, 0.5f), noOfRings);
+            DrawCone(position, Quaternion.LookRotation(direction), radius, height, color, new Vector3(0.5f, 0.5f, 0.5f), noOfRings, isRevesed);
         }
-        public static void DrawWireCone(Vector3 position, Quaternion rotation, float radius, float height, Color color, int noOfRings = 10)
+        public static void DrawCone(Vector3 position, Quaternion rotation, float radius, float height, Color color, int noOfRings = 10, bool isRevesed = false)
         {
-            DrawWireCone(position, rotation, radius, height, color, new Vector3(0.5f, 0.5f, 0.5f), noOfRings);
+            DrawCone(position, rotation, radius, height, color, new Vector3(0.5f, 0.5f, 0.5f), noOfRings, isRevesed);
         }
-        public static void DrawWireCone(Vector3 position, Vector3 direction, float radius, float height, Color color, Vector3 pivot, int noOfRings = 10)
+        public static void DrawCone(Vector3 position, Vector3 direction, float radius, float height, Color color, Vector3 pivot, int noOfRings = 10, bool isRevesed = false)
         {
-            DrawWireCone(position, Quaternion.LookRotation(direction), radius, height, color, pivot, noOfRings);
+            DrawCone(position, Quaternion.LookRotation(direction), radius, height, color, pivot, noOfRings, isRevesed);
         }
-        public static void DrawWireCone(Vector3 position, Quaternion rotation, float radius, float height, Color color, Vector3 pivot, int noOfRings = 10)
+        public static void DrawCone(Vector3 position, Quaternion rotation, float radius, float height, Color color, Vector3 pivot, int noOfRings = 10, bool isRevesed = false)
         {
             Vector3 forwardVector = rotation * Vector3.forward;
             float radiusDiv = 1f * radius / noOfRings;
             float heightDiv = 1f * height / noOfRings;
-            for (int i = 1; i < noOfRings; i++)
+            for (int i = 0; i < noOfRings; i++)
             {
-                Matrix4x4 oldGizmosMatrix = SetEnvironment(position + new Vector3((pivot.x - 0.5f) * radius, (0.5f - pivot.y) * height, (pivot.z - 0.5f) * radius) + heightDiv * i * forwardVector, rotation, color);
-                DrawCircle(radius - radiusDiv * i);
+                Matrix4x4 oldGizmosMatrix = SetEnvironment(position + heightDiv * i * forwardVector - height / 2f * forwardVector, rotation, color); // - height / 2f * forwardVector to start it from center
+                DrawCircle(new Vector3((pivot.x - 0.5f) * radius, (0.5f - pivot.y) * radius, (pivot.z - 0.5f) * height), isRevesed ? radiusDiv * i : radius - radiusDiv * i);
                 Gizmos.matrix = oldGizmosMatrix;
             }
         }
         #endregion
 
         #region Arrow
+        public static void DrawArrow(Vector3 position, Vector3 direction, float length, Color color)
+        {
+            DrawArrow(position, position + direction.normalized * length, color);
+        }
         public static void DrawArrow(Vector3 position1, Vector3 position2, Color color)
         {
             Gizmos.color = color;
             Gizmos.DrawLine(position1, position2);
-            DrawWireCone(position2 - (position2 - position1).normalized * .05f, Quaternion.LookRotation(position2 - position1), .02f, .05f, color);
+            DrawCone(position2 - (position2 - position1).normalized * .05f, Quaternion.LookRotation(position2 - position1), .02f, .05f, color, new Vector3(0.5f, 0.5f, 1));
         }
         #endregion
 
         #region Text
+        static GUIStyle style = new GUIStyle();
+
         public static void DrawText(string label, Vector3 position, Color color, int fontsize = 10)
         {
             style.alignment = TextAnchor.MiddleCenter;
@@ -164,6 +179,7 @@ namespace Assets.Scripts.Shared.Helpers
         }
         #endregion
 
+        #region GeneralFuntions
         static Matrix4x4 SetEnvironment(Vector3 position, Quaternion rotation, Color color)
         {
             Matrix4x4 cubeTransform = Matrix4x4.TRS(position, rotation, Vector3.one);
@@ -171,9 +187,8 @@ namespace Assets.Scripts.Shared.Helpers
             Gizmos.matrix *= cubeTransform;
             Gizmos.color = color;
             return oldGizmosMatrix;
-        }
-
-        public static void DrawCircle(float radius)
+        } 
+        public static void DrawCircle(Vector3 position, float radius)
         {
             Vector3 point = Vector3.zero, lastPoint = Vector3.zero;
             float angle = 15;
@@ -185,9 +200,10 @@ namespace Assets.Scripts.Shared.Helpers
                     k = 0;
                 point = radius * new Vector3(Mathf.Cos(k * angle * Mathf.Deg2Rad), Mathf.Sin(k * angle * Mathf.Deg2Rad), 0);
                 if (i > 0)
-                    Gizmos.DrawLine(lastPoint, point);
+                    Gizmos.DrawLine(position + lastPoint, position + point);
                 lastPoint = point;
             }
         }
+        #endregion
     }
 }
