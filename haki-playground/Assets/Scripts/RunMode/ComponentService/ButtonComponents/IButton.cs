@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Shared.Helpers;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace Assets.Scripts.Shared.Helpers
+namespace Assets.Scripts.RunMode.ComponentService.ButtonComponents
 {
 
     //>>> This class is responsible to handle button features as we need more to do than simple unity button

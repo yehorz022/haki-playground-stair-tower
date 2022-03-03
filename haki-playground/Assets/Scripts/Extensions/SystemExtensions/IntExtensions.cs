@@ -6,6 +6,23 @@ namespace Assets.Scripts.Extensions.SystemExtensions
         private const bool DefaultMaxInclusive = false;
 
 
+
+
+
+        public static int ClampFromMin(this int value, int min)
+        {
+            return value.Clamp(min, value);
+        }
+
+        public static int Clamp(this int value, int min, int max)
+        {
+            if (value < min)
+                return min;
+            if (value > max)
+                return max;
+            return value;
+        }
+
         /// <summary>
         /// returns the value of value.IsValueBetween(min, max, true, maxInclusive);
         /// </summary>

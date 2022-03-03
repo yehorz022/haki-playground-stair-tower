@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Assets.Scripts.Shared.Helpers
+namespace Assets.Scripts.RunMode.ComponentService.ButtonComponents
 {
     //>>> This is child class is of button responsible to handle animation features on button
 

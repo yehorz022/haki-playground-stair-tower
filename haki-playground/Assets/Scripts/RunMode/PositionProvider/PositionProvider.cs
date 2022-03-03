@@ -1,20 +1,17 @@
-using Assets.Scripts.RunMode.ComponentConnection;
 using Assets.Scripts.RunMode.ComponentService;
 using Assets.Scripts.Services.ComponentService;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.InputService;
 using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Shared.Containers.Collision;
-using Assets.Scripts.Shared.Interfaces;
 using Assets.Scripts.Shared.ScriptableObjects;
-using System.Collections.Generic;
+using Assets.Scripts.Shared.Behaviours;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.PositionProvider
 {
-    public class PositionProvider : HakiComponent
+    public class PositionProvider : SceneMemberInjectDependencies
     {
-
 
         private bool run;
         private ScaffoldingComponent ccs;
@@ -25,8 +22,6 @@ namespace Assets.Scripts.RunMode.PositionProvider
         [SerializeField]
         private GameObject floor;
 
-        [Inject]
-        private IInputService InputService { get; set; }
 
         [Inject]
         private IComponentHolder ComponentHolder { get; set; }
@@ -36,8 +31,6 @@ namespace Assets.Scripts.RunMode.PositionProvider
 
         void Start()
         {
-            ApplicationManager.HandleDependencyInjection(this);
-
             floor.SetActive(true);
         }
 
@@ -72,14 +65,9 @@ namespace Assets.Scripts.RunMode.PositionProvider
 
         public ScaffoldingComponent GetComponent()
         {
-            return (ScaffoldingComponent)ComponentHolder.GetComponentBehindRay();
+            return ComponentHolder.GetComponentBehindRay() as ScaffoldingComponent;
         }
 
-        void OnDrawGizmos()
-        {
-            if (Application.isEditor == false)
-                ComponentHolder.OnDrawGizmos();
-        }
 
         private void Update()
         {
@@ -97,27 +85,26 @@ namespace Assets.Scripts.RunMode.PositionProvider
             }
         }
 
-       
+
 
         private bool HandleCollisionDetection(out Vector3 pos, out Quaternion euler)
         {
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            CollisionInfo ci = CollisionDetectionService.Evaluate(ray, ccs.ConnectionDefinitionCollection, 0, ccs);
+            CollisionInfo ci = CollisionDetectionService.Evaluate(ray, 0, ccs);
 
             if (ci.IsSuccess)
             {
                 ConnectionDefinition cd = ci.Target.GetElementAt(ci.TargetConnectionIndex);
-                Vector3 newPos = cd.CalculateWorldPosition(ci.TargetScaffoldingComponent.GetTransform());
-                Quaternion newEuler = cd.CalculateRotation();
+                pos = cd.CalculateWorldPosition(ci.TargetScaffoldingComponent.transform);
+                euler = cd.CalculateRotation();
 
-                if (ccs.transform.position != newPos || ccs.transform.rotation != newEuler)
+                if (ccs.transform.position != pos && ccs.transform.rotation != euler)
                 {
                     AudioManager.instance.PlaySound(SoundID.Join); //playing joining sound
                 }
-                pos = newPos;
-                euler = newEuler;
+
                 return true;
             }
 

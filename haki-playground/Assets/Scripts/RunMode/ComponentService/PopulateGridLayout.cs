@@ -1,12 +1,13 @@
 using Assets.Scripts.RunMode.ComponentConnection;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.Instanciation;
+using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.ComponentService
 {
-    public class PopulateGridLayout : HakiComponent
+    public class PopulateGridLayout : SceneMemberInjectDependencies
     {
 
         [SerializeField] Color iconBGColor;
@@ -21,7 +22,6 @@ namespace Assets.Scripts.RunMode.ComponentService
         {
             positionProvider = FindObjectOfType<PositionProvider.PositionProvider>();
 
-            ApplicationManager.HandleDependencyInjection(this);
             ScrollState scrollState = new ScrollState(0);
             Routine.WaitAndCall(.01f, () => //wait for system to initialize first
             {

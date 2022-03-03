@@ -1,7 +1,7 @@
+using Assets.Scripts.Shared.Behaviours;
+using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Scripts.RunMode.ComponentConnection;
-using Assets.Scripts.Shared.Helpers;
 
 namespace Assets.Scripts.RunMode.ComponentService
 {
@@ -24,19 +24,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             instance = this;
         }
 
-        void Start()
-        {
-            positionProvider = FindObjectOfType<PositionProvider.PositionProvider>();
-        }
-
-        //void OnGUI()
-        //{
-        //    GUILayout.Label("onRecycleBin = " + onRecycleBin);
-        //    GUILayout.Label("picked = " + (picked ? picked.name : "null"));
-        //    GUILayout.Label("selected = " + (ScaffoldingComponent.selected ? ScaffoldingComponent.selected.name : "null"));
-        //}
-
-        //vvvvv    button listners functions for UI    vvvvv
+        void Start() => positionProvider = FindObjectOfType<PositionProvider.PositionProvider>();
 
         public void OnInputPanelDown()
         {
@@ -94,7 +82,7 @@ namespace Assets.Scripts.RunMode.ComponentService
                 return;
             onRecycleBin = false;
             recycleBin.sprite = recycleBinDefault;
-            picked.SetMaterial(picked == ScaffoldingComponent.selected ? selectedMat : defaultMat);
+            picked.SetMaterial(defaultMat);
         }
         //^^^^   button listners functions for UI   ^^^^
 
@@ -123,3 +111,4 @@ namespace Assets.Scripts.RunMode.ComponentService
         //^^^^   helping functions for drag and drop features   ^^^^
     }
 }
+

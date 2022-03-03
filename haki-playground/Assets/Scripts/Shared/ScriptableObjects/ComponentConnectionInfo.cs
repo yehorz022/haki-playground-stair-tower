@@ -11,7 +11,6 @@ namespace Assets.Scripts.Shared.ScriptableObjects
         {
             Vertical,
             Horizontal,
-
         }
 
         private Guid id;

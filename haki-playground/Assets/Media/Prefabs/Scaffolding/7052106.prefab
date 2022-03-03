@@ -172,7 +172,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3189105807693862902}
   - component: {fileID: 8631698342853981366}
-  - component: {fileID: 6243383065129235263}
   m_Layer: 0
   m_Name: 7052106
   m_TagString: Untagged
@@ -216,24 +215,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8028b95c62ced5743926f9b8101449ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugOptions: 0
+  debugOptions: 1
   ConnectionDefinitionCollection: {fileID: 11400000, guid: fc539f6b60ae139479d11ffb4dc57ae3, type: 2}
   inputHandler: {fileID: 0}
---- !u!114 &6243383065129235263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 455539313517744669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57754c3f6d8a8664a941c1e6954d527a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  reference: {fileID: 0}
-  look: {fileID: 0}
-  count: 0
+  elementHeightInMillimeters: 0
+  elementLengthInMillimeters: 0
+  elementWidthInMillimeters: 0
+  elementWeight: 0
 --- !u!1 &596905027358710900
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Assets.Scripts.Extensions.UnityExtensions;
 using Assets.Scripts.Services.Core;
-using Assets.Scripts.Shared.Constants;
+using Assets.Scripts.Services.Instanciation;
+using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Containers.Collision;
-using Assets.Scripts.Shared.Interfaces;
 using Assets.Scripts.Shared.ScriptableObjects;
 using UnityEngine;
 
@@ -11,115 +11,106 @@ namespace Assets.Scripts.Services.ComponentService
 {
     public interface IComponentHolder
     {
-        void PlaceComponent(IScaffoldingComponent scaffoldingComponent);
-        void RemoveComponent(IScaffoldingComponent scaffoldingComponent);
-        bool TryGetIntersections(Ray ray, ComponentConnectionInfo connectionInfo, out List<IntersectionResults> connectionPoints);
-        IScaffoldingComponent GetComponentBehindRay();
-        void OnDrawGizmos();
+        void PlaceComponent(HakiComponent scaffoldingComponent);
+        void RemoveComponent(HakiComponent scaffoldingComponent);
+        bool TryGetIntersections(int id, Ray ray, ComponentConnectionInfo connectionInfo,
+            out List<IntersectionResults> connectionPoints);
+        HakiComponent GetComponentBehindRay();
+        IEnumerable<HakiComponent> Enumerate();
     }
 
     [Service(typeof(IComponentHolder))]
     public class ComponentHolderService : IComponentHolder
     {
 
-        [Inject] private IIntersectionService IntersectionHandler { get; set; }
-
-        public ComponentHolderService(IIntersectionService intersectionService)
+        private readonly List<HakiComponent> components;
+        private readonly IIntersectionService intersectionHandler;
+        private readonly IObjectCacheManager objectCacheManager;
+        public ComponentHolderService(IIntersectionService intersectionService, IObjectCacheManager objectCacheManager)
         {
-            IntersectionHandler = intersectionService;
+            intersectionHandler = intersectionService;
+            this.objectCacheManager = objectCacheManager;
 
-            components = new List<IScaffoldingComponent>();
+            components = new List<HakiComponent>();
         }
 
-        private readonly List<IScaffoldingComponent> components;
 
-        public ComponentHolderService()
+        public ComponentHolderService(IObjectCacheManager objectCacheManager)
         {
-            components = new List<IScaffoldingComponent>();
+            this.objectCacheManager = objectCacheManager;
+            components = new List<HakiComponent>();
         }
 
-        public void PlaceComponent(IScaffoldingComponent scaffoldingComponent)
+        public void PlaceComponent(HakiComponent scaffoldingComponent)
         {
             components.Add(scaffoldingComponent);
         }
 
-        public void RemoveComponent(IScaffoldingComponent scaffoldingComponent)
+        public void RemoveComponent(HakiComponent scaffoldingComponent)
         {
             components.Remove(scaffoldingComponent);
         }
 
-        public void OnDrawGizmos()
+        public IEnumerable<HakiComponent> Enumerate()
         {
-            if (components != null)
-            {
-                foreach (IScaffoldingComponent component in components)
-                {
-                    for (int i = 0; i < component.GetConnectionDefinitionCollection().Count; i++)
-                    {
-                        ConnectionDefinition item = component.GetConnectionDefinitionCollection().GetElementAt(i);
-
-                        Vector3 connectorPos = item.CalculateWorldPosition(component.GetTransform());
-
-                        Gizmos.DrawSphere(connectorPos, Constants.VirtualSphereRadius);
-                    }
-                }
-            }
+            return components;
         }
 
-        public bool TryGetIntersections(Ray ray, ComponentConnectionInfo connectionInfo, out List<IntersectionResults> connectionPoints)
+
+        public bool TryGetIntersections(int id, Ray ray, ComponentConnectionInfo connectionInfo,
+            out List<IntersectionResults> connectionPoints)
         {
 
             connectionPoints = new List<IntersectionResults>();
 
-            bool result = false;
-
             Vector3 lineStart = ray.origin;
             Vector3 lineEnd = ray.GetPoint(100);
 
-            foreach (IScaffoldingComponent component in components)
+            foreach (HakiComponent component in components)
             {
-
-                //check if scaffoldingComponent is behind ray
-
-                if(ray.IsVectorBehind(component.GetTransform().position))
+                if (component.GetInstanceID() == id)
                     continue;
 
-                for (int i = 0; i < component.GetConnectionDefinitionCollection().Count; i++)
+                if (ray.IsVectorBehind(component.transform.position))
+                    continue;
+
+                if (component.TryGetCollectionDefinition(out ConnectionDefinitionCollection collection))
                 {
-                    ConnectionDefinition item = component.GetConnectionDefinitionCollection().GetElementAt(i);
+                    for (int i = 0; i < collection.Count; i++)
+                    {
+                        ConnectionDefinition definition = collection.GetElementAt(i);
 
-                    if (connectionInfo.Equals(item.ComponentConnectionInfo).Equals(false))
-                        continue;
+                        if (connectionInfo.Equals(definition.ComponentConnectionInfo).Equals(false))
+                            continue;
 
-                    Vector3 heading = item.CalculateHeading(component.GetTransform().localRotation);
-                    Vector3 wPos = item.CalculateWorldPosition(component.GetTransform());
+                        Vector3 heading = definition.CalculateHeading(component.transform.rotation);
+                        Vector3 wPos = definition.CalculateWorldPosition(component.transform);
 
-                    if (IntersectionHandler.CheckIntersection(lineStart, lineEnd, heading, wPos) == false)
-                        continue;
+                        if (intersectionHandler.CheckIntersection(lineStart, lineEnd, heading, wPos) == false)
+                            continue;
 
-                    connectionPoints.Add(new IntersectionResults(component, i));
-                    result = true;
+                        connectionPoints.Add(new IntersectionResults(component, i, collection));
+                    }
                 }
             }
 
-            return result;
+            return connectionPoints.Count > 0;
         }
 
-        RaycastHit hit;
-        public IScaffoldingComponent GetComponentBehindRay()
+        public HakiComponent GetComponentBehindRay()
         {
-            foreach (IScaffoldingComponent component in components)
-                component.GetGameObject().layer = LayerMask.NameToLayer("Default"); // enable raycast so it can selectable
-            IScaffoldingComponent componentSelected = null;
-            bool gotHit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit);
+            foreach (HakiComponent component in components)
+                component.gameObject.layer = LayerMask.NameToLayer("Default"); // enable raycast so it can selectable
+            HakiComponent componentSelected = null;
+            bool gotHit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);
             if (gotHit)
             {
-                if (hit.collider.GetComponent<IScaffoldingComponent>() != null) //print("gotHit  " + hit.collider.gameObject.name);
-                    componentSelected = hit.collider.GetComponent<IScaffoldingComponent>();
+                if (hit.collider.GetComponent<HakiComponent>() != null) //print("gotHit  " + hit.collider.gameObject.name);
+                    componentSelected = hit.collider.GetComponent<HakiComponent>();
             }
 
-            foreach (IScaffoldingComponent component in components)
-                component.GetGameObject().layer = LayerMask.NameToLayer("Ignore Raycast"); // disable objects raycast to detect floor easily
+            foreach (HakiComponent component in components)
+                component.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // disable objects raycast to detect floor easily
             return componentSelected;
         }
     }

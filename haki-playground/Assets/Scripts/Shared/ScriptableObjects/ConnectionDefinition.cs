@@ -38,14 +38,14 @@ namespace Assets.Scripts.Shared.ScriptableObjects
             Vector3 worldPosition = CalculateWorldPosition(parent);
 
             Vector3 lookAtPoint = CalculateHeading(parent.localRotation);
-            if (lookAtPoint == Vector3.zero)
-                lookAtPoint = new Vector3(0, 0, 1);
 
-            Gizmo.DrawArrow(worldPosition, worldPosition + lookAtPoint, color);
+            //Gizmos.color = color;
+            //Gizmos.DrawLine(worldPosition, worldPosition + lookAtPoint);
             //Gizmo.DrawCube(worldPosition + lookAtPoint, lookAtPoint, new Vector3(.5f, .05f, .2f), color);
             //Gizmo.DrawCube(worldPosition + lookAtPoint, new Vector3(.3f, .05f, .1f), color);
             //Gizmo.DrawCone(lookAtPoint + worldPosition, lookAtPoint, .05f, .15f, Color.magenta, 4);
-            Gizmo.DrawCone(lookAtPoint + worldPosition, lookAtPoint, .05f, .15f, Color.magenta, 14);
+            Gizmo.DrawArrow(worldPosition, worldPosition + lookAtPoint, color);
+            Gizmo.DrawCone(lookAtPoint + worldPosition, lookAtPoint, .05f, .15f, Color.magenta, 14, true);
 
             Vector3 point = Vector3.one;
             float scaleFactor = .1f;  // scaleFactor for presentation, makes things smaller
@@ -55,7 +55,6 @@ namespace Assets.Scripts.Shared.ScriptableObjects
             Gizmo.DrawArrow(point, Vector3.up, scaleFactor * 4, Color.yellow); // arrow method taking position, direction and length
             Gizmo.DrawArrow(point, Vector3.forward, scaleFactor * 4, Color.green); // arrow method taking position, direction and length
             Gizmo.DrawArrow(point, Vector3.one, scaleFactor * 4, Color.magenta); // arrow method taking position, direction and length
-           
         }
 
         public Quaternion CalculateRotation()

@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.ScriptableObjects;
 using UnityEngine;
 

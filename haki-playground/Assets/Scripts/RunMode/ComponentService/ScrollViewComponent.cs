@@ -57,7 +57,7 @@ namespace Assets.Scripts.RunMode.ComponentService
                 panelSize = vertical ? panelPrefab.GetComponent<RectTransform>().sizeDelta.y : panelPrefab.GetComponent<RectTransform>().sizeDelta.x;
                 minPanels = Mathf.CeilToInt((vertical ? 1f * Screen.height / Screen.width * CanvasComponent.MaxResolution : CanvasComponent.MaxResolution) / (panelSize + gap)) + 1;
             }
-            OnScreenResolutionChanged(); // to set end gaps at start
+            //OnScreenResolutionChanged(); // to set end gaps at start
         }
 
         void OnScreenResolutionChanged()
