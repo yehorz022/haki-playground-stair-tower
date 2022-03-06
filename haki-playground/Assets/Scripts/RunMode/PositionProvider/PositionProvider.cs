@@ -1,7 +1,6 @@
 using Assets.Scripts.RunMode.ComponentService;
 using Assets.Scripts.Services.ComponentService;
 using Assets.Scripts.Services.Core;
-using Assets.Scripts.Services.InputService;
 using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Shared.Containers.Collision;
 using Assets.Scripts.Shared.ScriptableObjects;
@@ -48,7 +47,6 @@ namespace Assets.Scripts.RunMode.PositionProvider
             ccs = component;
             run = true;
             ccs = ObjectCacheManager.Instantiate(component, transform);
-            ;
         }
 
         public void PlaceComponent()
@@ -91,7 +89,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
 
         private bool HandleCollisionDetection(out Vector3 pos, out Quaternion euler)
         {
-
+            
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             CollisionInfo ci = CollisionDetectionService.Evaluate(ray, 0, ccs);

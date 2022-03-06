@@ -1,4 +1,3 @@
-using Assets.Scripts.RunMode.ComponentService;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.DependencyInjection;
 using Assets.Scripts.Services.InputService;
@@ -9,21 +8,23 @@ using UnityEngine;
 
 namespace Assets.Scripts.RunMode
 {
-    public partial class ApplicationManager : MonoBehaviour
+    public partial class ApplicationManager : SceneMemberInjectDependencies
     {
         private static ApplicationManager instance;
         private ServiceManager serviceManager;
 
-        private IInputService inputService;
+        [Inject]
+        private IInputService inputService { get; set; }
         [SerializeField] private GameObject emptyGameObject;
         public static ApplicationManager Instance => instance;
+
 
         void Awake()
         {
             instance = this;
             InitService();
 
-            inputService = serviceManager.GetDependency<IInputService>();
+            //inputService = serviceManager.GetDependency<IInputService>();
 
             Inputs.Initialize(); //intializing inputs to enable drag and drop features of UI
             Routine.Initialize(this); // needs to place in Awake , intializing routine to run animations and routines like wait routines and button clicking anims
@@ -45,6 +46,11 @@ namespace Assets.Scripts.RunMode
         {
             ResetTransform();
 
+            InjectDependenciesToSceneObjects();
+        }
+
+        private void InjectDependenciesToSceneObjects()
+        {
             SceneMemberInjectDependencies[] hakiComponents = GameObject.FindObjectsOfType<SceneMemberInjectDependencies>();
 
             foreach (SceneMemberInjectDependencies component in hakiComponents)
@@ -64,9 +70,15 @@ namespace Assets.Scripts.RunMode
             transform.localScale = Vector3.one;
         }
 
+
+        public static void HandleDependencyInjection(HakiComponent hakicomponent)
+        {
+            instance.serviceManager.InjectDependencies(hakicomponent);
+        }
+
         void Update()
         {
-            inputService.Update();
+            inputService?.Update();
         }
 
     }

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Assets.Scripts.Extensions.UnityExtensions;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Containers.Collision;
 using Assets.Scripts.Shared.ScriptableObjects;
+using Assets.Scripts.Shared.UnityExtensions;
 using UnityEngine;
 
 namespace Assets.Scripts.Services.ComponentService
@@ -13,9 +13,12 @@ namespace Assets.Scripts.Services.ComponentService
     {
         void PlaceComponent(HakiComponent scaffoldingComponent);
         void RemoveComponent(HakiComponent scaffoldingComponent);
-        bool TryGetIntersections(int id, Ray ray, ComponentConnectionInfo connectionInfo,
+        bool TryGetConnectionPoints(int id, Ray ray, ComponentConnectionInfo connectionInfo,
             out List<IntersectionResults> connectionPoints);
+
         HakiComponent GetComponentBehindRay();
+
+        HakiComponent[] GetComponentsIntersectingWith(Ray ray);
         IEnumerable<HakiComponent> Enumerate();
     }
 
@@ -51,20 +54,40 @@ namespace Assets.Scripts.Services.ComponentService
             components.Remove(scaffoldingComponent);
         }
 
+        /// <inheritdoc />
+        public HakiComponent[] GetComponentsIntersectingWith(Ray ray)
+        {
+            List<HakiComponent> results = new List<HakiComponent>();
+            foreach (HakiComponent component in components)
+            {
+                if (ray.IsVectorBehind(component.transform.position))
+                    continue;
+
+                if (intersectionHandler.RayCubeIntersection(ray, component, out Vector3 point) == false)
+                    continue;
+
+                Debug.DrawLine(ray.origin, point, Color.red, 12);
+
+                results.Add(component);
+            }
+
+            return results.ToArray();
+        }
+
         public IEnumerable<HakiComponent> Enumerate()
         {
             return components;
         }
 
 
-        public bool TryGetIntersections(int id, Ray ray, ComponentConnectionInfo connectionInfo,
-            out List<IntersectionResults> connectionPoints)
+        public bool TryGetConnectionPoints(int id, Ray ray, ComponentConnectionInfo connectionInfo, out List<IntersectionResults> connectionPoints)
         {
 
             connectionPoints = new List<IntersectionResults>();
 
-            Vector3 lineStart = ray.origin;
             Vector3 lineEnd = ray.GetPoint(100);
+            Debug.DrawRay(ray.origin, ray.direction, Color.magenta);
+            HakiComponent[] comps = GetComponentsIntersectingWith(ray);
 
             foreach (HakiComponent component in components)
             {
@@ -86,7 +109,7 @@ namespace Assets.Scripts.Services.ComponentService
                         Vector3 heading = definition.CalculateHeading(component.transform.rotation);
                         Vector3 wPos = definition.CalculateWorldPosition(component.transform);
 
-                        if (intersectionHandler.CheckIntersection(lineStart, lineEnd, heading, wPos) == false)
+                        if (intersectionHandler.LineSphereIntersection(ray.origin, lineEnd, heading, wPos) == false)
                             continue;
 
                         connectionPoints.Add(new IntersectionResults(component, i, collection));
@@ -102,7 +125,7 @@ namespace Assets.Scripts.Services.ComponentService
             foreach (HakiComponent component in components)
                 component.gameObject.layer = LayerMask.NameToLayer("Default"); // enable raycast so it can selectable
             HakiComponent componentSelected = null;
-            bool gotHit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);
+            bool gotHit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit);
             if (gotHit)
             {
                 if (hit.collider.GetComponent<HakiComponent>() != null) //print("gotHit  " + hit.collider.gameObject.name);

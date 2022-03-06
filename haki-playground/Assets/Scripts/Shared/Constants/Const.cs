@@ -10,9 +10,8 @@ namespace Assets.Scripts.Shared.Constants
         public const float MinimumDotProductValueAllowedForIntersections = 1f;
         public const float MilimitersToUnityFactor = 0.001f;
         public const float CentiMetersToUnityFactor = 0.01f;
-
-        public const int SpirePocketOffset = 25;
-
+        public const string ReflectionServiceFactoryIsNull = "ReflectionServiceFactory.constructor is null";
+        public const string ReflectionServiceFactoryTypesIsNull = "ReflectionServiceFactory.types is null";
         public const int SpireInitialOffset = 240;
         public const int SpireSpacingBetweenPocketGroups = 500;
         public const int DeckVerticalOffset = 45;

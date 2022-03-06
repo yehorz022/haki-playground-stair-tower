@@ -86,8 +86,10 @@ crashlytics-build.properties
 /haki-playground/[Ll]ogs/*
 /[Tt]emp/UnityTempFile**
 /[Ll]ogs/*
-/haki-playground/Library
+/haki-playground/Library/Artifacts
 /haki-playground/obj/Debug
+/haki-playground/Temp
 /haki-playground/UserSettings
 /haki-playground/ProjectSettings
-/haki-playground
+/haki-playground/Library
+/haki-playground/Assembly-CSharp.csproj.DotSettings
