@@ -4,15 +4,24 @@ namespace Assets.Scripts.Shared.UnityExtensions
 {
     public static class RayExtensions
     {
-
-        public static bool IsVectorInFront(this Ray ray, Vector3 point)
+        public static bool IsVectorInFrontRay(this Ray ray, Vector3 point)
         {
-            return Vector3.Dot(ray.direction, ray.origin.GetDirectionTo(point, true)) > 0;
+            return Vector3.Dot(ray.direction, ray.origin.CalculateDirectionTo(point, true)) > 0;
         }
 
-        public static bool IsVectorBehind(this Ray ray, Vector3 point)
+        public static bool IsTransformInFrontRay(this Ray ray, Transform transform)
         {
-            return ray.IsVectorInFront(point) == false;
+            return ray.IsVectorInFrontRay(transform.position);
+        }
+
+        public static bool IsVectorBehindRay(this Ray ray, Vector3 point)
+        {
+            return ray.IsVectorInFrontRay(point) == false;
+        }
+
+        public static bool IsTransformBehindRay(this Ray ray, Transform transform)
+        {
+            return ray.IsVectorBehindRay(transform.position);
         }
 
         public static float DotProduct(this Ray ray, Vector3 otherDirection)
@@ -20,9 +29,21 @@ namespace Assets.Scripts.Shared.UnityExtensions
             return ray.direction.DotProduct(otherDirection);
         }
 
+        public static Vector3 GetCloserVector(this Ray ray, Vector3 first, Vector3 second)
+        {
+            return ray.origin.GetCloserVector(first, second);
+        }
+
+        public static bool IsVectorCloser(this Ray ray, Vector3 first, Vector3 second, out Vector3 result)
+        {
+            return ray.origin.IsVectorCloser(first, second, out result);
+        }
+
         public static bool IsDotProductGreaterOrEqual(this Ray ray, Vector3 other, float threshold)
         {
             return ray.DotProduct(other) >= threshold;
         }
+
+        
     }
 }

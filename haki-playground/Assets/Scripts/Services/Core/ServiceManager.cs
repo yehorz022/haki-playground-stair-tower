@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using Assets.Scripts.Services.Factories;
-using Assets.Scripts.Services.Instanciation;
+using UnityEngine;
 
 namespace Assets.Scripts.Services.Core
 {
@@ -28,13 +25,19 @@ namespace Assets.Scripts.Services.Core
         {
             if (tInterface.IsAssignableFrom(tImplementation))
             {
-                services.Add(tInterface, 
+                services.Add(tInterface,
                     new ReflectionServiceFactory(
                         tImplementation.GetConstructors()));
             }
         }
 
-        private object GetDependency(Type type)
+        [Obsolete("is obsolete, do not use")]
+        public T GetDependency<T>()
+        {
+            return GetDependency<T>(Array.Empty<object>());
+        }
+
+        private object GetDependency(Type type, object[] injectData)
         {
 
             if (implementations.TryGetValue(type, out object implementation))
@@ -42,32 +45,63 @@ namespace Assets.Scripts.Services.Core
                 return implementation;
             }
 
-            return CreateDependency(type);
+            return CreateDependency(type, injectData);
         }
 
-        private object CreateDependency(Type type)
+        private object CreateDependency(Type type, object[] injectData)
         {
-            if (services.TryGetValue(type, out ReflectionServiceFactory serviceFactory) == false) 
+            if (services.TryGetValue(type, out ReflectionServiceFactory serviceFactory) == false)
                 return default;
 
 
-            IEnumerable<Type> requiredTypes = new List<Type>(serviceFactory.RequiredTypes);
-
-            object[] parameters = new object[requiredTypes.Count()];
-            int index = 0;
-            foreach (Type requiredType in requiredTypes)
-            {
-                parameters[index++] = GetDependency(requiredType);
-            }
-
+            object[] parameters = CreateConstructorParameters(type, injectData, serviceFactory);
             object implementation = serviceFactory.Implement(parameters);
+
             implementations.Add(type, implementation);
+
             return implementation;
         }
 
-        public T GetDependency<T>()
+        private object[] CreateConstructorParameters(Type type, object[] injectData, ReflectionServiceFactory serviceFactory)
         {
-            if (GetDependency(typeof(T)) is T createdValue)
+            IList<Type> requiredTypes = new List<Type>(serviceFactory.RequiredTypes);
+
+            IDictionary<Type, object> injected = injectData.ToDictionary(x => x.GetType());
+
+            object[] parameters = new object[requiredTypes.Count];
+            int index = 0;
+
+            foreach (Type requiredType in requiredTypes)
+            {
+                if (injected.TryGetValue(requiredType, out object dependency) == false)
+                {
+                    dependency = GetDependency(requiredType, Array.Empty<object>());
+                }
+
+                if (ValidateDependency(dependency, () => $"Dependency of type {requiredType} required by {type.Name} could not been found!"))
+                {
+                    parameters[index++] = dependency;
+                }
+            }
+
+            return parameters;
+        }
+
+        private static bool ValidateDependency(object dependency, Func<string> func)
+        {
+            if (dependency == null)
+            {
+                string message = func(); ;
+                Debug.LogError(message);
+                throw new NullReferenceException(message);
+            }
+
+            return true;
+        }
+
+        public T GetDependency<T>(object[] injectData)
+        {
+            if (GetDependency(typeof(T), injectData) is T createdValue)
             {
                 return createdValue;
             }

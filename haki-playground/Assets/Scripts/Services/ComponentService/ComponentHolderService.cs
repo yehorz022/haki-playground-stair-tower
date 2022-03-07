@@ -60,7 +60,7 @@ namespace Assets.Scripts.Services.ComponentService
             List<HakiComponent> results = new List<HakiComponent>();
             foreach (HakiComponent component in components)
             {
-                if (ray.IsVectorBehind(component.transform.position))
+                if (ray.IsVectorBehindRay(component.transform.position))
                     continue;
 
                 if (intersectionHandler.RayCubeIntersection(ray, component, out Vector3 point) == false)
@@ -94,7 +94,7 @@ namespace Assets.Scripts.Services.ComponentService
                 if (component.GetInstanceID() == id)
                     continue;
 
-                if (ray.IsVectorBehind(component.transform.position))
+                if (ray.IsVectorBehindRay(component.transform.position))
                     continue;
 
                 if (component.TryGetCollectionDefinition(out ConnectionDefinitionCollection collection))

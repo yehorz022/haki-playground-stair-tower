@@ -21,22 +21,22 @@ namespace Assets.Scripts.Services.Factories
 
         public void Produce(Transform parent, HakiComponent prefab, int length, int width, int elementWidth, int level)
         {
-            //int number = width / elementWidth;
-            //float offset = unitConverter.Convert(width % elementWidth) / 2f;
-            //float halfEleWidth = unitConverter.Convert(elementWidth / 2);
-            //float elementWithUnity = unitConverter.Convert(elementWidth);
+            int number = width / elementWidth;
+            float offset = unitConverter.Convert(width % elementWidth) / 2f;
+            float halfEleWidth = unitConverter.Convert(elementWidth / 2);
+            float elementWithUnity = unitConverter.Convert(elementWidth);
 
-            //float y = unitConverter.Convert(Constants.SpireInitialOffset + level * Constants.SpireSpacingBetweenPocketGroups)
-            //          + unitConverter.Convert(Constants.DeckVerticalOffset);
+            float y = unitConverter.Convert(Constants.SpireInitialOffset + level * Constants.SpireSpacingBetweenPocketGroups)
+                      + unitConverter.Convert(Constants.DeckVerticalOffset);
 
 
-            //Quaternion rotation = Quaternion.identity;
-            //for (int i = 0; i < number; i++)
-            //{
-            //    HakiComponent hc = Produce(prefab, parent.transform);
-            //    hc.transform.localPosition = new Vector3(0, y, offset + (halfEleWidth + elementWithUnity * i));
-            //    hc.transform.rotation = rotation;
-            //}
+            Quaternion rotation = Quaternion.identity;
+            for (int i = 0; i < number; i++)
+            {
+                HakiComponent hc = Produce(prefab, parent.transform);
+                hc.transform.localPosition = new Vector3(0, y, offset + (halfEleWidth + elementWithUnity * i));
+                hc.transform.rotation = rotation;
+            }
         }
     }
 }

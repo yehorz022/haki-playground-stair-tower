@@ -3,6 +3,8 @@ namespace Assets.Scripts.Shared.Constants
 {
     public static class Constants
     {
+        public const int IndexOfTopConnectionPointInStandardSpire = 1;
+        public const int IndexOfBottomConnectionPointInStandardSpire = 0;
         public const float VirtualSphereRadius = .15f;
         public const string ImproperParameters = "Improper parameters";
         public const string TooManyConstructorsException = "Services can have only one constructor empty constructor or one constructor with parameters";

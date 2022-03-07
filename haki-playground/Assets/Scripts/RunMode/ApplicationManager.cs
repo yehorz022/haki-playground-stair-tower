@@ -2,6 +2,7 @@ using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.DependencyInjection;
 using Assets.Scripts.Services.InputService;
 using Assets.Scripts.Services.Instanciation;
+using Assets.Scripts.Services.Tools;
 using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
@@ -15,6 +16,9 @@ namespace Assets.Scripts.RunMode
 
         [Inject]
         private IInputService inputService { get; set; }
+        [Inject(1)]
+        private ISelectFaceTool FaceSelectTool { get; set; }
+
         [SerializeField] private GameObject emptyGameObject;
         public static ApplicationManager Instance => instance;
 
@@ -79,6 +83,7 @@ namespace Assets.Scripts.RunMode
         void Update()
         {
             inputService?.Update();
+            FaceSelectTool?.DetectFace(Camera.main.ScreenPointToRay(Input.mousePosition));
         }
 
     }

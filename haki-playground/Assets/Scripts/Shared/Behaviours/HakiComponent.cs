@@ -7,6 +7,8 @@ namespace Assets.Scripts.Shared.Behaviours
     public abstract class HakiComponent : DebugBehaviour
     {
 
+        public Vector3 Position => transform.position;
+        public Quaternion Rotation => transform.rotation;
 
         protected void Activate() => gameObject.SetActive(true);
         protected void Deactivate() => gameObject.SetActive(false);

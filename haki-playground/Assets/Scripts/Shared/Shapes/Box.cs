@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Assets.Scripts.Shared.Helpers;
 using Assets.Scripts.Shared.UnityExtensions;
 using log4net.Appender;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Assets.Scripts.Shared.Shapes
 {
     public abstract class Shape<T> where T : Shape<T>
     {
-        public abstract T Rotate(Transform transform);
+        protected abstract T Rotate(Transform transform);
     }
 
     public class Box : Shape<Box>
@@ -22,6 +23,9 @@ namespace Assets.Scripts.Shared.Shapes
         private Vector3 max;
 
         Color color = Color.blue;
+
+        public Vector3[] Normals => normals;
+
         private Box(Vector3 localPosition, Vector3 offset, (Vector3[] points, Vector3[] normals, Vector3 min, Vector3 max) structure)
         {
             this.offset = offset;
@@ -31,9 +35,9 @@ namespace Assets.Scripts.Shared.Shapes
             min = structure.min;
             max = structure.max;
         }
-        public Box(Vector3 size, Vector3 offset) : this(size, offset, CreatePoints(size))
+        public Box(Vector3 size, Vector3 offset, Transform transform) : this(size, offset, CreatePoints(size))
         {
-
+            //Rotate(transform);
         }
 
 
@@ -100,7 +104,7 @@ namespace Assets.Scripts.Shared.Shapes
         }
 
 
-        public override Box Rotate(Transform transform)
+        protected sealed override Box Rotate(Transform transform)
         {
 
             for (int i = 0; i < points.Length; i++)

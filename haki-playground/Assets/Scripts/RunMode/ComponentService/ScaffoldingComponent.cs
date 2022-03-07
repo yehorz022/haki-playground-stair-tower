@@ -41,32 +41,34 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         protected override void DebugDraw(bool isSelected)
         {
-            if (ConnectionDefinitionCollection == null)
-                return;
-
-            for (int i = 0; i < ConnectionDefinitionCollection.Count; i++)
+            if (ConnectionDefinitionCollection != null)
             {
-
-                Color color = default;
-
-                switch (i % 4)
+                for (int i = 0; i < ConnectionDefinitionCollection.Count; i++)
                 {
-                    case 0:
-                        color = Color.red;
-                        break;
-                    case 1:
-                        color = Color.yellow;
-                        break;
-                    case 2:
-                        color = Color.blue;
-                        break;
-                    case 3:
-                        color = Color.green;
-                        break;
-                }
 
-                ConnectionDefinitionCollection.GetElementAt(i).DebugDraw(transform, color);
+                    Color color = default;
+
+                    switch (i % 4)
+                    {
+                        case 0:
+                            color = Color.red;
+                            break;
+                        case 1:
+                            color = Color.yellow;
+                            break;
+                        case 2:
+                            color = Color.blue;
+                            break;
+                        case 3:
+                            color = Color.green;
+                            break;
+                    }
+
+                    ConnectionDefinitionCollection.GetElementAt(i).DebugDraw(transform, color);
+                }
             }
+
+            GetBounds().DebugDraw(transform);
         }
 
         public void Select()
@@ -143,7 +145,7 @@ namespace Assets.Scripts.RunMode.ComponentService
                 width = unitConverter.Convert(elementWidthInMillimeters);
             }
             Vector3 size = new Vector3(length, height, width) / 2;
-            return new Box(size, offset).Rotate(transform);
+            return new Box(size, offset, transform);
         }
     }
 }
