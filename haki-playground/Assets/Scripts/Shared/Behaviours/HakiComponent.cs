@@ -27,7 +27,6 @@ namespace Assets.Scripts.Shared.Behaviours
             Activate();
         }
 
-        //public abstract bool TryGetCollectionDefinition(out ConnectionDefinitionCollection payload);
         public abstract bool TryGetCollectionDefinition(out ConnectionDefinitionCollection collection);
 
         public abstract Box GetBounds();

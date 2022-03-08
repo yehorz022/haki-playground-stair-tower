@@ -131,7 +131,6 @@ namespace Assets.Scripts.Shared.Shapes
             {
                 if (i2 >= points.Length || i1 >= points.Length)
                     return;
-                Debug.DrawLine(world + transform.rotation * points[i1], world + transform.rotation * points[i2], color);
             }
             for (int iSide = 0; iSide < NumberOfSides; iSide++)
             {

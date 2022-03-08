@@ -114,7 +114,6 @@ namespace Assets.Scripts.RunMode.ComponentService
                 SetMaterialRecursively(trans.GetChild(i), mat);
         }
 
-        /// <inheritdoc />
         public override bool TryGetCollectionDefinition(out ConnectionDefinitionCollection collection)
         {
             collection = ConnectionDefinitionCollection;
@@ -125,9 +124,10 @@ namespace Assets.Scripts.RunMode.ComponentService
             return ConnectionDefinitionCollection != null;
         }
 
-        /// <inheritdoc />
         public override Box GetBounds()
         {
+            //This is rather poor implementation, while it works it would be best to cache it somehow, however the fact that it uses
+            // transform.rotation makes it difficult.
             float length;
             float height;
             float width;

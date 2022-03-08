@@ -99,7 +99,7 @@ namespace Assets.Scripts.Services.Core
             return true;
         }
 
-        public T GetDependency<T>(object[] injectData)
+        private T GetDependency<T>(object[] injectData)
         {
             if (GetDependency(typeof(T), injectData) is T createdValue)
             {
@@ -120,6 +120,11 @@ namespace Assets.Scripts.Services.Core
             {
                 if (Inject.CreateProcedureList(type, out procedures))
                 {
+                    if (procedures == null)
+                        throw new NullReferenceException(
+                            $"{nameof(procedures)} in {nameof(InjectDependencies)} in {GetType().Name} was null! {Environment.NewLine} StackTrace: {Environment.StackTrace}");
+
+
                     injectionProcedures.Add(type, procedures);
                 }
             }
@@ -129,8 +134,6 @@ namespace Assets.Scripts.Services.Core
                 procedure.Execute(item, GetDependency);
             }
         }
-
-
 
         public void RegisterServicesFromAssembly(Assembly assembly)
         {
@@ -144,7 +147,7 @@ namespace Assets.Scripts.Services.Core
                 if (Service.TryGetService(type, out Service att) == false)
                     continue;
 
-                foreach (Type current in att.SupportedTypes)
+                foreach (Type current in att.ImplementedServices)
                 {
                     Register(current, type);
                 }

@@ -1,3 +1,4 @@
+using System;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Shared.Behaviours;
@@ -40,7 +41,7 @@ namespace Assets.Scripts.RunMode.ComponentService
         /// <inheritdoc />
         public override Box GetBounds()
         {
-            return null;
+            throw new NotImplementedException("This feature has not yet been implemented!");
         }
     }
 }

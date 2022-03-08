@@ -2932,7 +2932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8028b95c62ced5743926f9b8101449ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugOptions: 3
+  debugOptions: 0
   ConnectionDefinitionCollection: {fileID: 11400000, guid: 8c85f712ffed62147a990443ba0c8b87, type: 2}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 2000

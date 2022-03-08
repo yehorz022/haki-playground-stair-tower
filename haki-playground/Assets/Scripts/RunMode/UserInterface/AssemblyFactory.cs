@@ -34,7 +34,7 @@ namespace Assets.Scripts.RunMode.UserInterface
 
         private Stack<int> heights; //TODO: change this to something less silly.
 
-        [Inject] protected IObjectCacheManager ObjectCacheManager { get; set; }
+        [Inject] private IObjectCacheManager ObjectCacheManager { get; set; }
         [Inject] private IConverter<MilliMeter, Native> Converter { get; set; }
         [Inject] private IPillarFactory PillarFactory { get; set; }
         [Inject] private ISidesFactory SidesFactory { get; set; }

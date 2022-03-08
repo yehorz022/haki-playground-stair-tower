@@ -69,7 +69,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
                 if (service == null)
                     continue;
 
-                foreach (Type current in service.SupportedTypes)
+                foreach (Type current in service.ImplementedServices)
                 {
                     Assert.IsTrue(current.IsInterface, $"Service {type.FullName} attempts to implement a class ({current.FullName}) as an interface");
                     Assert.IsTrue(type.IsClass, $"type {type.FullName} is expected to be a class, but it is not.");
@@ -164,7 +164,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
                 if (service == null)
                     continue;
 
-                foreach (Type current in service.SupportedTypes)
+                foreach (Type current in service.ImplementedServices)
                 {
                     interfaceImplementationPair.Add(current, type);
                 }

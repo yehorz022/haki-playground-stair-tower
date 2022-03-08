@@ -66,8 +66,6 @@ namespace Assets.Scripts.Services.ComponentService
                 if (intersectionHandler.RayCubeIntersection(ray, component, out Vector3 point) == false)
                     continue;
 
-                Debug.DrawLine(ray.origin, point, Color.red, 12);
-
                 results.Add(component);
             }
 
@@ -86,8 +84,6 @@ namespace Assets.Scripts.Services.ComponentService
             connectionPoints = new List<IntersectionResults>();
 
             Vector3 lineEnd = ray.GetPoint(100);
-            Debug.DrawRay(ray.origin, ray.direction, Color.magenta);
-            HakiComponent[] comps = GetComponentsIntersectingWith(ray);
 
             foreach (HakiComponent component in components)
             {

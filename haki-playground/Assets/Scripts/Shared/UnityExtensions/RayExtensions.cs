@@ -29,14 +29,14 @@ namespace Assets.Scripts.Shared.UnityExtensions
             return ray.direction.DotProduct(otherDirection);
         }
 
-        public static Vector3 GetCloserVector(this Ray ray, Vector3 first, Vector3 second)
+        public static Vector3 GetVectorClosestToRay(this Ray ray, Vector3 first, Vector3 second)
         {
-            return ray.origin.GetCloserVector(first, second);
+            return ray.origin.GetVectorClosestToVector(first, second);
         }
 
-        public static bool IsVectorCloser(this Ray ray, Vector3 first, Vector3 second, out Vector3 result)
+        public static bool TryGetVectorClosestToRay(this Ray ray, Vector3 first, Vector3 second, out Vector3 result)
         {
-            return ray.origin.IsVectorCloser(first, second, out result);
+            return ray.origin.TryGetVectorClosestToVector(first, second, out result);
         }
 
         public static bool IsDotProductGreaterOrEqual(this Ray ray, Vector3 other, float threshold)

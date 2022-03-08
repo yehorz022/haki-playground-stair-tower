@@ -35,15 +35,15 @@ namespace Assets.Scripts.Shared.UnityExtensions
             return new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         }
 
-        public static float MagnitudeSquared(this Vector3 vec)
+        public static float CalculateSquareDistanceTo(this Vector3 origin, Vector3 target)
         {
-            return vec.x.Pow2() + vec.y.Pow2() + vec.z.Pow2();
+            return origin.CalculateDirectionTo(target, false).sqrMagnitude;
         }
 
-        public static bool IsVectorCloser(this Vector3 origin, Vector3 first, Vector3 second, out Vector3 result)
+        public static bool TryGetVectorClosestToVector(this Vector3 origin, Vector3 first, Vector3 second, out Vector3 result)
         {
-            float f = origin.CalculateNormalizedDirectionTo(first).sqrMagnitude;
-            float s = origin.CalculateNormalizedDirectionTo(second).sqrMagnitude;
+            float f = origin.CalculateSquareDistanceTo(first);
+            float s = origin.CalculateSquareDistanceTo(second);
 
             if (f > s)
             {
@@ -54,12 +54,15 @@ namespace Assets.Scripts.Shared.UnityExtensions
             return false;
         }
 
-        public static Vector3 GetCloserVector(this Vector3 origin, Vector3 first, Vector3 second)
+        public static bool IsVectorCloserThan(this Vector3 origin, Vector3 candidate, Vector3 current)
         {
-            float f = origin.CalculateDirectionTo(first, false).MagnitudeSquared();
-            float s = origin.CalculateDirectionTo(second, false).MagnitudeSquared();
+            return origin.TryGetVectorClosestToVector(candidate, current, out Vector3 ignore);
+        }
 
-            return s < f ? second : first;
+        public static Vector3 GetVectorClosestToVector(this Vector3 origin, Vector3 first, Vector3 second)
+        {
+            origin.TryGetVectorClosestToVector(first, second, out Vector3 res);
+            return res;
         }
     }
 }

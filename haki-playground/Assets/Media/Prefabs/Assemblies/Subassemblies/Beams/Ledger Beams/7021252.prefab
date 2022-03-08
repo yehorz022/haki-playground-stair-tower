@@ -1564,13 +1564,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8028b95c62ced5743926f9b8101449ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugOptions: 3
+  debugOptions: 0
   ConnectionDefinitionCollection: {fileID: 0}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 230
   elementLengthInMillimeters: 2500
   elementWidthInMillimeters: 50
   elementWeight: 10.5
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &8693560959720075543
 GameObject:
   m_ObjectHideFlags: 0

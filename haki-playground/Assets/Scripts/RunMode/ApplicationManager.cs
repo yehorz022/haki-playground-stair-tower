@@ -1,9 +1,11 @@
+using System;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.DependencyInjection;
-using Assets.Scripts.Services.InputService;
 using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Services.Tools;
+using Assets.Scripts.Services.Utility.InputService;
 using Assets.Scripts.Shared.Behaviours;
+using Assets.Scripts.Shared.Enums;
 using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 
@@ -14,10 +16,8 @@ namespace Assets.Scripts.RunMode
         private static ApplicationManager instance;
         private ServiceManager serviceManager;
 
-        [Inject]
-        private IInputService inputService { get; set; }
-        [Inject(1)]
-        private ISelectFaceTool FaceSelectTool { get; set; }
+        [Inject] private IInputService InputService { get; set; }
+        [Inject] private IToolHandlerService ToolManager { get; set; }
 
         [SerializeField] private GameObject emptyGameObject;
         public static ApplicationManager Instance => instance;
@@ -28,7 +28,6 @@ namespace Assets.Scripts.RunMode
             instance = this;
             InitService();
 
-            //inputService = serviceManager.GetDependency<IInputService>();
 
             Inputs.Initialize(); //intializing inputs to enable drag and drop features of UI
             Routine.Initialize(this); // needs to place in Awake , intializing routine to run animations and routines like wait routines and button clicking anims
@@ -51,6 +50,7 @@ namespace Assets.Scripts.RunMode
             ResetTransform();
 
             InjectDependenciesToSceneObjects();
+            ToolManager.SelectToolByType(ToolType.ExtrudeTool);
         }
 
         private void InjectDependenciesToSceneObjects()
@@ -74,17 +74,10 @@ namespace Assets.Scripts.RunMode
             transform.localScale = Vector3.one;
         }
 
-
-        public static void HandleDependencyInjection(HakiComponent hakicomponent)
-        {
-            instance.serviceManager.InjectDependencies(hakicomponent);
-        }
-
         void Update()
         {
-            inputService?.Update();
-            FaceSelectTool?.DetectFace(Camera.main.ScreenPointToRay(Input.mousePosition));
+            InputService?.Update();
+            ToolManager.Update();
         }
-
     }
 }
