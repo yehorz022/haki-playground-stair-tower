@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Assets.Scripts.Shared.Helpers;
-using UnityEngine.Events;
 
 namespace Assets.Scripts.RunMode.ComponentService
 {

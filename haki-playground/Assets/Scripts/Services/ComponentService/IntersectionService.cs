@@ -1,12 +1,16 @@
 using Assets.Scripts.Services.Core;
+using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Constants;
+using Assets.Scripts.Shared.Shapes;
 using UnityEngine;
 
 namespace Assets.Scripts.Services.ComponentService
 {
     public interface IIntersectionService
     {
-        bool CheckIntersection(Vector3 lineStart, Vector3 lineEnd, Vector3 heading, Vector3 worldPosition);
+        bool LineSphereIntersection(Vector3 lineStart, Vector3 lineEnd, Vector3 heading, Vector3 worldPosition);
+        bool RayCubeIntersection(Ray ray, HakiComponent component);
+        bool RayCubeIntersection(Ray ray, HakiComponent component, out Vector3 point);
     }
 
     [Service(typeof(IIntersectionService))]
@@ -93,7 +97,7 @@ namespace Assets.Scripts.Services.ComponentService
             return LineSphereIntersectionType.None;
         }
 
-        public bool CheckIntersection(Vector3 lineStart, Vector3 lineEnd, Vector3 heading, Vector3 worldPosition)
+        public bool LineSphereIntersection(Vector3 lineStart, Vector3 lineEnd, Vector3 heading, Vector3 worldPosition)
         {
             Vector3 dir = (lineEnd - lineStart).normalized;
 
@@ -112,6 +116,20 @@ namespace Assets.Scripts.Services.ComponentService
             }
 
             return false;
+        }
+
+        /// <inheritdoc />
+        public bool RayCubeIntersection(Ray ray, HakiComponent component)
+        {
+            return RayCubeIntersection(ray, component, out _);
+        }
+
+        /// <inheritdoc />
+        public bool RayCubeIntersection(Ray ray, HakiComponent component, out Vector3 point)
+        {
+            Box bounds = component.GetBounds();
+
+            return  bounds.IntersectRay(ray, component.transform, out point);
         }
     }
 }

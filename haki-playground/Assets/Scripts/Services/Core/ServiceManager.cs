@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace Assets.Scripts.Services.Core
 {
-
     public class ServiceManager
     {
-        private readonly Dictionary<Type, ServiceFactory> services = new Dictionary<Type, ServiceFactory>();
+        private readonly Dictionary<Type, ReflectionServiceFactory> services = new Dictionary<Type, ReflectionServiceFactory>();
+
+        private readonly Dictionary<Type, IEnumerable<DepInjectionProcedure>> injectionProcedures =
+            new Dictionary<Type, IEnumerable<DepInjectionProcedure>>();
         private readonly Dictionary<Type, object> implementations = new Dictionary<Type, object>();
 
         public void Register<TInterface, TImplementation>() where TImplementation : TInterface
@@ -22,83 +25,113 @@ namespace Assets.Scripts.Services.Core
         {
             if (tInterface.IsAssignableFrom(tImplementation))
             {
-                ConstructorInfo[] implementationConstructors = tImplementation.GetConstructors();
-
-                ServiceFactory sf = new ReflectionInstanciation(implementationConstructors);
-
-                services.Add(tInterface, sf);
+                services.Add(tInterface,
+                    new ReflectionServiceFactory(
+                        tImplementation.GetConstructors()));
             }
         }
 
-        private object GetDependency(Type type)
+        [Obsolete("is obsolete, do not use")]
+        public T GetDependency<T>()
         {
+            return GetDependency<T>(Array.Empty<object>());
+        }
+
+        private object GetDependency(Type type, object[] injectData)
+        {
+
             if (implementations.TryGetValue(type, out object implementation))
             {
                 return implementation;
             }
 
-            return CreateDependency(type);
+            return CreateDependency(type, injectData);
         }
 
-
-
-        private object CreateDependency(Type type)
+        private object CreateDependency(Type type, object[] injectData)
         {
-            if (services.TryGetValue(type, out ServiceFactory serviceFactory))
+            if (services.TryGetValue(type, out ReflectionServiceFactory serviceFactory) == false)
+                return default;
+
+
+            object[] parameters = CreateConstructorParameters(type, injectData, serviceFactory);
+            object implementation = serviceFactory.Implement(parameters);
+
+            implementations.Add(type, implementation);
+
+            return implementation;
+        }
+
+        private object[] CreateConstructorParameters(Type type, object[] injectData, ReflectionServiceFactory serviceFactory)
+        {
+            IList<Type> requiredTypes = new List<Type>(serviceFactory.RequiredTypes);
+
+            IDictionary<Type, object> injected = injectData.ToDictionary(x => x.GetType());
+
+            object[] parameters = new object[requiredTypes.Count];
+            int index = 0;
+
+            foreach (Type requiredType in requiredTypes)
             {
-                if (serviceFactory is ReflectionInstanciation reflectionInstanciation)
+                if (injected.TryGetValue(requiredType, out object dependency) == false)
                 {
-                    IEnumerable<Type> requiredTypes = new List<Type>(reflectionInstanciation.RequiredTypes);
+                    dependency = GetDependency(requiredType, Array.Empty<object>());
+                }
 
-                    object[] parameters = new object[requiredTypes.Count()];
-                    int index = 0;
-                    foreach (Type requiredType in requiredTypes)
-                    {
-                        parameters[index++] = GetDependency(requiredType);
-                    }
-
-                    object implementation = reflectionInstanciation.Implement(parameters);
-                    implementations.Add(type, implementation);
-                    return implementation;
+                if (ValidateDependency(dependency, () => $"Dependency of type {requiredType} required by {type.Name} could not been found!"))
+                {
+                    parameters[index++] = dependency;
                 }
             }
 
-
-            return default;
+            return parameters;
         }
 
-        public T GetDependency<T>()
+        private static bool ValidateDependency(object dependency, Func<string> func)
         {
-            if (GetDependency(typeof(T)) is T createdValue)
+            if (dependency == null)
+            {
+                string message = func(); ;
+                Debug.LogError(message);
+                throw new NullReferenceException(message);
+            }
+
+            return true;
+        }
+
+        private T GetDependency<T>(object[] injectData)
+        {
+            if (GetDependency(typeof(T), injectData) is T createdValue)
             {
                 return createdValue;
             }
 
             return default;
-
         }
 
         public void InjectDependencies(object item)
         {
             if (item == null)
-            {
                 return;
-            }
 
             Type type = item.GetType();
 
-            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-            foreach (PropertyInfo property in props)
+            if (injectionProcedures.TryGetValue(type, out IEnumerable<DepInjectionProcedure> procedures) == false)
             {
-                Inject inject = property.GetCustomAttribute<Inject>();
-
-                if (inject == null)
-                    continue;
-
-                if (property.GetValue(item) == null)
+                if (Inject.CreateProcedureList(type, out procedures))
                 {
-                    property.SetValue(item, GetDependency(property.PropertyType));
+                    if (procedures == null)
+                        throw new NullReferenceException(
+                            $"{nameof(procedures)} in {nameof(InjectDependencies)} in {GetType().Name} was null! {Environment.NewLine} StackTrace: {Environment.StackTrace}");
+
+
+                    injectionProcedures.Add(type, procedures);
                 }
+            }
+
+            foreach (DepInjectionProcedure procedure in procedures)
+            {
+                procedure.Execute(item, GetDependency);
             }
         }
 
@@ -111,13 +144,13 @@ namespace Assets.Scripts.Services.Core
                 if (type.IsInterface)
                     continue;
 
-                Service att = type.GetCustomAttribute<Service>();
-                if (att == null)
-                {
+                if (Service.TryGetService(type, out Service att) == false)
                     continue;
-                }
 
-                Register(att.Interface, type);
+                foreach (Type current in att.ImplementedServices)
+                {
+                    Register(current, type);
+                }
             }
         }
 

@@ -1,29 +1,33 @@
-using Assets.Scripts.RunMode.ComponentService;
+using System;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.DependencyInjection;
-using Assets.Scripts.Services.InputService;
 using Assets.Scripts.Services.Instanciation;
+using Assets.Scripts.Services.Tools;
+using Assets.Scripts.Services.Utility.InputService;
 using Assets.Scripts.Shared.Behaviours;
+using Assets.Scripts.Shared.Enums;
 using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode
 {
-    public partial class ApplicationManager : MonoBehaviour
+    public partial class ApplicationManager : SceneMemberInjectDependencies
     {
         private static ApplicationManager instance;
         private ServiceManager serviceManager;
 
-        private IInputService inputService;
+        [Inject] private IInputService InputService { get; set; }
+        [Inject] private IToolHandlerService ToolManager { get; set; }
+
         [SerializeField] private GameObject emptyGameObject;
         public static ApplicationManager Instance => instance;
+
 
         void Awake()
         {
             instance = this;
             InitService();
 
-            inputService = serviceManager.GetDependency<IInputService>();
 
             Inputs.Initialize(); //intializing inputs to enable drag and drop features of UI
             Routine.Initialize(this); // needs to place in Awake , intializing routine to run animations and routines like wait routines and button clicking anims
@@ -45,6 +49,12 @@ namespace Assets.Scripts.RunMode
         {
             ResetTransform();
 
+            InjectDependenciesToSceneObjects();
+            ToolManager.SelectToolByType(ToolType.ExtrudeTool);
+        }
+
+        private void InjectDependenciesToSceneObjects()
+        {
             SceneMemberInjectDependencies[] hakiComponents = GameObject.FindObjectsOfType<SceneMemberInjectDependencies>();
 
             foreach (SceneMemberInjectDependencies component in hakiComponents)
@@ -66,8 +76,8 @@ namespace Assets.Scripts.RunMode
 
         void Update()
         {
-            inputService.Update();
+            InputService?.Update();
+            ToolManager.Update();
         }
-
     }
 }

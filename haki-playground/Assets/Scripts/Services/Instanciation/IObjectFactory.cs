@@ -1,4 +1,3 @@
-using Assets.Scripts.Services.Core;
 using Assets.Scripts.Shared.Behaviours;
 using UnityEngine;
 
@@ -17,6 +16,4 @@ namespace Assets.Scripts.Services.Instanciation
         T Instantiate<T>(T template, Vector3 position) where T : HakiComponent;
         T Instantiate<T>(T template, Vector3 position, Quaternion rotation) where T : HakiComponent;
     }
-
-
 }

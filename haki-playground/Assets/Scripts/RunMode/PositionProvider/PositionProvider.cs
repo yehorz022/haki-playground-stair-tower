@@ -1,7 +1,6 @@
 using Assets.Scripts.RunMode.ComponentService;
 using Assets.Scripts.Services.ComponentService;
 using Assets.Scripts.Services.Core;
-using Assets.Scripts.Services.InputService;
 using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Shared.Containers.Collision;
 using Assets.Scripts.Shared.ScriptableObjects;
@@ -17,25 +16,27 @@ namespace Assets.Scripts.RunMode.PositionProvider
         private ScaffoldingComponent ccs;
 
         [Inject]
-        private IObjectCacheManager ObjectCacheManager { get; set; }
+        public IObjectCacheManager ObjectCacheManager { get; set; }
 
         [SerializeField]
         private GameObject floor;
 
 
         [Inject]
-        private IComponentHolder ComponentHolder { get; set; }
+        public IComponentHolder ComponentHolder { get; set; }
 
         [Inject]
         private IComponentCollisionDetectionService CollisionDetectionService { get; set; }
+        private ProjectLayout projectLayout;
 
         void Start()
         {
+            projectLayout = FindObjectOfType<ProjectLayout>();
             floor.SetActive(true);
         }
 
 
-        public ScaffoldingComponent CreateAndPickComponent(ScaffoldingComponent replacement) // made create 
+        public ScaffoldingComponent CreateComponent(ScaffoldingComponent replacement) // made create 
         {
             ccs = ObjectCacheManager.Instantiate(replacement, transform);
             run = true;
@@ -54,6 +55,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
             ComponentHolder.PlaceComponent(ccs);
             ccs = null;
             run = false;
+            projectLayout.SaveProject();
         }
 
         public void RecycleComponent()
@@ -61,6 +63,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
             ObjectCacheManager.Cache(ccs);
             ccs = null;
             run = false;
+            projectLayout.SaveProject();
         }
 
         public ScaffoldingComponent GetComponent()

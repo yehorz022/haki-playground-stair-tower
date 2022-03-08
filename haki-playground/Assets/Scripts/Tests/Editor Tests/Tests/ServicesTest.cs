@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Assets.Scripts.Services;
 using Assets.Scripts.Services.Core;
+using Assets.Scripts.Shared.Behaviours;
 using NUnit.Framework;
 
 namespace Assets.Scripts.Tests.Editor_Tests.Tests
@@ -14,8 +14,8 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
         [Test]
         public void Test()
         {
-            var ass =typeof(ServiceHook).Assembly;
-            var aqn = typeof(ServiceHook).AssemblyQualifiedName;
+            Assembly ass = typeof(ServiceHook).Assembly;
+            string aqn = typeof(ServiceHook).AssemblyQualifiedName;
         }
 
         [Test]
@@ -37,6 +37,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
         [Test]
         public void CreateSimpleDependencyTest_2()
         {
+
             ServiceManager service = new ServiceManager();
 
             service.Register<ITest1, Test1>();
@@ -59,7 +60,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
         [Test]
         public void ServiceImplementationTest()
         {
-            var hook = typeof(ServiceHook);
+            Type hook = typeof(ServiceHook);
 
             foreach (Type type in hook.Assembly.GetTypes())
             {
@@ -68,10 +69,13 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
                 if (service == null)
                     continue;
 
-                Assert.IsTrue(service.Interface.IsInterface, $"Service {type.FullName} attempts to implement a class ({service.Interface.FullName}) as an interface");
-                Assert.IsTrue(type.IsClass, $"type {type.FullName} is expected to be a class, but it is not.");
-                Assert.IsFalse(type.IsAbstract);
-                Assert.IsTrue(service.Interface.IsAssignableFrom(type));
+                foreach (Type current in service.ImplementedServices)
+                {
+                    Assert.IsTrue(current.IsInterface, $"Service {type.FullName} attempts to implement a class ({current.FullName}) as an interface");
+                    Assert.IsTrue(type.IsClass, $"type {type.FullName} is expected to be a class, but it is not.");
+                    Assert.IsFalse(type.IsAbstract);
+                    Assert.IsTrue(current.IsAssignableFrom(type));
+                }
             }
         }
 
@@ -103,7 +107,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
         public void OnlyOneConstructorPerService_Test()
         {
             //load all services
-            var types = typeof(ServiceHook).Assembly.GetTypes();
+            Type[] types = typeof(ServiceHook).Assembly.GetTypes();
 
 
             foreach (Type type in types)
@@ -160,7 +164,10 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
                 if (service == null)
                     continue;
 
-                interfaceImplementationPair.Add(service.Interface, type);
+                foreach (Type current in service.ImplementedServices)
+                {
+                    interfaceImplementationPair.Add(current, type);
+                }
             }
 
             foreach (Type type in interfaceImplementationPair.Values)
@@ -205,7 +212,7 @@ namespace Assets.Scripts.Tests.Editor_Tests.Tests
     }
 
 
-    public class InjectTarget
+    public class InjectTarget : SceneMemberInjectDependencies
     {
         [Inject]
         public ITest3 Test3 { get; set; }

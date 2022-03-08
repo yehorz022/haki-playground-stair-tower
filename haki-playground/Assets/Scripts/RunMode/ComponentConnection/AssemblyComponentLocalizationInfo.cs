@@ -1,5 +1,4 @@
 using Assets.Scripts.RunMode.ComponentService;
-using Assets.Scripts.Shared.Behaviours;
 
 namespace Assets.Scripts.RunMode.ComponentConnection
 {

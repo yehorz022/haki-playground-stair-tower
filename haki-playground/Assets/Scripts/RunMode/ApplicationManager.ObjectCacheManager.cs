@@ -23,7 +23,19 @@ namespace Assets.Scripts.RunMode
             /// <inheritdoc />
             public void HandleInjections(SceneMemberInjectDependencies item)
             {
+                if (item == null)
+                {
+                    return;
+                }
+
+                if (item.GetDependencyInjectionStatus())
+                {
+                    return;
+                }
+
                 injectionDelegate.Invoke(item);
+
+                item.FinalizeDependancyInjection();
             }
         }
 
@@ -33,10 +45,10 @@ namespace Assets.Scripts.RunMode
 
             private readonly Transform applicationManagerTransform;
             private readonly GameObject emptyPrefab;
-            private IDependencyInjection dependencyInjectionHandler;
+            private readonly IDependencyInjection dependencyInjectionHandler;
             private readonly IDictionary<string, Transform> parents;
 
-            public ObjectCacheManager(ApplicationManager parent, GameObject emptyPrefab, IDependencyInjection dependencyInjection)
+            public ObjectCacheManager(Component parent, GameObject emptyPrefab, IDependencyInjection dependencyInjection)
             {
                 applicationManagerTransform = parent.transform;
                 this.emptyPrefab = emptyPrefab;

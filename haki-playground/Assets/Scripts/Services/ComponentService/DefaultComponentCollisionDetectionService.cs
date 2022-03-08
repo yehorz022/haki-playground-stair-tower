@@ -38,14 +38,13 @@ namespace Assets.Scripts.Services.ComponentService
             ci.Source = source;
             ci.SourceConnectionIndex = sourceConnectionIndex;
 
-
             if (source.Count == 0 || sourceConnectionIndex >= source.Count)
                 throw new Exception(Constants.ConnectionDefinitionsIsEmpty);
-
             
 
             if (ValidateIntersection(component.GetInstanceID(),ray, source, sourceConnectionIndex, out List<IntersectionResults> intersections))
             {
+
                 IntersectionResults intersection = intersectionEvaluationService.Evaluate(intersections);
 
                 ci.TargetScaffoldingComponent = intersection.ScaffoldingComponent;
@@ -60,7 +59,7 @@ namespace Assets.Scripts.Services.ComponentService
         private bool ValidateIntersection(int id, Ray ray, ConnectionDefinitionCollection source,
             int sourceConnectionIndex, out List<IntersectionResults> intersections)
         {
-            return componentHolder.TryGetIntersections(id,ray, source.GetElementAt(sourceConnectionIndex).ComponentConnectionInfo, out intersections);
+            return componentHolder.TryGetConnectionPoints(id,ray, source.GetElementAt(sourceConnectionIndex).ComponentConnectionInfo, out intersections);
         }
     }
 }

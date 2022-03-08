@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Shared.Helpers;
+﻿using System;
+using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.ComponentService
@@ -66,7 +67,8 @@ namespace Assets.Scripts.RunMode.ComponentService
             if (correctPosition)
                 endGap = (vertical ? CanvasComponent.CanvasSize.y : CanvasComponent.CanvasSize.x) % (panelSize + gap) - startGap;
             int childs = GetChildCountWRTNaming(); // in the last bcz after naming panels
-            content.sizeDelta = new Vector2(!vertical ? childs * (panelSize + gap) + startGap + endGap : content.sizeDelta.x, vertical ? childs * (panelSize + gap) + startGap + endGap : content.sizeDelta.y);
+            if (content != null)
+                content.sizeDelta = new Vector2(!vertical ? childs * (panelSize + gap) + startGap + endGap : content.sizeDelta.x, vertical ? childs * (panelSize + gap) + startGap + endGap : content.sizeDelta.y);
             myScreenResolutionChangeNo = CanvasComponent.ScreenResolutionChangeNo;
         }
 
@@ -142,7 +144,8 @@ namespace Assets.Scripts.RunMode.ComponentService
                 if ((vertical && (value.y < endGap || value.y + CanvasComponent.CanvasSize.y > minPanels * (panelSize + gap) + endGap)) || (!vertical && (value.x > sizeDelta.x - endGap || value.x - CanvasComponent.CanvasSize.x < sizeDelta.x - minPanels * (panelSize + gap) - endGap)))
                 { //when slider reach at start or end
                     bool next = (vertical && value.y < endGap) || (!vertical && value.x > sizeDelta.x - endGap);
-                    Code.ShiftPanel(content, panelsParent, vertical, next, minPanels, totalPanels, panelSize, startGap, endGap, gap, (child, childNo) => {
+                    Code.ShiftPanel(content, panelsParent, vertical, next, minPanels, totalPanels, panelSize, startGap, endGap, gap, (child, childNo) =>
+                    {
                         //AudioManager.o.PlaySound (SoundID.Scroll); // play scrolling sound
                         LoadPanel(child, OLD_STATE);
                     }); // true or false to check which panel to create ie next or back
@@ -215,7 +218,14 @@ namespace Assets.Scripts.RunMode.ComponentService
         {
             for (int i = panelsParent.childCount - 1; i >= 0; i--)
                 if (panelsParent.GetChild(i).gameObject.activeSelf)
-                    return int.Parse(panelsParent.GetChild(i).name) + 1; //bcz child count is 1 greator than child index 
+                {
+                    if (int.TryParse(panelsParent.GetChild(i).name, out int res))
+                        return res;
+
+
+                    //was unable to parse, returning default value.
+                    return 0;
+                }
             return 0; // default value is 0 bcz count can not be -ve
         }
 

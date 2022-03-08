@@ -86,7 +86,7 @@ namespace Assets.Scripts.Shared.Helpers
 
         public static Texture2D CropTexture(Texture2D texture, int width, int height, bool freeMemory = true)
         {
-            var tex = new Texture2D(width, height, TextureFormat.RGB24, false); // RGBA for high quality image
+            Texture2D tex = new Texture2D(width, height, TextureFormat.RGB24, false); // RGBA for high quality image
             int deltaX = width / 2 - texture.width / 2;
             int deltaY = height / 2 - texture.height / 2;
             for (int i = 0; i < width; i++) // Reading Image
@@ -117,7 +117,7 @@ namespace Assets.Scripts.Shared.Helpers
                 y = y < 0 ? 0 : (y > texture.height - heightRatio ? texture.height - heightRatio : y);  //for handling image pixels out of bounds
                 rect = new RectInt(0, y, widthRatio, heightRatio);
             }
-            var tex = new Texture2D(rect.width, rect.height, TextureFormat.RGB24, false); // RGBA for high quality image
+            Texture2D tex = new Texture2D(rect.width, rect.height, TextureFormat.RGB24, false); // RGBA for high quality image
             Color c;
             for (int i = 0; i < rect.width; i++)
                 for (int j = 0; j < rect.height; j++)
@@ -211,8 +211,8 @@ namespace Assets.Scripts.Shared.Helpers
             }
             w = tex.width;
             w2 = newWidth;
-            var cores = Mathf.Min(SystemInfo.processorCount, newHeight);
-            var slice = newHeight / cores;
+            int cores = Mathf.Min(SystemInfo.processorCount, newHeight);
+            int slice = newHeight / cores;
 
             finishCount = 0;
             if (mutex == null)
@@ -258,17 +258,17 @@ namespace Assets.Scripts.Shared.Helpers
         public static void BilinearScale(System.Object obj)
         {
             ThreadData threadData = (ThreadData)obj;
-            for (var y = threadData.start; y < threadData.end; y++)
+            for (int y = threadData.start; y < threadData.end; y++)
             {
                 int yFloor = (int)Mathf.Floor(y * ratioY);
-                var y1 = yFloor * w;
-                var y2 = (yFloor + 1) * w;
-                var yw = y * w2;
+                int y1 = yFloor * w;
+                int y2 = (yFloor + 1) * w;
+                int yw = y * w2;
 
-                for (var x = 0; x < w2; x++)
+                for (int x = 0; x < w2; x++)
                 {
                     int xFloor = (int)Mathf.Floor(x * ratioX);
-                    var xLerp = x * ratioX - xFloor;
+                    float xLerp = x * ratioX - xFloor;
                     newColors[yw + x] = ColorLerpUnclamped(ColorLerpUnclamped(texColors[y1 + xFloor], texColors[y1 + xFloor + 1], xLerp),
                         ColorLerpUnclamped(texColors[y2 + xFloor], texColors[y2 + xFloor + 1], xLerp),
                         y * ratioY - yFloor);
@@ -283,11 +283,11 @@ namespace Assets.Scripts.Shared.Helpers
         public static void PointScale(System.Object obj)
         {
             ThreadData threadData = (ThreadData)obj;
-            for (var y = threadData.start; y < threadData.end; y++)
+            for (int y = threadData.start; y < threadData.end; y++)
             {
-                var thisY = (int)(ratioY * y) * w;
-                var yw = y * w2;
-                for (var x = 0; x < w2; x++)
+                int thisY = (int)(ratioY * y) * w;
+                int yw = y * w2;
+                for (int x = 0; x < w2; x++)
                 {
                     newColors[yw + x] = texColors[(int)(thisY + ratioX * x)];
                 }
