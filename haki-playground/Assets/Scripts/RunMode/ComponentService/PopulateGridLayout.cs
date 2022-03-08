@@ -11,7 +11,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         [SerializeField] Color iconBGColor;
         [SerializeField] ScrollViewComponent scrollView;
-        [SerializeField] ScaffoldingComponent[] elements;
+        public ScaffoldingComponent[] elements;
         [SerializeField] Sprite[] elementsIcons;
         [Inject]
         private IObjectCacheManager ObjectcacheManager { get; set; }

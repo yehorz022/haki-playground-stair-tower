@@ -43,5 +43,15 @@ namespace Assets.Scripts.RunMode.ComponentService
         {
             throw new NotImplementedException("This feature has not yet been implemented!");
         }
+
+        public override void Write(int projectID, int no)
+        {
+            //will write it later
+        }
+
+        public override void Read(int projectID, int no)
+        {
+            //will write it later
+        }
     }
 }

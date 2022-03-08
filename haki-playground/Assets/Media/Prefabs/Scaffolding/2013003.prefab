@@ -126,12 +126,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugOptions: 2
+  id: 2013003
   ConnectionDefinitionCollection: {fileID: 11400000, guid: adad6566d62c83e48bce399d471cc215, type: 2}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 0
   elementLengthInMillimeters: 0
   elementWidthInMillimeters: 0
   elementWeight: 0
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &1936646305312762868
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,9 +18,9 @@ namespace Assets.Scripts.RunMode.UserInterface
         private int height = 0;
         [SerializeField] private ScaffoldingAssembly assembly;
         [SerializeField] private Transform origin;
-        [SerializeField] private List<ScaffoldingComponent> spires;
-        [SerializeField] private List<ScaffoldingComponent> beams;
-        [SerializeField] private List<ScaffoldingComponent> decks;
+        public List<ScaffoldingComponent> spires;
+        public List<ScaffoldingComponent> beams;
+        public List<ScaffoldingComponent> decks;
 
         private List<ScaffoldingComponent> current = new List<ScaffoldingComponent>();
 
@@ -39,12 +39,11 @@ namespace Assets.Scripts.RunMode.UserInterface
         [Inject] private IPillarFactory PillarFactory { get; set; }
         [Inject] private ISidesFactory SidesFactory { get; set; }
         [Inject] private IDeckFactory DeckFactory { get; set; }
-
-
-
+        private ProjectLayout projectLayout;
 
         void Start()
         {
+            projectLayout = FindObjectOfType<ProjectLayout>();
             assemblies = new Stack<ScaffoldingAssembly>();
             heights = new Stack<int>();
             spirePrefab = spires[spires.Count - 1];
@@ -95,6 +94,7 @@ namespace Assets.Scripts.RunMode.UserInterface
                     assemblies.Pop();
                 }
             }
+            projectLayout.SaveProject();
         }
 
         private ScaffoldingAssembly Create()
@@ -130,6 +130,7 @@ namespace Assets.Scripts.RunMode.UserInterface
                 heights.Push(spirePrefab.GetElementHeight());
                 assemblies.Push(item);
             }
+            projectLayout.SaveProject();
         }
     }
 }

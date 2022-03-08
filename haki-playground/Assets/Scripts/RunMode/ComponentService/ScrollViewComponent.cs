@@ -22,7 +22,7 @@ namespace Assets.Scripts.RunMode.ComponentService
         [SerializeField] bool correctPosition; //move to correctPosition
         public RectTransform panelsParent;
         public RectTransform panelPrefab; // prefab of panel in scroll list
-        [SerializeField] int totalPanels;
+        public int totalPanels;
         public Gap gapp;
         public float startGap; // gap at the start in scroll list
         public float endGap; // gap at the end in scroll list

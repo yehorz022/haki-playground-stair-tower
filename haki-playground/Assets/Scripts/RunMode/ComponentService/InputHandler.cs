@@ -115,7 +115,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public void OnCreateItem()
         {
-            picked = positionProvider.CreateAndPickComponent(PanelComponent.selectedComponentPrefab); //This script is under working...
+            picked = positionProvider.CreateComponent(PanelComponent.selectedComponentPrefab); //This script is under working...
         }
         //^^^^   helping functions for drag and drop features   ^^^^
     }

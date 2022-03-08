@@ -6,7 +6,7 @@ namespace Assets.Scripts.Shared.Behaviours
 {
     public abstract class HakiComponent : DebugBehaviour
     {
-
+        public int id;
         public Vector3 Position => transform.position;
         public Quaternion Rotation => transform.rotation;
 
@@ -30,5 +30,9 @@ namespace Assets.Scripts.Shared.Behaviours
         public abstract bool TryGetCollectionDefinition(out ConnectionDefinitionCollection collection);
 
         public abstract Box GetBounds();
+
+        public abstract void Read(int projectID, int no);
+
+        public abstract void Write(int projectID, int no);
     }
 }
