@@ -1604,7 +1604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugOptions: 3
-  scaffoldingDebugOptions: 2
+  id: 7016100
   ConnectionDefinitionCollection: {fileID: 0}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 1000

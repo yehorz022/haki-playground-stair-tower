@@ -16,6 +16,7 @@ namespace Assets.Scripts.Services.ComponentService
         bool TryGetConnectionPoints(int id, Ray ray, ComponentConnectionInfo connectionInfo,
             out List<IntersectionResults> connectionPoints);
 
+        List<HakiComponent> GetAllComponents();
         HakiComponent GetComponentBehindRay();
 
         HakiComponent[] GetComponentsIntersectingWith(Ray ray);
@@ -52,6 +53,11 @@ namespace Assets.Scripts.Services.ComponentService
         public void RemoveComponent(HakiComponent scaffoldingComponent)
         {
             components.Remove(scaffoldingComponent);
+        }
+
+        public List<HakiComponent> GetAllComponents()
+        {
+            return components;
         }
 
         /// <inheritdoc />

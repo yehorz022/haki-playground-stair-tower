@@ -147,5 +147,34 @@ namespace Assets.Scripts.RunMode.ComponentService
             Vector3 size = new Vector3(length, height, width) / 2;
             return new Box(size, offset, transform);
         }
+
+        public override void Write(int projectID, int no)
+        {
+            //print("Write  projectID" + projectID + "no" + no);
+            PlayerPrefs.SetInt("project" + projectID + "component" + no + "id", id);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "position_x", transform.position.x);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "position_y", transform.position.y);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "position_z", transform.position.z);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "rotation_x", transform.rotation.eulerAngles.x);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "rotation_y", transform.rotation.eulerAngles.y);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "rotation_z", transform.rotation.eulerAngles.z);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "scale_x", transform.localScale.x);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "scale_y", transform.localScale.y);
+            PlayerPrefs.SetFloat("project" + projectID + "component" + no + "scale_z", transform.localScale.z);
+        }
+
+        public override void Read(int projectID, int no)
+        {
+            //print("Read  projectID" + projectID + "no" + no);
+            transform.position = new Vector3(PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_x", transform.position.x),
+                                             PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_y", transform.position.y),
+                                             PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_z", transform.position.z));
+            transform.rotation = Quaternion.Euler(PlayerPrefs.GetFloat("project" + projectID + "component" + no + "rotation_x", transform.rotation.eulerAngles.x),
+                                                  PlayerPrefs.GetFloat("project" + projectID + "component" + no + "rotation_y", transform.rotation.eulerAngles.y),
+                                                  PlayerPrefs.GetFloat("project" + projectID + "component" + no + "rotation_z", transform.rotation.eulerAngles.z));
+            transform.localScale = new Vector3(PlayerPrefs.GetFloat("project" + projectID + "component" + no + "scale_x", transform.localScale.x),
+                                               PlayerPrefs.GetFloat("project" + projectID + "component" + no + "scale_y", transform.localScale.y),
+                                               PlayerPrefs.GetFloat("project" + projectID + "component" + no + "scale_z", transform.localScale.z));
+        }
     }
 }

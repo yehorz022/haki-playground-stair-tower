@@ -22,7 +22,7 @@ namespace Assets.Scripts.RunMode.ComponentService
         [SerializeField] bool correctPosition; //move to correctPosition
         public RectTransform panelsParent;
         public RectTransform panelPrefab; // prefab of panel in scroll list
-        [SerializeField] int totalPanels;
+        public int totalPanels;
         public Gap gapp;
         public float startGap; // gap at the start in scroll list
         public float endGap; // gap at the end in scroll list
@@ -58,7 +58,7 @@ namespace Assets.Scripts.RunMode.ComponentService
                 panelSize = vertical ? panelPrefab.GetComponent<RectTransform>().sizeDelta.y : panelPrefab.GetComponent<RectTransform>().sizeDelta.x;
                 minPanels = Mathf.CeilToInt((vertical ? 1f * Screen.height / Screen.width * CanvasComponent.MaxResolution : CanvasComponent.MaxResolution) / (panelSize + gap)) + 1;
             }
-            //OnScreenResolutionChanged(); // to set end gaps at start
+            OnScreenResolutionChanged(); // to set end gaps at start
         }
 
         void OnScreenResolutionChanged()

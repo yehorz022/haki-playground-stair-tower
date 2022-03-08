@@ -92,7 +92,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
 
         private bool HandleCollisionDetection(out Vector3 pos, out Quaternion euler)
         {
-
+            
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             CollisionInfo ci = CollisionDetectionService.Evaluate(ray, 0, ccs);

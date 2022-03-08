@@ -2731,12 +2731,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugOptions: 3
+  id: 4073122
   ConnectionDefinitionCollection: {fileID: 0}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 78
   elementLengthInMillimeters: 1250
   elementWidthInMillimeters: 400
   elementWeight: 0
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &6976034530955660559
 GameObject:
   m_ObjectHideFlags: 0
