@@ -18,7 +18,6 @@ namespace Assets.Scripts.RunMode.UserInterface
         private const string DropDownConditionFormat = "if(dropdown.value < {1}.Count) is false in {0}";
         private int number = 1;
         private int height = 0;
-        private int numberIndex = 0;
         private int spiresIndex = 0;
         private int beamsIndex = 0;
         [SerializeField] private ScaffoldingAssembly assembly;
@@ -59,7 +58,7 @@ namespace Assets.Scripts.RunMode.UserInterface
 
         public void OnNumberChanged(Dropdown value)
         {
-            number = (numberIndex = value.value) + 1;
+            number = value.value + 1;
             Debug.Log(number);
         }
 
@@ -176,7 +175,6 @@ namespace Assets.Scripts.RunMode.UserInterface
             int assembliesCount = PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "AssembliesCount", 0);
             for (int i = assembliesCount; i < assemblies.Count; i++)
             {
-                PlayerPrefs.SetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "NumberIndex", numberIndex);
                 PlayerPrefs.SetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "SpiresIndex", spiresIndex);
                 PlayerPrefs.SetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "BeamsIndex", beamsIndex);
             }
@@ -188,9 +186,8 @@ namespace Assets.Scripts.RunMode.UserInterface
             int assembliesCount = PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "AssembliesCount", 0);
             for (int i = 0; i < assembliesCount; i++)
             {
-                number = PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "NumberIndex") + 1;
+                number = 1;
                 spirePrefab = spires[PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "SpiresIndex")];
-                //print("SpiresIndex" + PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "SpiresIndex"));
                 lengthPrefab = beams[PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "BeamsIndex")];
                 Add();
             }
