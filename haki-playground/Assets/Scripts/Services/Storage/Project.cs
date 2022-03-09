@@ -21,7 +21,7 @@ namespace Assets.Scripts.Services.Storage
             this.objectCacheManager = objectCacheManager;
         }
 
-        public void Load(Transform parent, List<HakiComponent>components)
+        public void Load(Transform parent, List<HakiComponent> components)
         {
             //Debug.Log("ComponentsCount = " + components.Count);
             int count = PlayerPrefs.GetInt("Project" + id + "ComponentsCount", 0);

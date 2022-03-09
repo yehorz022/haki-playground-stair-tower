@@ -12,18 +12,15 @@ namespace Assets.Scripts.RunMode.ComponentService
     public class ScaffoldingComponent : HakiComponent
     {
         [SerializeField] public ConnectionDefinitionCollection ConnectionDefinitionCollection;
+        //public static ScaffoldingComponent selected;
+        public InputHandler inputHandler;
+
         [SerializeField] public int elementHeightInMillimeters;
         [SerializeField] public int elementLengthInMillimeters;
         [SerializeField] public int elementWidthInMillimeters;
         [SerializeField] public float elementWeight;
         [SerializeField] private Vector3 offset;
-        [Inject]
-        private IConverter<MilliMeter, Native> UnitConverter
-        {
-            get;
-            set;
-        }
-
+        [Inject] private IConverter<MilliMeter, Native> UnitConverter { get; set; }
         [Inject] private ISelected<ScaffoldingComponent> Selected { get; set; }
         public float GetWeight() => elementWeight;
         public int GetElementHeight() => elementHeightInMillimeters;
@@ -37,6 +34,8 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         void Start()
         {
+            inputHandler = FindObjectOfType<InputHandler>();
+
             //TODO: we have a custom built system designed for detecting intersection, mesh colliders are way too expensive to use so frivolously. 
             //AddMeshCollider(); // adding mesh collider to select the items again using raycast
             //gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // disable component raycast to detect floor easily
@@ -150,18 +149,17 @@ namespace Assets.Scripts.RunMode.ComponentService
         public override void Select()
         {
             Selected.SetSelected(this);
-            //SetMaterial(inputHandler.selectedMat);
+            SetMaterial(inputHandler.selectedMat);
         }
 
         public override void Deselect()
         {
             Selected.SetSelected(null);
-            //SetMaterial(inputHandler.defaultMat);
+            SetMaterial(inputHandler.defaultMat);
         }
-
         public override void Write(int projectID, int no)
         {
-            //print("Write  projectID" + projectID + "no" + no + "id" + id);
+            //print("Write  projectID" + projectID + "no" + no);
             PlayerPrefs.SetInt("project" + projectID + "component" + no + "id", id);
             PlayerPrefs.SetFloat("project" + projectID + "component" + no + "position_x", transform.position.x);
             PlayerPrefs.SetFloat("project" + projectID + "component" + no + "position_y", transform.position.y);
@@ -176,7 +174,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public override void Read(int projectID, int no)
         {
-            //print("Read  projectID" + projectID + "no" + no + "id" + id);
+            //print("Read  projectID" + projectID + "no" + no);
             transform.position = new Vector3(PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_x", transform.position.x),
                                              PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_y", transform.position.y),
                                              PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_z", transform.position.z));

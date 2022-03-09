@@ -22,6 +22,8 @@ namespace Assets.Scripts.RunMode
         [SerializeField] private Material mouseover;
         [SerializeField] private Material selected;
 
+        [SerializeField] private GameObject emptyGameObject;
+        [SerializeField] private GameObject uiElement;
 
         [Inject] private IInputService InputService { get; set; }
         [Inject] private IToolHandlerService ToolManager { get; set; }
@@ -33,7 +35,6 @@ namespace Assets.Scripts.RunMode
 
 
 
-        [SerializeField] private GameObject emptyGameObject;
         public static ApplicationManager Instance => instance;
 
 
@@ -58,9 +59,9 @@ namespace Assets.Scripts.RunMode
             serviceManager.DefineAs<IDependencyInjection, DependencyInjection>(new DependencyInjection(serviceManager.InjectDependencies));
             serviceManager.DefineAs<IObjectCacheManager, ObjectCacheManager>(new ObjectCacheManager(this, emptyGameObject, serviceManager.GetDependency<IDependencyInjection>()));
 
-            serviceManager.DefineAs<ISelected<ScaffoldingAssembly>, SelectedAssembly>(new SelectedAssembly());
+            //serviceManager.DefineAs<ISelected<ScaffoldingAssembly>, SelectedAssembly>(new SelectedAssembly());
             serviceManager.DefineAs<ISelected<ScaffoldingComponent>, SelectedComponent>(new SelectedComponent());
-
+            serviceManager.DefineAs<IOnSelected, OnSelectedService>(new OnSelectedService(uiElement));
             serviceManager.GetDependency<IMaterialService>()?.SetMaterials(mouseover, selected);
         }
 
@@ -96,7 +97,6 @@ namespace Assets.Scripts.RunMode
 
         void Update()
         {
-            InjectDependenciesToSceneObjects();
             InputService?.Update();
             ToolManager?.Update();
 

@@ -828,12 +828,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugOptions: 0
   id: 7021192
-  ConnectionDefinitionCollection: {fileID: 0}
+  ConnectionDefinitionCollection: {fileID: 11400000, guid: 5b2fb516154855b4e927c384091a2335, type: 2}
   inputHandler: {fileID: 0}
-  elementHeightInMillimeters: 400
-  elementLengthInMillimeters: 400
-  elementWidthInMillimeters: 400
-  elementWeight: 0
+  elementHeightInMillimeters: 230
+  elementLengthInMillimeters: 1964
+  elementWidthInMillimeters: 50
+  elementWeight: 8
   offset: {x: 0, y: 0, z: 0}
 --- !u!1 &5369513330127133692
 GameObject:

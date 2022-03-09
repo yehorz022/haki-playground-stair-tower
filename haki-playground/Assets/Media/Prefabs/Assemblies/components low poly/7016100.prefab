@@ -797,15 +797,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8028b95c62ced5743926f9b8101449ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugOptions: 0
+  debugOptions: 3
   id: 7016100
-  ConnectionDefinitionCollection: {fileID: 0}
+  ConnectionDefinitionCollection: {fileID: 11400000, guid: 923b7e054684daa4cad57558f88f8154, type: 2}
   inputHandler: {fileID: 0}
-  elementHeightInMillimeters: 400
-  elementLengthInMillimeters: 400
-  elementWidthInMillimeters: 400
-  elementWeight: 0
-  offset: {x: 0, y: 0, z: 0}
+  elementHeightInMillimeters: 1000
+  elementLengthInMillimeters: 50
+  elementWidthInMillimeters: 50
+  elementWeight: 5.3
+  offset: {x: -0.025, y: 0, z: -0.025}
 --- !u!1 &3386086415539937536
 GameObject:
   m_ObjectHideFlags: 0

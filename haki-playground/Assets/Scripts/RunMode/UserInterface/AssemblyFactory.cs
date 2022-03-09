@@ -4,6 +4,7 @@ using Assets.Scripts.Services.Converters;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.Factories;
 using Assets.Scripts.Services.Instanciation;
+using Assets.Scripts.Services.Tools.Selector.Face;
 using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Metrics.Metric_Units;
 using UnityEngine;
@@ -43,6 +44,8 @@ namespace Assets.Scripts.RunMode.UserInterface
         [Inject] private IPillarFactory PillarFactory { get; set; }
         [Inject] private ISidesFactory SidesFactory { get; set; }
         [Inject] private IDeckFactory DeckFactory { get; set; }
+        [Inject] private IOnSelected OnSelected { get; set; }
+        [Inject] private ISelected<ScaffoldingAssembly> SelectedAssembly { get; set; }
         private ProjectLayout projectLayout;
 
         void Start()
@@ -50,8 +53,8 @@ namespace Assets.Scripts.RunMode.UserInterface
             projectLayout = FindObjectOfType<ProjectLayout>();
             assemblies = new Stack<ScaffoldingAssembly>();
             heights = new Stack<int>();
-            spirePrefab = spires[spires.Count - 1];
-            lengthPrefab = beams[spires.Count - 1];
+            spirePrefab = spires[spiresIndex = spires.Count - 1];
+            lengthPrefab = beams[beamsIndex = spires.Count - 1];
             widthPrefab = beams[2];
             deckPrefab = decks[10];
         }
@@ -106,36 +109,47 @@ namespace Assets.Scripts.RunMode.UserInterface
             switch (height)
             {
                 case 500:
-                {
-                    lvl = 0;
-                    return false;
-                }
+                    {
+                        lvl = 0;
+                        return false;
+                    }
                 case 1000:
-                {
-                    lvl = 1;
-                    return true;
-                }
+                    {
+                        lvl = 1;
+                        return true;
+                    }
                 case 1500:
-                {
-                    lvl = 2;
-                    return true;
-                }
+                    {
+                        lvl = 2;
+                        return true;
+                    }
 
                 case 2000:
-                {
-                    lvl = 3;
-                    return true;
-                }
+                    {
+                        lvl = 3;
+                        return true;
+                    }
 
                 case 3000:
-                {
-                    lvl = 4;
-                    return true;
-                }
+                    {
+                        lvl = 4;
+                        return true;
+                    }
             }
 
             lvl = 0;
             return false;
+        }
+
+
+        public void Save()
+        {
+            if (SelectedAssembly.TryGet(out var item))
+            {
+                GameObject.FindObjectOfType<PopulateAssemblyGrid>().AddItem(item);
+                OnSelected.OnSelected(false);
+                SelectedAssembly.Release();
+            }
         }
 
         private ScaffoldingAssembly Create()
@@ -144,7 +158,7 @@ namespace Assets.Scripts.RunMode.UserInterface
             int length = lengthPrefab.GetElementLength();
             int width = widthPrefab.GetElementLength();
 
-            item.SetDimensions(Converter.Convert(width), Converter.Convert(spirePrefab.GetElementHeight()),Converter.Convert(length));
+            item.SetDimensions(Converter.Convert(width), Converter.Convert(spirePrefab.GetElementHeight()), Converter.Convert(length));
 
             PillarFactory.Produce(item.transform, spirePrefab, length, width);
             SidesFactory.Produce(item.transform, lengthPrefab, widthPrefab, length, width, 0);

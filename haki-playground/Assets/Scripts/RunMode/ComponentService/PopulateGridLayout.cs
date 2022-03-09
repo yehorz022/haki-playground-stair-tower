@@ -11,8 +11,9 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         [SerializeField] Color iconBGColor;
         [SerializeField] ScrollViewComponent scrollView;
-        public HakiComponent[] elements;
+        [SerializeField] public HakiComponent[] elements;
         [SerializeField] Sprite[] elementsIcons;
+        [SerializeField] private GameObject uiParent;
         [Inject]
         private IObjectCacheManager ObjectcacheManager { get; set; }
         private PositionProvider.PositionProvider positionProvider;
@@ -26,6 +27,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             {
                 PopulateItems();
                 scrollView.Initialize(elements.Length, transform.GetComponent<RectTransform>(), LoadPanel, scrollState, ScrollViewComponent.OLD_STATE);
+                uiParent.SetActive(false);
             });
         }
 

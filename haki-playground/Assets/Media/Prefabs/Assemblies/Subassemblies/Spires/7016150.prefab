@@ -683,7 +683,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugOptions: 3
   id: 7016150
-  ConnectionDefinitionCollection: {fileID: 0}
+  ConnectionDefinitionCollection: {fileID: 11400000, guid: 8bcf5e22f456b19468e771fbe60add8e, type: 2}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 1500
   elementLengthInMillimeters: 50

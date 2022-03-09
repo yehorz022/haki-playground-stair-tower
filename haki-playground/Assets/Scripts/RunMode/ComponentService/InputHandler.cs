@@ -17,7 +17,7 @@ namespace Assets.Scripts.RunMode.ComponentService
         [SerializeField] Sprite recycleBinOpened;
 
         [Inject] private ISelected<ScaffoldingComponent> Selected { get; set; }
-        public ScaffoldingComponent picked;
+        public HakiComponent picked;
         public PositionProvider.PositionProvider positionProvider;
         public bool onRecycleBin;
 
@@ -42,33 +42,15 @@ namespace Assets.Scripts.RunMode.ComponentService
         public void OnInputPanelDown()
         {
             Inputs.OnInputDown();
-            picked = positionProvider.GetComponent();
         }
 
         public void OnInputPanelUp()
         {
             Inputs.OnInputUp();
-            if (Inputs.InputType() == Click.Tap && picked)
-            {
-                Selected.TryGet(out var item);
-                bool same = picked == item;
-                if (item)
-                    item.Deselect();
-                if (!same)
-                    picked.Select();
-            }
         }
 
         public void OnInputPanelBeginDrag()
         {
-            if (picked)
-            {
-                Selected.TryGet(out var item);
-                if (picked == item)
-                    positionProvider.PickComponent(picked);
-                else
-                    picked = null;
-            }
         }
 
         public void OnInputPanelEndDrag()
@@ -121,7 +103,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public void OnCreateItem()
         {
-            picked = positionProvider.CreateAndPickComponent(PanelComponent.selectedComponentPrefab) as ScaffoldingComponent; //This script is under working...
+            picked = positionProvider.CreateAndPickComponent(PanelComponent.selectedComponentPrefab) ; //This script is under working...
         }
         //^^^^   helping functions for drag and drop features   ^^^^
     }

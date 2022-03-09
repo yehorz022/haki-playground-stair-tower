@@ -88,7 +88,6 @@ namespace Assets.Scripts.RunMode
 
                 if (ass == null)
                 {
-                    //Debug.Log(hit.transform.name);
                     continue;
                 }
 

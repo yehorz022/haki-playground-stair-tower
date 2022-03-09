@@ -1605,7 +1605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugOptions: 3
   id: 7016100
-  ConnectionDefinitionCollection: {fileID: 0}
+  ConnectionDefinitionCollection: {fileID: 11400000, guid: 923b7e054684daa4cad57558f88f8154, type: 2}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 1000
   elementLengthInMillimeters: 50

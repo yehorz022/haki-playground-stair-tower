@@ -4,10 +4,23 @@ using UnityEngine;
 
 namespace Assets.Scripts.Shared.Behaviours
 {
+    [RequireComponent(typeof(BoxCollider))]
     public abstract class HakiComponent : DebugBehaviour
     {
         public int id;
-        public Vector3 Position => transform.position;
+
+        public Vector3 Position
+        {
+            get { return transform.position; }
+            set
+            {
+                if (value == Vector3.zero)
+                {
+
+                }
+                transform.position = value;
+            }
+        }
         public Quaternion Rotation => transform.rotation;
 
         protected void Activate() => gameObject.SetActive(true);

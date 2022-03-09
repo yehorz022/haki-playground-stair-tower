@@ -6,6 +6,7 @@ using Assets.Scripts.Shared.Containers.Collision;
 using Assets.Scripts.Shared.ScriptableObjects;
 using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Helpers;
+using Codice.Client.GameUI.Status;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.PositionProvider
@@ -16,20 +17,16 @@ namespace Assets.Scripts.RunMode.PositionProvider
         private bool run;
         private HakiComponent ccs;
 
-        [Inject]
-        public IObjectCacheManager ObjectCacheManager { get; set; }
+        [Inject] public IObjectCacheManager ObjectCacheManager { get; set; }
 
-        [SerializeField]
-        private GameObject floor;
+        [SerializeField] private GameObject floor;
 
 
-        [Inject]
-        public IComponentHolder ComponentHolder { get; set; }
+        [Inject] public IComponentHolder ComponentHolder { get; set; }
 
-        [Inject]
-        private IComponentCollisionDetectionService CollisionDetectionService { get; set; }
+        [Inject] private IComponentCollisionDetectionService CollisionDetectionService { get; set; }
         private ProjectLayout projectLayout;
-
+        private bool isAssembly = false;
         void Start()
         {
             projectLayout = FindObjectOfType<ProjectLayout>();
@@ -40,11 +37,12 @@ namespace Assets.Scripts.RunMode.PositionProvider
         public HakiComponent CreateAndPickComponent(HakiComponent replacement) // made create 
         {
             ccs = ObjectCacheManager.Instantiate(replacement, transform);
+            isAssembly = ccs.GetType() == typeof(ScaffoldingAssembly);
             run = true;
             return ccs;
         }
 
-        public void PickComponent(ScaffoldingComponent component)
+        public void PickComponent(HakiComponent component)
         {
             ComponentHolder.RemoveComponent(component);
             ccs = component;
@@ -54,6 +52,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
         public void PlaceComponent()
         {
             ComponentHolder.PlaceComponent(ccs);
+
             ccs = null;
             run = false;
             projectLayout.SaveProject();
@@ -81,15 +80,67 @@ namespace Assets.Scripts.RunMode.PositionProvider
             if (ccs.gameObject.activeSelf is false)
                 ccs.gameObject.SetActive(true);
 
-
-            if (HandleCollisionDetection(out Vector3 newPos, out Quaternion newEuler))
+            if (isAssembly)
             {
-                ccs.transform.position = newPos;
-                ccs.transform.rotation = newEuler;
+
+
+                if (HandleCollisionDetectionForScaffoldingAssembly(out Vector3 newPos, out Quaternion newEuler))
+                {
+                    ccs.Position = newPos;
+                    ccs.transform.rotation = newEuler;
+                }
+            }
+            else
+            {
+                if (HandleCollisionDetectionForScaffoldingComponent(out Vector3 newPos, out Quaternion newEuler))
+                {
+                    ccs.Position = newPos;
+                    ccs.transform.rotation = newEuler;
+                }
             }
         }
 
-        private bool HandleCollisionDetection(out Vector3 pos, out Quaternion euler)
+        private bool HandleCollisionDetectionForScaffoldingAssembly(out Vector3 position, out Quaternion quaternion)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] results = Physics.RaycastAll(ray);
+
+            if (results.Length > 0)
+            {
+                foreach (RaycastHit hit in results)
+                {
+                    ScaffoldingAssembly assembly = hit.transform.gameObject.GetComponent<ScaffoldingAssembly>();
+                    if (assembly == null)
+                        continue;
+
+                    if (assembly.GetInstanceID() == ccs.GetInstanceID())
+                        continue;
+
+                    Vector3 size = assembly.Size;
+
+                    Vector3 n = hit.normal;
+                    position = assembly.Position + new Vector3(n.x * size.x, n.y * size.y, n.z * size.z);
+
+
+                    quaternion = Quaternion.identity;
+                    return true;
+                }
+            }
+
+            if (Intersections.RayPlaneIntersection(ray, Vector3.up, Vector3.zero, out Vector3 hitPoint))
+            {
+                position = hitPoint;
+                quaternion = Quaternion.identity;
+                return true;
+            }
+
+            //this should never happen
+            position = Vector3.zero;
+            quaternion = Quaternion.identity;
+            return false;
+        }
+
+        private bool HandleCollisionDetectionForScaffoldingComponent(out Vector3 pos, out Quaternion euler)
         {
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

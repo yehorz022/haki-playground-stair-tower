@@ -22,7 +22,8 @@ namespace Assets.Scripts.RunMode.ComponentService
         public InputHandler inputHandler;
         private MeshRenderer indicatorCube;
 
-        public Vector3 Center => transform.position + boxCollider.center;
+        public Vector3 Center => boxCollider.center;
+        public Vector3 Size => boxCollider.size;
         private IList<ScaffoldingComponent> scaffoldingComponents;
         private float x, y, z;
 

@@ -36,6 +36,11 @@ namespace Assets.Scripts.RunMode
                 injectionDelegate.Invoke(item);
 
                 item.FinalizeDependancyInjection();
+
+                foreach (SceneMemberInjectDependencies child in item.GetComponentsInChildren<SceneMemberInjectDependencies>())
+                {
+                    HandleInjections(child);
+                }
             }
         }
 

@@ -19,8 +19,14 @@ namespace Assets.Scripts.Services.Tools.Selector.Face
 
     public interface ISelected<T>
     {
+
         void SetSelected(T item);
         bool TryGet(out T item);
         void Release();
+    }
+
+    public interface IOnSelected
+    {
+        void OnSelected(bool value);
     }
 }

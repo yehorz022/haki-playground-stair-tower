@@ -79,7 +79,7 @@ namespace Assets.Scripts.Services.Core
 
             properties = pps;
 
-            return properties.Any();
+            return properties != null;
         }
 
         private static bool IsInjectProperty(PropertyInfo info, out Inject inject)
