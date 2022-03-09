@@ -1564,9 +1564,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8028b95c62ced5743926f9b8101449ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugOptions: 0
+  debugOptions: 3
   id: 7021252
-  ConnectionDefinitionCollection: {fileID: 0}
+  ConnectionDefinitionCollection: {fileID: 11400000, guid: d752f716e6414044e93726b4b7b6e001, type: 2}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 230
   elementLengthInMillimeters: 2500

@@ -134,8 +134,8 @@ namespace Assets.Scripts.Services.ComponentService
                     componentSelected = hit.collider.GetComponent<HakiComponent>();
             }
 
-            foreach (HakiComponent component in components)
-                component.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // disable objects raycast to detect floor easily
+            //foreach (HakiComponent component in components)
+            //    component.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // disable objects raycast to detect floor easily
             return componentSelected;
         }
     }

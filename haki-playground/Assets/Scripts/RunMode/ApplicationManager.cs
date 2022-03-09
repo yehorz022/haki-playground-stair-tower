@@ -1,8 +1,11 @@
 using System;
+using Assets.Scripts.RunMode.ComponentService;
+using Assets.Scripts.Services.Cameras;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.DependencyInjection;
 using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Services.Tools;
+using Assets.Scripts.Services.Tools.Selector.Face;
 using Assets.Scripts.Services.Utility.InputService;
 using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Enums;
@@ -16,10 +19,22 @@ namespace Assets.Scripts.RunMode
         private static ApplicationManager instance;
         private ServiceManager serviceManager;
 
-        [Inject] private IInputService InputService { get; set; }
-        [Inject] private IToolHandlerService ToolManager { get; set; }
+        [SerializeField] private Material mouseover;
+        [SerializeField] private Material selected;
 
         [SerializeField] private GameObject emptyGameObject;
+        [SerializeField] private GameObject uiElement;
+
+        [Inject] private IInputService InputService { get; set; }
+        [Inject] private IToolHandlerService ToolManager { get; set; }
+        [Inject] private ICameraService CameraService { get; set; }
+        [Inject] private IBoxFinder<ScaffoldingComponent> ScaffoldingAssemblyBoxFinder { get; set; }
+        [Inject] private IFinder<ScaffoldingAssembly> AssemblyFinder { get; set; }
+        [Inject] private ISelected<ScaffoldingAssembly> SelectedAssembly { get; set; }
+
+
+
+
         public static ApplicationManager Instance => instance;
 
 
@@ -38,10 +53,16 @@ namespace Assets.Scripts.RunMode
             serviceManager = new ServiceManager();
 
             serviceManager.RegisterServicesFromAssembly(typeof(ServiceHook).Assembly);
+            serviceManager.RegisterServicesFromAssembly(GetType().Assembly);
 
 
             serviceManager.DefineAs<IDependencyInjection, DependencyInjection>(new DependencyInjection(serviceManager.InjectDependencies));
             serviceManager.DefineAs<IObjectCacheManager, ObjectCacheManager>(new ObjectCacheManager(this, emptyGameObject, serviceManager.GetDependency<IDependencyInjection>()));
+
+            //serviceManager.DefineAs<ISelected<ScaffoldingAssembly>, SelectedAssembly>(new SelectedAssembly());
+            serviceManager.DefineAs<ISelected<ScaffoldingComponent>, SelectedComponent>(new SelectedComponent());
+            serviceManager.DefineAs<IOnSelected, OnSelectedService>(new OnSelectedService(uiElement));
+            serviceManager.GetDependency<IMaterialService>()?.SetMaterials(mouseover, selected);
         }
 
 
@@ -77,7 +98,29 @@ namespace Assets.Scripts.RunMode
         void Update()
         {
             InputService?.Update();
-            ToolManager.Update();
+            ToolManager?.Update();
+
+            foreach (ScaffoldingAssembly assembly in GameObject.FindObjectsOfType<ScaffoldingAssembly>())
+            {
+                assembly.RemoveHighlight();
+            }
+
+            if (AssemblyFinder.TryFind(out ScaffoldingAssembly item))
+            {
+                if (item == null)
+                {
+                    return;
+                }
+
+                if (InputService.IsLeftMouseButtonDown)
+                {
+                    SelectedAssembly.SetSelected(item);
+
+                    //activate UI
+                }
+                item.Highlight();
+
+            }
         }
     }
 }

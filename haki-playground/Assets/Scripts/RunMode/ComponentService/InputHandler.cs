@@ -1,10 +1,13 @@
+using Assets.Scripts.Services.Core;
+using Assets.Scripts.Services.Tools.Selector.Face;
+using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.RunMode.ComponentService
 {
-    public class InputHandler : MonoBehaviour
+    public class InputHandler : SceneMemberInjectDependencies
     {
         public Material defaultMat;
         public Material selectedMat;
@@ -13,7 +16,8 @@ namespace Assets.Scripts.RunMode.ComponentService
         [SerializeField] Sprite recycleBinDefault;
         [SerializeField] Sprite recycleBinOpened;
 
-        public ScaffoldingComponent picked;
+        [Inject] private ISelected<ScaffoldingComponent> Selected { get; set; }
+        public HakiComponent picked;
         public PositionProvider.PositionProvider positionProvider;
         public bool onRecycleBin;
 
@@ -46,9 +50,10 @@ namespace Assets.Scripts.RunMode.ComponentService
             Inputs.OnInputUp();
             if (Inputs.InputType() == Click.Tap && picked)
             {
-                bool same = picked == ScaffoldingComponent.selected;
-                if (ScaffoldingComponent.selected)
-                    ScaffoldingComponent.selected.Deselect();
+                Selected.TryGet(out var item);
+                bool same = picked == item;
+                if (item)
+                    item.Deselect();
                 if (!same)
                     picked.Select();
             }
@@ -58,7 +63,8 @@ namespace Assets.Scripts.RunMode.ComponentService
         {
             if (picked)
             {
-                if (picked == ScaffoldingComponent.selected)
+                Selected.TryGet(out var item);
+                if (picked == item)
                     positionProvider.PickComponent(picked);
                 else
                     picked = null;
@@ -67,7 +73,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public void OnInputPanelEndDrag()
         {
-            if (picked && picked == ScaffoldingComponent.selected)
+            if (picked && Selected.TryGet(out var item)  && picked == item)
             {
                 if (onRecycleBin)
                     OnClickRecycleButton();
@@ -115,7 +121,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public void OnCreateItem()
         {
-            picked = positionProvider.CreateComponent(PanelComponent.selectedComponentPrefab); //This script is under working...
+            picked = positionProvider.CreateAndPickComponent(PanelComponent.selectedComponentPrefab) ; //This script is under working...
         }
         //^^^^   helping functions for drag and drop features   ^^^^
     }

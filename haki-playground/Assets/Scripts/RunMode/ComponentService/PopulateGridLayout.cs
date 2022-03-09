@@ -11,8 +11,9 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         [SerializeField] Color iconBGColor;
         [SerializeField] ScrollViewComponent scrollView;
-        public ScaffoldingComponent[] elements;
+        [SerializeField] public HakiComponent[] elements;
         [SerializeField] Sprite[] elementsIcons;
+        [SerializeField] private GameObject uiParent;
         [Inject]
         private IObjectCacheManager ObjectcacheManager { get; set; }
         private PositionProvider.PositionProvider positionProvider;
@@ -26,6 +27,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             {
                 PopulateItems();
                 scrollView.Initialize(elements.Length, transform.GetComponent<RectTransform>(), LoadPanel, scrollState, ScrollViewComponent.OLD_STATE);
+                uiParent.SetActive(false);
             });
         }
 
@@ -34,7 +36,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             elementsIcons = new Sprite[elements.Length];
             for (int i = 0; i < elements.Length; i++)
             {
-                ScaffoldingComponent element = ObjectcacheManager.Instantiate(elements[i]);
+                var element = ObjectcacheManager.Instantiate(elements[i]);
                 //IconMaker create camera on runtime because we only need camera once to create icons in first time opening the app and second time it pick from persistent path
                 //otherwise it will become heavy call for creating 200 or more icon everytime and it will take 1-2 seconds on opening the app everytime
                 elementsIcons[i] = Media.TextureToSprite(IconMaker.CreateIcon(element.gameObject, iconBGColor));

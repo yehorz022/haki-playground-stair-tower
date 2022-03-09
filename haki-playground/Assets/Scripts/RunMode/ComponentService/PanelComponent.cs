@@ -1,3 +1,4 @@
+using Assets.Scripts.Shared.Behaviours;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,9 +6,9 @@ namespace Assets.Scripts.RunMode.ComponentService
 {
     public class PanelComponent : MonoBehaviour
     {
-        public static ScaffoldingComponent selectedComponentPrefab; // this selection is used to create object 
+        public static HakiComponent selectedComponentPrefab; // this selection is used to create object 
         [SerializeField] private Image image;
-        private ScaffoldingComponent component;
+        private HakiComponent component;
         private PropertiesWindow propertiesWindow;
         
         void Start()
@@ -15,7 +16,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             propertiesWindow = FindObjectOfType<PropertiesWindow>();
         }
 
-        public void Initialize(ScaffoldingComponent component, Sprite icon)
+        public void Initialize(HakiComponent component, Sprite icon)
         {
             this.component = component;
             image.sprite = icon;

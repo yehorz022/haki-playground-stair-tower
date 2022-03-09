@@ -13,9 +13,10 @@ namespace Assets.Scripts.Services.Utility.InputService
         Vector3 MousePosition { get; }
 
         void Update();
+        bool IsKeyDown(KeyCode keyCode);
     }
 
-   
+
     [Service(typeof(IInputService))]
     public class InputService : IInputService
     {
@@ -49,15 +50,44 @@ namespace Assets.Scripts.Services.Utility.InputService
             HandleInput();
         }
 
+        public bool IsKeyDown(KeyCode keyCode)
+        {
+            return Input.GetKey(keyCode);
+        }
+
         private void HandleInput()
         {
-            currentState.IsRightMouseButtonDown = Input.GetMouseButtonDown(1);
+            currentState.IsRightMouseButtonDown = Input.GetMouseButton(1);
             currentState.IsRightMouseButtonUp = Input.GetMouseButtonUp(1);
-            currentState.IsLeftMouseButtonDown = Input.GetMouseButtonDown(0);
+            currentState.IsLeftMouseButtonDown = Input.GetMouseButton(0);
             currentState.IsLeftMouseButtonUp = Input.GetMouseButtonUp(0);
 
             currentState.MousePosition = Input.mousePosition;
 
+        }
+    }
+
+    public class CameraInputService : MonoBehaviour
+    {
+        
+        //Camera Input
+        public delegate void MoveInputHandler(Vector3 moveVector);
+        public delegate void RotateInputHandler(float rotateAmount);
+        public delegate void ZoomInputHandler(float zoomAmount);
+
+        private KeyboardInputManager kInput;
+        private MouseInputManager mInput;
+
+        public void Start()
+        {
+            kInput = GetComponent<KeyboardInputManager>();
+            mInput = GetComponent<MouseInputManager>();
+        }
+
+        public void Update()
+        {
+            kInput.CameraMovement();
+            mInput.MousePosition();
         }
     }
 }

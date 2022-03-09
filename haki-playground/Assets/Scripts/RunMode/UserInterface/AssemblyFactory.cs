@@ -4,6 +4,7 @@ using Assets.Scripts.Services.Converters;
 using Assets.Scripts.Services.Core;
 using Assets.Scripts.Services.Factories;
 using Assets.Scripts.Services.Instanciation;
+using Assets.Scripts.Services.Tools.Selector.Face;
 using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Metrics.Metric_Units;
 using UnityEngine;
@@ -11,6 +12,8 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.RunMode.UserInterface
 {
+
+
     public class AssemblyFactory : SceneMemberInjectDependencies
     {
         private const string DropDownConditionFormat = "if(dropdown.value < {1}.Count) is false in {0}";
@@ -39,6 +42,8 @@ namespace Assets.Scripts.RunMode.UserInterface
         [Inject] private IPillarFactory PillarFactory { get; set; }
         [Inject] private ISidesFactory SidesFactory { get; set; }
         [Inject] private IDeckFactory DeckFactory { get; set; }
+        [Inject] private IOnSelected OnSelected { get; set; }
+        [Inject] private ISelected<ScaffoldingAssembly> SelectedAssembly { get; set; }
         private ProjectLayout projectLayout;
 
         void Start()
@@ -97,23 +102,67 @@ namespace Assets.Scripts.RunMode.UserInterface
             projectLayout.SaveProject();
         }
 
+        bool TryGetMaxLvl(int height, out int lvl)
+        {
+            switch (height)
+            {
+                case 500:
+                    {
+                        lvl = 0;
+                        return false;
+                    }
+                case 1000:
+                    {
+                        lvl = 1;
+                        return true;
+                    }
+                case 1500:
+                    {
+                        lvl = 2;
+                        return true;
+                    }
+
+                case 2000:
+                    {
+                        lvl = 3;
+                        return true;
+                    }
+
+                case 3000:
+                    {
+                        lvl = 4;
+                        return true;
+                    }
+            }
+
+            lvl = 0;
+            return false;
+        }
+
+
+        public void Save()
+        {
+            if (SelectedAssembly.TryGet(out var item))
+            {
+                GameObject.FindObjectOfType<PopulateAssemblyGrid>().AddItem(item);
+                OnSelected.OnSelected(false);
+                SelectedAssembly.Release();
+            }
+        }
+
         private ScaffoldingAssembly Create()
         {
             ScaffoldingAssembly item = ObjectCacheManager.Instantiate(assembly, origin);
             int length = lengthPrefab.GetElementLength();
             int width = widthPrefab.GetElementLength();
 
+            item.SetDimensions(Converter.Convert(width), Converter.Convert(spirePrefab.GetElementHeight()), Converter.Convert(length));
+
             PillarFactory.Produce(item.transform, spirePrefab, length, width);
             SidesFactory.Produce(item.transform, lengthPrefab, widthPrefab, length, width, 0);
-            SidesFactory.Produce(item.transform, lengthPrefab, widthPrefab, length, width, 4);
+            if (TryGetMaxLvl(spirePrefab.GetElementHeight(), out int lvl))
+                SidesFactory.Produce(item.transform, lengthPrefab, widthPrefab, length, width, lvl);
             DeckFactory.Produce(item.transform, deckPrefab, width, length, deckPrefab.GetElementWidth(), 0);
-
-            Collider[] box = item.GetComponentsInChildren<Collider>();
-
-            foreach (Collider collider1 in box)
-            {
-                Destroy(collider1);
-            }
 
             return item;
         }

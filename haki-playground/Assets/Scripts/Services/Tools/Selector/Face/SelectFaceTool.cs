@@ -207,7 +207,7 @@ namespace Assets.Scripts.Services.Tools.Selector.Face
         }
 
         /// <inheritdoc />
-        public bool TrySelect(out HakiComponent item)
+        public bool TryFind(out HakiComponent item)
         {
             Ray ray = cameraService.CreateMouseRay();
             return DetectFace(ray, out item);
