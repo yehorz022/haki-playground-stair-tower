@@ -6,7 +6,7 @@ namespace Assets.Scripts.Services.Storage
 {
     public interface IProject
     {
-        void Save();
+        void Save(Transform parent);
         void Load(Transform parent, List<HakiComponent> components);
     }
 

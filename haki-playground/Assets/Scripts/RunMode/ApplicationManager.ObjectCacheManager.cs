@@ -151,6 +151,10 @@ namespace Assets.Scripts.RunMode
 
             public void Cache<T>(T item) where T : HakiComponent
             {
+
+                Destroy(item.gameObject); // destrying items for now since we're makign a dirty fix here and this only causes problems
+
+                return;
                 item.name = item.name.Replace(Constants.CloneGameObjectSuffix, string.Empty).Trim();
 
                 Transform tempParent = GetParent(item.name);

@@ -15,6 +15,8 @@ namespace Assets.Scripts.Shared.Shapes
     {
         private const int NumberOfSides = 6;
         private const int NumberOfVerticesPerSide = 4;
+
+        public Vector3 LocalPosition => localPosition;
         private Vector3 localPosition;
         private Vector3[] points;
         private Vector3[] normals;

@@ -12,7 +12,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 {
     public class ProjectLayout : MonoBehaviour
     {
-
+        public static int projectId;
         [Inject]
         private IProject Project { get; set; }
         [Inject]
@@ -52,18 +52,18 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public void LoadProject(int id)
         {
+            projectId = id;
             Project = new Project(id, positionProvider.ComponentHolder, positionProvider.ObjectCacheManager);
             List<HakiComponent> components = new List<HakiComponent>();
             components.AddRange(populateGridLayout.elements);
-            components.AddRange(assemblyFactory.spires);
-            components.AddRange(assemblyFactory.beams);
-            components.AddRange(assemblyFactory.decks);
             Project.Load(positionProvider.transform, components);
+            assemblyFactory.LoadFactory();
         }
 
         public void SaveProject()
         {
-            Project.Save();
+            Project.Save(positionProvider.transform);
+            assemblyFactory.SaveFactory();
         }
     }
 

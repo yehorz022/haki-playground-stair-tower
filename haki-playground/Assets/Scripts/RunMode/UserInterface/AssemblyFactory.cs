@@ -11,11 +11,16 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.RunMode.UserInterface
 {
+
+
     public class AssemblyFactory : SceneMemberInjectDependencies
     {
         private const string DropDownConditionFormat = "if(dropdown.value < {1}.Count) is false in {0}";
         private int number = 1;
         private int height = 0;
+        private int numberIndex = 0;
+        private int spiresIndex = 0;
+        private int beamsIndex = 0;
         [SerializeField] private ScaffoldingAssembly assembly;
         [SerializeField] private Transform origin;
         public List<ScaffoldingComponent> spires;
@@ -54,7 +59,7 @@ namespace Assets.Scripts.RunMode.UserInterface
 
         public void OnNumberChanged(Dropdown value)
         {
-            number = value.value + 1;
+            number = (numberIndex = value.value) + 1;
             Debug.Log(number);
         }
 
@@ -62,7 +67,7 @@ namespace Assets.Scripts.RunMode.UserInterface
         {
             if (dropdown.value < spires.Count)
             {
-                spirePrefab = spires[dropdown.value];
+                spirePrefab = spires[spiresIndex = dropdown.value];
             }
             else
             {
@@ -73,7 +78,7 @@ namespace Assets.Scripts.RunMode.UserInterface
         {
             if (dropdown.value < beams.Count)
             {
-                lengthPrefab = beams[dropdown.value];
+                lengthPrefab = beams[beamsIndex = dropdown.value];
             }
             else
             {
@@ -94,7 +99,44 @@ namespace Assets.Scripts.RunMode.UserInterface
                     assemblies.Pop();
                 }
             }
-            projectLayout.SaveProject();
+            SaveFactory();
+        }
+
+        bool TryGetMaxLvl(int height, out int lvl)
+        {
+            switch (height)
+            {
+                case 500:
+                {
+                    lvl = 0;
+                    return false;
+                }
+                case 1000:
+                {
+                    lvl = 1;
+                    return true;
+                }
+                case 1500:
+                {
+                    lvl = 2;
+                    return true;
+                }
+
+                case 2000:
+                {
+                    lvl = 3;
+                    return true;
+                }
+
+                case 3000:
+                {
+                    lvl = 4;
+                    return true;
+                }
+            }
+
+            lvl = 0;
+            return false;
         }
 
         private ScaffoldingAssembly Create()
@@ -103,17 +145,13 @@ namespace Assets.Scripts.RunMode.UserInterface
             int length = lengthPrefab.GetElementLength();
             int width = widthPrefab.GetElementLength();
 
+            item.SetDimensions(Converter.Convert(width), Converter.Convert(spirePrefab.GetElementHeight()),Converter.Convert(length));
+
             PillarFactory.Produce(item.transform, spirePrefab, length, width);
             SidesFactory.Produce(item.transform, lengthPrefab, widthPrefab, length, width, 0);
-            SidesFactory.Produce(item.transform, lengthPrefab, widthPrefab, length, width, 4);
+            if (TryGetMaxLvl(spirePrefab.GetElementHeight(), out int lvl))
+                SidesFactory.Produce(item.transform, lengthPrefab, widthPrefab, length, width, lvl);
             DeckFactory.Produce(item.transform, deckPrefab, width, length, deckPrefab.GetElementWidth(), 0);
-
-            Collider[] box = item.GetComponentsInChildren<Collider>();
-
-            foreach (Collider collider1 in box)
-            {
-                Destroy(collider1);
-            }
 
             return item;
         }
@@ -130,7 +168,32 @@ namespace Assets.Scripts.RunMode.UserInterface
                 heights.Push(spirePrefab.GetElementHeight());
                 assemblies.Push(item);
             }
-            projectLayout.SaveProject();
+            SaveFactory();
+        }
+
+        public void SaveFactory()
+        {
+            int assembliesCount = PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "AssembliesCount", 0);
+            for (int i = assembliesCount; i < assemblies.Count; i++)
+            {
+                PlayerPrefs.SetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "NumberIndex", numberIndex);
+                PlayerPrefs.SetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "SpiresIndex", spiresIndex);
+                PlayerPrefs.SetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "BeamsIndex", beamsIndex);
+            }
+            PlayerPrefs.SetInt("Project" + ProjectLayout.projectId + "AssembliesCount", assemblies.Count);
+        }
+
+        public void LoadFactory()
+        {
+            int assembliesCount = PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "AssembliesCount", 0);
+            for (int i = 0; i < assembliesCount; i++)
+            {
+                number = PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "NumberIndex") + 1;
+                spirePrefab = spires[PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "SpiresIndex")];
+                //print("SpiresIndex" + PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "SpiresIndex"));
+                lengthPrefab = beams[PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "BeamsIndex")];
+                Add();
+            }
         }
     }
 }

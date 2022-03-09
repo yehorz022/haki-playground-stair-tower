@@ -28,20 +28,20 @@ namespace Assets.Scripts.Services.Storage
             for (int i = 0; i < count; i++)
             {
                 int componentId = PlayerPrefs.GetInt("project" + id + "component" + i + "id");
-                //Debug.Log("Component " + i + " id = " + id + " name " + (GetComponentByID(components, componentId) != null ? GetComponentByID(components, componentId).name : "null"));
+                //Debug.Log("Component " + i + " id = " + componentId + " name " + (GetComponentByID(components, componentId) != null ? GetComponentByID(components, componentId).name : "null"));
                 HakiComponent res = Produce(GetComponentByID(components, componentId), parent);
                 res.Read(id, i);
             }
         }
 
-        public void Save()
+        public void Save(Transform parent)
         {
-            List<HakiComponent> components = componentHolder.GetAllComponents();
-            PlayerPrefs.SetInt("Project" + id + "ComponentsCount", components.Count);
-            for (int i = 0; i < components.Count; i++)
+            int componentsCount = PlayerPrefs.GetInt("Project" + id + "ComponentsCount", 0);
+            for (int i = componentsCount; i < parent.childCount; i++)
             {
-                components[i].Write(id, i);
+                parent.GetChild(i).GetComponent<HakiComponent>().Write(id, i);
             }
+            PlayerPrefs.SetInt("Project" + id + "ComponentsCount", parent.childCount);
         }
 
         protected T Produce<T>(T prefab, Transform parent) where T : HakiComponent

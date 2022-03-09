@@ -1,5 +1,6 @@
 using Assets.Scripts.Services.Converters;
 using Assets.Scripts.Services.Core;
+using Assets.Scripts.Services.Tools.Selector.Face;
 using Assets.Scripts.Shared.Behaviours;
 using Assets.Scripts.Shared.Metrics.Metric_Units;
 using Assets.Scripts.Shared.ScriptableObjects;
@@ -11,15 +12,19 @@ namespace Assets.Scripts.RunMode.ComponentService
     public class ScaffoldingComponent : HakiComponent
     {
         [SerializeField] public ConnectionDefinitionCollection ConnectionDefinitionCollection;
-        public static ScaffoldingComponent selected;
-        public InputHandler inputHandler;
-
         [SerializeField] public int elementHeightInMillimeters;
         [SerializeField] public int elementLengthInMillimeters;
         [SerializeField] public int elementWidthInMillimeters;
         [SerializeField] public float elementWeight;
         [SerializeField] private Vector3 offset;
-        [Inject] private IConverter<MilliMeter, Native> unitConverter { get; set; }
+        [Inject]
+        private IConverter<MilliMeter, Native> UnitConverter
+        {
+            get;
+            set;
+        }
+
+        [Inject] private ISelected<ScaffoldingComponent> Selected { get; set; }
         public float GetWeight() => elementWeight;
         public int GetElementHeight() => elementHeightInMillimeters;
         public int GetElementWidth() => elementWidthInMillimeters;
@@ -32,11 +37,47 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         void Start()
         {
-            inputHandler = FindObjectOfType<InputHandler>();
-
             //TODO: we have a custom built system designed for detecting intersection, mesh colliders are way too expensive to use so frivolously. 
             //AddMeshCollider(); // adding mesh collider to select the items again using raycast
-            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // disable component raycast to detect floor easily
+            //gameObject.layer = LayerMask.NameToLayer("Ignore Raycast"); // disable component raycast to detect floor easily
+
+            if (GetComponent<BoxCollider>() == null)
+            {
+                var bc = this.gameObject.AddComponent<BoxCollider>();
+
+
+            }
+        }
+
+
+        void Update()
+        {
+            var bc = GetComponent<BoxCollider>();
+            var x = UnitConverter.Convert(GetElementWidth());
+            var y = UnitConverter.Convert(GetElementHeight());
+            var z = UnitConverter.Convert(GetElementLength());
+
+
+            if (this.name.StartsWith("7016"))
+            {
+                bc.center = new Vector3(0, y / 2, 0);
+                bc.size = new Vector3(x, y, z);
+            }
+            else if (name.StartsWith("7021"))
+            {
+                bc.center = new Vector3(z / 2, -.04f, x / 2);
+                bc.size = new Vector3(z, y, x);
+            }
+            else if (name.StartsWith("407"))
+            {
+                bc.center = new Vector3(1.25f, 0, .015f);
+                bc.size = new Vector3(z, y, x);
+            }
+            else if (name.StartsWith("2073"))
+            {
+                bc.center = new Vector3(0, y / 2, 0);
+                bc.size = new Vector3(z, y, x);
+            }
         }
 
         protected override void DebugDraw(bool isSelected)
@@ -71,49 +112,6 @@ namespace Assets.Scripts.RunMode.ComponentService
             GetBounds().DebugDraw(transform);
         }
 
-        public void Select()
-        {
-            selected = this;
-            SetMaterial(inputHandler.selectedMat);
-        }
-
-        public void Deselect()
-        {
-            selected = null;
-            SetMaterial(inputHandler.defaultMat);
-        }
-
-        public void SetMaterial(Material mat)
-        {
-            SetMaterialRecursively(transform, mat);
-        }
-
-        public void AddMeshCollider()
-        {
-            AddMeshColliderRecursively(gameObject);
-        }
-
-        void AddMeshColliderRecursively(GameObject go)
-        {
-            if (go.GetComponent<MeshRenderer>() != null)
-            {
-                BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
-                boxCollider.center = go.GetComponent<MeshRenderer>().bounds.center - transform.position;
-                boxCollider.size = go.GetComponent<MeshRenderer>().bounds.size;
-            }
-            for (int i = 0; i < go.transform.childCount; i++)
-                AddMeshColliderRecursively(go.transform.GetChild(i).gameObject);
-        }
-
-        void SetMaterialRecursively(Transform trans, Material mat)
-        {
-            if (trans.GetComponent<MeshRenderer>() != null)
-                trans.GetComponent<MeshRenderer>().material = mat;
-
-            for (int i = 0; i < trans.transform.childCount; i++)
-                SetMaterialRecursively(trans.GetChild(i), mat);
-        }
-
         public override bool TryGetCollectionDefinition(out ConnectionDefinitionCollection collection)
         {
             collection = ConnectionDefinitionCollection;
@@ -132,7 +130,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             float height;
             float width;
 
-            if (unitConverter == null /* and is in play mode*/)
+            if (UnitConverter == null /* and is in play mode*/)
             {
                 length = 0.001f * elementLengthInMillimeters;
                 height = 0.001f * elementHeightInMillimeters;
@@ -140,17 +138,30 @@ namespace Assets.Scripts.RunMode.ComponentService
             }
             else
             {
-                length = unitConverter.Convert(elementLengthInMillimeters);
-                height = unitConverter.Convert(elementHeightInMillimeters);
-                width = unitConverter.Convert(elementWidthInMillimeters);
+                length = UnitConverter.Convert(elementLengthInMillimeters);
+                height = UnitConverter.Convert(elementHeightInMillimeters);
+                width = UnitConverter.Convert(elementWidthInMillimeters);
             }
             Vector3 size = new Vector3(length, height, width) / 2;
             return new Box(size, offset, transform);
         }
 
+
+        public override void Select()
+        {
+            Selected.SetSelected(this);
+            //SetMaterial(inputHandler.selectedMat);
+        }
+
+        public override void Deselect()
+        {
+            Selected.SetSelected(null);
+            //SetMaterial(inputHandler.defaultMat);
+        }
+
         public override void Write(int projectID, int no)
         {
-            //print("Write  projectID" + projectID + "no" + no);
+            //print("Write  projectID" + projectID + "no" + no + "id" + id);
             PlayerPrefs.SetInt("project" + projectID + "component" + no + "id", id);
             PlayerPrefs.SetFloat("project" + projectID + "component" + no + "position_x", transform.position.x);
             PlayerPrefs.SetFloat("project" + projectID + "component" + no + "position_y", transform.position.y);
@@ -165,7 +176,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public override void Read(int projectID, int no)
         {
-            //print("Read  projectID" + projectID + "no" + no);
+            //print("Read  projectID" + projectID + "no" + no + "id" + id);
             transform.position = new Vector3(PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_x", transform.position.x),
                                              PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_y", transform.position.y),
                                              PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_z", transform.position.z));
@@ -175,6 +186,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             transform.localScale = new Vector3(PlayerPrefs.GetFloat("project" + projectID + "component" + no + "scale_x", transform.localScale.x),
                                                PlayerPrefs.GetFloat("project" + projectID + "component" + no + "scale_y", transform.localScale.y),
                                                PlayerPrefs.GetFloat("project" + projectID + "component" + no + "scale_z", transform.localScale.z));
+
         }
     }
 }

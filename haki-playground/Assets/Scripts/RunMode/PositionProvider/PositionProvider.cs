@@ -5,6 +5,7 @@ using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Shared.Containers.Collision;
 using Assets.Scripts.Shared.ScriptableObjects;
 using Assets.Scripts.Shared.Behaviours;
+using Assets.Scripts.Shared.Helpers;
 using UnityEngine;
 
 namespace Assets.Scripts.RunMode.PositionProvider
@@ -13,7 +14,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
     {
 
         private bool run;
-        private ScaffoldingComponent ccs;
+        private HakiComponent ccs;
 
         [Inject]
         public IObjectCacheManager ObjectCacheManager { get; set; }
@@ -36,7 +37,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
         }
 
 
-        public ScaffoldingComponent CreateComponent(ScaffoldingComponent replacement) // made create 
+        public HakiComponent CreateAndPickComponent(HakiComponent replacement) // made create 
         {
             ccs = ObjectCacheManager.Instantiate(replacement, transform);
             run = true;
@@ -68,7 +69,7 @@ namespace Assets.Scripts.RunMode.PositionProvider
 
         public ScaffoldingComponent GetComponent()
         {
-            return ComponentHolder.GetComponentBehindRay() as ScaffoldingComponent;
+            return ComponentHolder?.GetComponentBehindRay() as ScaffoldingComponent;
         }
 
 
@@ -88,11 +89,9 @@ namespace Assets.Scripts.RunMode.PositionProvider
             }
         }
 
-
-
         private bool HandleCollisionDetection(out Vector3 pos, out Quaternion euler)
         {
-            
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             CollisionInfo ci = CollisionDetectionService.Evaluate(ray, 0, ccs);
@@ -111,9 +110,11 @@ namespace Assets.Scripts.RunMode.PositionProvider
                 return true;
             }
 
-            if (Physics.Raycast(ray, out RaycastHit hit))
+
+
+            if (Intersections.RayPlaneIntersection(ray, Vector3.up, Vector3.zero, out Vector3 hitPoint))
             {
-                pos = hit.point;
+                pos = hitPoint;
                 euler = Quaternion.identity;
                 return true;
             }
