@@ -163,54 +163,6 @@ namespace Assets.Scripts.RunMode.UserInterface
             }
         }
 
-        bool TryGetMaxLvl(int height, out int lvl)
-        {
-            switch (height)
-            {
-                case 500:
-                    {
-                        lvl = 0;
-                        return false;
-                    }
-                case 1000:
-                    {
-                        lvl = 1;
-                        return true;
-                    }
-                case 1500:
-                    {
-                        lvl = 2;
-                        return true;
-                    }
-
-                case 2000:
-                    {
-                        lvl = 3;
-                        return true;
-                    }
-
-                case 3000:
-                    {
-                        lvl = 4;
-                        return true;
-                    }
-            }
-
-            lvl = 0;
-            return false;
-        }
-
-
-        public void Save()
-        {
-            if (SelectedAssembly.TryGet(out var item))
-            {
-                GameObject.FindObjectOfType<PopulateAssemblyGrid>().AddItem(item);
-                OnSelected.OnSelected(false);
-                SelectedAssembly.Release();
-            }
-        }
-
         private ScaffoldingAssembly Create()
         {
             ScaffoldingAssembly item = ObjectCacheManager.Instantiate(assembly, origin);
