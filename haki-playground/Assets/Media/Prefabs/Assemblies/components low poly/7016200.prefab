@@ -2229,11 +2229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugOptions: 3
-<<<<<<< HEAD
   id: 7016200
-=======
-  id: 0
->>>>>>> bea05682485c6180576c52d6a885adf1dbdbc011
   ConnectionDefinitionCollection: {fileID: 11400000, guid: 554fbfca58ed0ca46803bed2616022f8, type: 2}
   inputHandler: {fileID: 0}
   elementHeightInMillimeters: 2000
