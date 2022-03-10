@@ -137,12 +137,12 @@ namespace Assets.Scripts.RunMode.ComponentService
             SetMaterial(inputHandler.defaultMat);
         }
         
-        public override void Write(int projectID, int no)
+        public override void Write(string projectID, int no)
         {
             //will write it later
         }
 
-        public override void Read(int projectID, int no)
+        public override void Read(string projectID, int no)
         {
             //will write it later
         }

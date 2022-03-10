@@ -12,23 +12,25 @@ namespace Assets.Scripts.RunMode.ComponentService
         public Material defaultMat;
         public Material selectedMat;
         public Material warningMat;
-        [SerializeField] Image recycleBin;
+        [SerializeField] Image trashIcon;
+        [SerializeField] RectTransform trashTrans;
         [SerializeField] Sprite recycleBinDefault;
         [SerializeField] Sprite recycleBinOpened;
 
         [Inject] private ISelected<ScaffoldingComponent> Selected { get; set; }
+        private PositionProvider.PositionProvider positionProvider;
         public HakiComponent picked;
-        public PositionProvider.PositionProvider positionProvider;
         public bool onRecycleBin;
 
         public static InputHandler instance;
-        void Awake()
-        {
-            instance = this;
-        }
+
+        void Awake() => instance = this;
 
         void Start() => positionProvider = FindObjectOfType<PositionProvider.PositionProvider>();
 
+        public void Show() => Routine.MovePivot(trashTrans, new Vector2(0, 1), new Vector2(0, 0), .18f); // opening animation
+
+        public void Hide() => Routine.MovePivot(trashTrans, new Vector2(0, 0), new Vector2(0, 1), .18f); // closing animation
 
         //void OnGUI()
         //{
@@ -69,7 +71,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             if (!picked)
                 return;
             onRecycleBin = true;
-            recycleBin.sprite = recycleBinOpened;
+            trashIcon.sprite = recycleBinOpened;
             picked.SetMaterial(warningMat);
         }
 
@@ -78,7 +80,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             if (!picked)
                 return;
             onRecycleBin = false;
-            recycleBin.sprite = recycleBinDefault;
+            trashIcon.sprite = recycleBinDefault;
             picked.SetMaterial(defaultMat);
         }
         //^^^^   button listners functions for UI   ^^^^
@@ -87,7 +89,7 @@ namespace Assets.Scripts.RunMode.ComponentService
         public void OnClickRecycleButton()
         {
             onRecycleBin = false;
-            recycleBin.sprite = recycleBinDefault;
+            trashIcon.sprite = recycleBinDefault;
             positionProvider.RecycleComponent();
             picked.SetMaterial(defaultMat);
             picked = null;

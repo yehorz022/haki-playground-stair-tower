@@ -10,11 +10,11 @@ namespace Assets.Scripts.Services.Storage
     [Service(typeof(IProject))]
     public class Project : IProject
     {
-        private int id;
+        private string id;
         private readonly IComponentHolder componentHolder;
         private readonly IObjectCacheManager objectCacheManager;
 
-        public Project(int id, IComponentHolder componentHolder, IObjectCacheManager objectCacheManager)
+        public Project(string id, IComponentHolder componentHolder, IObjectCacheManager objectCacheManager)
         {
             this.id = id;
             this.componentHolder = componentHolder;

@@ -24,7 +24,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         [HideInInspector] public CanvasScaler cs;
         [HideInInspector] public Transform panelsView;
-        [SerializeField] PopulateGridLayout populateGridLayout;
+        [SerializeField] ComponentsLayout componentsLayout;
         public Coroutine routineDrag;
         public static DeviceOrientation orientation = DeviceOrientation.Portrait;
         float deltaDrag;
@@ -54,12 +54,12 @@ namespace Assets.Scripts.RunMode.ComponentService
                 if (orientation == DeviceOrientation.Portrait || orientation == DeviceOrientation.PortraitUpsideDown)
                 {
                     cs.matchWidthOrHeight = 0;
-                    Routine.WaitAndCall(.1f, () => populateGridLayout.OnDeviceOrientationChange());
+                    Routine.WaitAndCall(.1f, () => componentsLayout.OnDeviceOrientationChange());
                 }
                 else if (orientation == DeviceOrientation.LandscapeLeft || orientation == DeviceOrientation.LandscapeRight)
                 {
                     cs.matchWidthOrHeight = 1;
-                    Routine.WaitAndCall(.1f, () => populateGridLayout.OnDeviceOrientationChange());
+                    Routine.WaitAndCall(.1f, () => componentsLayout.OnDeviceOrientationChange());
                 }
             }
         }

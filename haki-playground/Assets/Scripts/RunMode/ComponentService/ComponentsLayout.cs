@@ -6,14 +6,13 @@ using UnityEngine;
 
 namespace Assets.Scripts.RunMode.ComponentService
 {
-    public class PopulateGridLayout : SceneMemberInjectDependencies
+    public class ComponentsLayout : SceneMemberInjectDependencies
     {
 
         [SerializeField] Color iconBGColor;
         [SerializeField] ScrollViewComponent scrollView;
         [SerializeField] public HakiComponent[] elements;
         [SerializeField] Sprite[] elementsIcons;
-        [SerializeField] private GameObject uiParent;
         [Inject]
         private IObjectCacheManager ObjectcacheManager { get; set; }
         private PositionProvider.PositionProvider positionProvider;
@@ -26,10 +25,13 @@ namespace Assets.Scripts.RunMode.ComponentService
             Routine.WaitAndCall(.01f, () => //wait for system to initialize first
             {
                 PopulateItems();
-                scrollView.Initialize(elements.Length, transform.GetComponent<RectTransform>(), LoadPanel, scrollState, ScrollViewComponent.OLD_STATE);
-                uiParent.SetActive(false);
+                scrollView.Initialize(elements.Length, scrollView.panelsParent, LoadPanel, scrollState, ScrollViewComponent.OLD_STATE);
             });
         }
+
+        public void Show() => Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(1, 1), .18f); // opening animation
+
+        public void Hide() => Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(1, 1), new Vector2(0, 1), .18f); // closing animation
 
         void PopulateItems()
         {
@@ -56,7 +58,7 @@ namespace Assets.Scripts.RunMode.ComponentService
                 scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(120, scrollView.GetComponent<RectTransform>().sizeDelta.y);
             if (CanvasComponent.orientation == DeviceOrientation.LandscapeLeft || CanvasComponent.orientation == DeviceOrientation.LandscapeRight)
                 scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(220, scrollView.GetComponent<RectTransform>().sizeDelta.y);
-            scrollView.Initialize(elements.Length, transform.GetComponent<RectTransform>(), LoadPanel, new ScrollState(0));
+            scrollView.Initialize(elements.Length, scrollView.panelsParent, LoadPanel, new ScrollState(0));
         }
     }
 

@@ -90,8 +90,8 @@ namespace Assets.Scripts.Shared.Behaviours
         }
 
 
-        public abstract void Read(int projectID, int no);
+        public abstract void Read(string projectID, int no);
 
-        public abstract void Write(int projectID, int no);
+        public abstract void Write(string projectID, int no);
     }
 }

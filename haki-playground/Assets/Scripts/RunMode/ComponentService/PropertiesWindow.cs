@@ -18,10 +18,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public void Hide() {
             Routine.Stop(routineDrag);
-            routineDrag = Routine.Lerp(transform.position.y, Screen.height * 1.2f, .18f,
-                (val) => {
-                    transform.position = new Vector3(transform.position.x, val, transform.position.z);
-                }); // moving animation
+            routineDrag = Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(0, 0), .18f); // moving animation
         }
 
         public void Show(Sprite img, string title, string id) {
@@ -30,10 +27,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             this.id.text = "ID : " + id;
             Routine.Stop(routineDrag);
             Routine.Stop(routineHide);
-            routineDrag = Routine.Lerp(transform.position.y, Screen.height, .18f,
-                (val) => {
-                    transform.position = new Vector3(transform.position.x, val, transform.position.z);
-                }); // moving animation
+            routineDrag = routineDrag = Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(0, 0), new Vector2(0, 1), .18f); // moving animation
             routineHide = Routine.WaitAndCall(3, Hide);
         }
     }

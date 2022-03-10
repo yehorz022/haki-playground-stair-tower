@@ -12,7 +12,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 {
     public class ProjectLayout : MonoBehaviour
     {
-        public static int projectId;
+        public static string projectId;
         [Inject]
         private IProject Project { get; set; }
         [Inject]
@@ -25,14 +25,16 @@ namespace Assets.Scripts.RunMode.ComponentService
         [SerializeField] Sprite newProjectIcon;
         public ScrollViewComponent scrollView;
         ScrollState scrollState = new ScrollState(0);
+        private ToolManager toolManager;
         private AssemblyFactory assemblyFactory;
         private PositionProvider.PositionProvider positionProvider;
-        private PopulateGridLayout populateGridLayout;
+        private ComponentsLayout componentsLayout;
 
         void Start()
         {
+            toolManager = FindObjectOfType<ToolManager>();
             assemblyFactory = FindObjectOfType<AssemblyFactory>();
-            populateGridLayout = FindObjectOfType<PopulateGridLayout>();
+            componentsLayout = FindObjectOfType<ComponentsLayout>();
             positionProvider = FindObjectOfType<PositionProvider.PositionProvider>();
             Routine.WaitAndCall(.01f, () => //wait for system to initialize first
             {
@@ -42,7 +44,7 @@ namespace Assets.Scripts.RunMode.ComponentService
 
         public void Initialize()
         {
-            scrollView.Initialize(PlayerPrefs.GetInt("ProjectsCount", 1), scrollView.panelsParent, LoadPanel, scrollState, ScrollViewComponent.OLD_STATE);
+            scrollView.Initialize(PlayerPrefs.GetInt("ProjectsCount") + 1, scrollView.panelsParent, LoadPanel, scrollState, ScrollViewComponent.OLD_STATE);
         }
 
         public void LoadPanel(Transform panel, int reset = ScrollViewComponent.DEFAULT)
@@ -50,14 +52,16 @@ namespace Assets.Scripts.RunMode.ComponentService
             panel.GetComponent<ProjectComponent>().Initialize(int.Parse(panel.name), int.Parse(panel.name) == scrollView.totalPanels - 1 ? newProjectIcon : projectIcon);
         }
 
-        public void LoadProject(int id)
+        public void LoadProject(string id)
         {
             projectId = id;
             Project = new Project(id, positionProvider.ComponentHolder, positionProvider.ObjectCacheManager);
             List<HakiComponent> components = new List<HakiComponent>();
-            components.AddRange(populateGridLayout.elements);
+            components.AddRange(componentsLayout.elements);
             Project.Load(positionProvider.transform, components);
             assemblyFactory.LoadFactory();
+            assemblyFactory.Show();
+            toolManager.Show();
         }
 
         public void SaveProject()

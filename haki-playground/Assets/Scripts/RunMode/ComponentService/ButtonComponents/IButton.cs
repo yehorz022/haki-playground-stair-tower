@@ -16,7 +16,8 @@ namespace Assets.Scripts.RunMode.ComponentService.ButtonComponents
         public UnityEvent onDown = new UnityEvent();
         public UnityEvent onExit = new UnityEvent();
         public UnityEvent onUp = new UnityEvent();
-    //  public Component[] animations; // will work on later
+        public UnityEvent onLongPress = new UnityEvent();
+        //  public Component[] animations; // will work on later
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
@@ -32,6 +33,10 @@ namespace Assets.Scripts.RunMode.ComponentService.ButtonComponents
                 return;
             Inputs.OnInputDown();
             onDown.Invoke();
+            Routine.WaitAndCall(1, () => { 
+                if (Inputs.InputType() == Click.LongTap)
+                    onLongPress.Invoke();
+            });
         }
 
         public virtual void OnPointerExit(PointerEventData eventData)
@@ -50,11 +55,11 @@ namespace Assets.Scripts.RunMode.ComponentService.ButtonComponents
         {
             if (!interactable)
                 return;
+            Click tap = Inputs.InputType();
 #if UNITY_EDITOR
-            if (Inputs.InputType() == Click.Tap && !Input.GetMouseButton(0) && !Input.GetMouseButton(1))
+            if (tap == Click.Tap && !Input.GetMouseButton(0) && !Input.GetMouseButton(1))
                 onClick.Invoke();
 #endif
-
             onUp.Invoke();
         }
     }

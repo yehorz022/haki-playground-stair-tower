@@ -157,7 +157,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             Selected.SetSelected(null);
             SetMaterial(inputHandler.defaultMat);
         }
-        public override void Write(int projectID, int no)
+        public override void Write(string projectID, int no)
         {
             //print("Write  projectID" + projectID + "no" + no);
             PlayerPrefs.SetInt("project" + projectID + "component" + no + "id", id);
@@ -172,7 +172,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             PlayerPrefs.SetFloat("project" + projectID + "component" + no + "scale_z", transform.localScale.z);
         }
 
-        public override void Read(int projectID, int no)
+        public override void Read(string projectID, int no)
         {
             //print("Read  projectID" + projectID + "no" + no);
             transform.position = new Vector3(PlayerPrefs.GetFloat("project" + projectID + "component" + no + "position_x", transform.position.x),

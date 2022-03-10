@@ -6,6 +6,7 @@ using Assets.Scripts.Services.Factories;
 using Assets.Scripts.Services.Instanciation;
 using Assets.Scripts.Services.Tools.Selector.Face;
 using Assets.Scripts.Shared.Behaviours;
+using Assets.Scripts.Shared.Helpers;
 using Assets.Scripts.Shared.Metrics.Metric_Units;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,6 +58,16 @@ namespace Assets.Scripts.RunMode.UserInterface
             lengthPrefab = beams[beamsIndex = spires.Count - 1];
             widthPrefab = beams[2];
             deckPrefab = decks[10];
+        }
+
+        public void Hide()
+        {
+            Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(1, 1), new Vector2(0, 1), .18f); // moving animation
+        }
+
+        public void Show()
+        {
+            Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2 (0, 1), new Vector2(1, 1), .18f); // moving animation
         }
 
         public void OnNumberChanged(Dropdown value)
