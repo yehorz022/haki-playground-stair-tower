@@ -30,15 +30,10 @@ namespace Assets.Scripts.RunMode.ComponentService
             {
                 if (no == projectLayout.scrollView.totalPanels - 1)
                 {
-                    string st = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890~!@#$%^&*()_+"; 
-                    string randomId = "";
-                    for (int i = 0; i < 10; i++)
-                        randomId += st[Random.Range(0, st.Length)];
-                    PlayerPrefs.SetString("ProjectID" + no, randomId);
+                    PlayerPrefs.SetString("ProjectID" + no, Code.GenerateRandomString ());
                     PlayerPrefs.SetInt("ProjectsCount", PlayerPrefs.GetInt("ProjectsCount") + 1);
                     projectLayout.Initialize();
                 }
-                projectLayout.gameObject.SetActive(false);
                 AudioManager.instance.PlaySound(SoundID.Click);
                 projectLayout.LoadProject(PlayerPrefs.GetString("ProjectID" + no));
             }

@@ -99,7 +99,7 @@ namespace Assets.Scripts.RunMode.UserInterface
             }
         }
 
-        public void Remove()
+        public void Remove(bool save = true)
         {
             for (int i = 0; i < number; i++)
             {
@@ -112,7 +112,8 @@ namespace Assets.Scripts.RunMode.UserInterface
                     assemblies.Pop();
                 }
             }
-            SaveFactory();
+            if (save)
+                SaveFactory();
         }
 
         bool TryGetMaxLvl(int height, out int lvl)
@@ -208,6 +209,7 @@ namespace Assets.Scripts.RunMode.UserInterface
 
         public void LoadFactory()
         {
+            UnloadFactory();
             int assembliesCount = PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "AssembliesCount", 0);
             for (int i = 0; i < assembliesCount; i++)
             {
@@ -216,6 +218,14 @@ namespace Assets.Scripts.RunMode.UserInterface
                 lengthPrefab = beams[PlayerPrefs.GetInt("Project" + ProjectLayout.projectId + "Assembly" + i + "BeamsIndex")];
                 Add();
             }
+        }
+
+        public void UnloadFactory()
+        {
+            int temp = number;
+            number = assemblies.Count;
+            Remove(false);
+            number = temp;
         }
     }
 }

@@ -41,6 +41,12 @@ namespace Assets.Scripts.RunMode.ComponentService
                 Initialize();
             });
         }
+        public void Show() {
+            gameObject.SetActive(true);
+            Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(2, .5f), new Vector2(.5f, .5f), .3f); // opening animation
+        }
+        public void Hide() => gameObject.SetActive(false); // closing animation
+
 
         public void Initialize()
         {
@@ -62,6 +68,7 @@ namespace Assets.Scripts.RunMode.ComponentService
             assemblyFactory.LoadFactory();
             assemblyFactory.Show();
             toolManager.Show();
+            Hide();
         }
 
         public void SaveProject()

@@ -23,6 +23,7 @@ namespace Assets.Scripts.Services.Storage
 
         public void Load(Transform parent, List<HakiComponent> components)
         {
+            Unload(parent);
             //Debug.Log("ComponentsCount = " + components.Count);
             int count = PlayerPrefs.GetInt("Project" + id + "ComponentsCount", 0);
             for (int i = 0; i < count; i++)
@@ -42,6 +43,15 @@ namespace Assets.Scripts.Services.Storage
                 parent.GetChild(i).GetComponent<HakiComponent>().Write(id, i);
             }
             PlayerPrefs.SetInt("Project" + id + "ComponentsCount", parent.childCount);
+        }
+
+        public void Unload(Transform parent)
+        {
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                objectCacheManager.Cache(parent.GetChild(i).GetComponent<HakiComponent>());
+            }
+            componentHolder.RemoveAll();
         }
 
         protected T Produce<T>(T prefab, Transform parent) where T : HakiComponent

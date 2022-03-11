@@ -14,6 +14,15 @@ namespace Assets.Scripts.Shared.Helpers
             return Application.internetReachability != NetworkReachability.NotReachable;
         }
 
+        public static string GenerateRandomString()
+        {
+            string randomStr = "";
+            string st = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890~!@#$%^&*()_+";
+            for (int i = 0; i < 10; i++)
+                randomStr += st[UnityEngine.Random.Range(0, st.Length)];
+            return randomStr;
+        }
+
         static AsyncOperation async = null; // When assigned, load is in progress.
         public static IEnumerator LoadASyncLevel(int levelNo, Image logo = null)
         {

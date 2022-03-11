@@ -21,7 +21,10 @@ namespace Assets.Scripts.RunMode.ComponentService.ButtonComponents
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
-            
+#if UNITY_EDITOR
+            if (!Input.GetMouseButtonDown(0) && !Input.GetMouseButtonDown(1))
+                return;
+#endif  
             if (!interactable)
                 return;
             onEnter.Invoke();
@@ -29,37 +32,47 @@ namespace Assets.Scripts.RunMode.ComponentService.ButtonComponents
 
         public virtual void OnPointerDown(PointerEventData eventData)
         {
+#if UNITY_EDITOR
+            if (!Input.GetMouseButtonDown(0) && !Input.GetMouseButtonDown(1))
+                return;
+#endif
             if (!interactable)
                 return;
             Inputs.OnInputDown();
-            onDown.Invoke();
-            Routine.WaitAndCall(1, () => { 
-                if (Inputs.InputType() == Click.LongTap)
-                    onLongPress.Invoke();
+            Routine.WaitAndCall(1, () => {
+#if UNITY_EDITOR
+                if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+#endif
+                    if (Inputs.InputType() == Click.LongTap)
+                        onLongPress.Invoke();
             });
+            onDown.Invoke();
         }
 
         public virtual void OnPointerExit(PointerEventData eventData)
         {
+#if UNITY_EDITOR
+            if (!Input.GetMouseButtonUp(0) && !Input.GetMouseButtonUp(1))
+                return;
+#endif
             if (!interactable)
                 return;
             if (Inputs.InputType() == Click.Tap)
                 onClick.Invoke();
-#if UNITY_EDITOR
-            if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
-#endif
-                onExit.Invoke();
+            onExit.Invoke();
         }
 
         public virtual void OnPointerUp(PointerEventData eventData)
         {
+#if UNITY_EDITOR
+            if (!Input.GetMouseButtonUp(0) && !Input.GetMouseButtonUp(1))
+                return;
+#endif
             if (!interactable)
                 return;
             Click tap = Inputs.InputType();
-#if UNITY_EDITOR
-            if (tap == Click.Tap && !Input.GetMouseButton(0) && !Input.GetMouseButton(1))
+            if (tap == Click.Tap)
                 onClick.Invoke();
-#endif
             onUp.Invoke();
         }
     }

@@ -8,19 +8,24 @@ namespace Assets.Scripts.RunMode.UserInterface
 {
     public class ToolManager : MonoBehaviour
     {
+        [SerializeField] Dropdown dropdown;
         private InputHandler inputHandler;
+        private ProjectLayout projectLayout;
         private AssemblyFactory assemblyFactory;
         private ComponentsLayout componentsLayout;
 
         void Start()
         {
             inputHandler = FindObjectOfType<InputHandler>();
+            projectLayout = FindObjectOfType<ProjectLayout>();
             assemblyFactory = FindObjectOfType<AssemblyFactory>();
             componentsLayout = FindObjectOfType<ComponentsLayout>();
         }
 
-        public void Show() => Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(1, 1), .18f); // opening animation
-
+        public void Show() {
+            dropdown.value = 0;
+            Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(0, 1), new Vector2(1, 1), .18f); // opening animation
+        }
         public void Hide() => Routine.MovePivot(transform.GetComponent<RectTransform>(), new Vector2(1, 1), new Vector2(0, 1), .18f); // closing animation
 
         public void OnToolChanged(Dropdown dropdown)
@@ -37,6 +42,13 @@ namespace Assets.Scripts.RunMode.UserInterface
                     assemblyFactory.Hide();
                     componentsLayout.Show();
                     inputHandler.Show();
+                    break;
+                case 2:
+                    Hide();
+                    inputHandler.Hide();
+                    assemblyFactory.Hide();
+                    componentsLayout.Hide();
+                    projectLayout.Show();
                     break;
 
                 default:

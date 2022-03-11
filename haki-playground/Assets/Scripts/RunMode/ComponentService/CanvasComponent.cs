@@ -22,9 +22,9 @@ namespace Assets.Scripts.RunMode.ComponentService
         public static Action<string> OnUpdateRank;
         public static Action OnScreenResolutionChanged;
 
-        [HideInInspector] public CanvasScaler cs;
-        [HideInInspector] public Transform panelsView;
-        [SerializeField] ComponentsLayout componentsLayout;
+        public CanvasScaler cs;
+        public Transform panelsView;
+        private ComponentsLayout componentsLayout;
         public Coroutine routineDrag;
         public static DeviceOrientation orientation = DeviceOrientation.Portrait;
         float deltaDrag;
@@ -32,6 +32,7 @@ namespace Assets.Scripts.RunMode.ComponentService
         void Awake()
         {
             cs = FindObjectOfType<CanvasScaler>();
+            componentsLayout = FindObjectOfType<ComponentsLayout>();
             float ScreenWidthInch = Screen.width / Screen.dpi;
             OnRectTransformDimensionsChange();
             //SetScreenResolution(PlayerPrefs.GetFloat(Prefs.ScreenResolution, 800 + (ScreenWidthInch - 3f) * 100)); //adjust canvas size according to screen width,, //-3 bcz 3 inches is standard size 
